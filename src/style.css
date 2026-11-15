@@ -68,6 +68,7 @@ h2 { font-size: 17px; margin-bottom: 8px; }
 .video-wrap { position: relative; margin-top: 10px; border-radius: 10px; overflow: hidden; background: #000; }
 .video-wrap video { display: block; width: 100%; }
 .video-wrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.video-wrap.mirrored video, .video-wrap.mirrored canvas { transform: scaleX(-1); }
 
 .bench-live {
   font-variant-numeric: tabular-nums;

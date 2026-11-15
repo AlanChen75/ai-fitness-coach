@@ -155,8 +155,12 @@ async function cameraAndModel(): Promise<void> {
   const video = $('#cam') as HTMLVideoElement
   const items: CheckItem[] = []
   const btnBench = $('#btn-bench') as HTMLButtonElement
+  const useFront = ($('#front-cam') as HTMLInputElement).checked
+  // 前鏡頭時預覽與骨架一起鏡像（同一 transform 保持對齊）
+  const wrap = document.querySelector('.video-wrap') as HTMLElement
+  wrap.classList.toggle('mirrored', useFront)
   try {
-    camInfo = await startCamera(video)
+    camInfo = await startCamera(video, useFront ? 'user' : 'environment')
     items.push({ key: '鏡頭', value: `${camInfo.label.slice(0, 40)}（${camInfo.facing}）`, status: 'ok' })
     items.push({ key: '實際解析度', value: `${camInfo.width}x${camInfo.height} @ ${Math.round(camInfo.frameRate)}fps`, status: 'ok' })
   } catch (e) {

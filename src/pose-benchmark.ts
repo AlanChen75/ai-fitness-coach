@@ -23,10 +23,13 @@ export interface BenchmarkResult {
   model: string
 }
 
-export async function startCamera(video: HTMLVideoElement): Promise<CameraInfo> {
+export async function startCamera(video: HTMLVideoElement, facing: 'environment' | 'user' = 'environment'): Promise<CameraInfo> {
+  // 先關掉舊的串流，避免切換鏡頭時佔用
+  const old = video.srcObject as MediaStream | null
+  if (old) old.getTracks().forEach((t) => t.stop())
   const stream = await navigator.mediaDevices.getUserMedia({
     video: {
-      facingMode: { ideal: 'environment' },
+      facingMode: { ideal: facing },
       width: { ideal: 640 },
       height: { ideal: 480 },
       frameRate: { ideal: 15 }
