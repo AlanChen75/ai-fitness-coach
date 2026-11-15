@@ -199,8 +199,14 @@ async function benchmark(): Promise<void> {
     (msg) => { $('#bench-live').textContent = msg }
   )
   btn.disabled = false
-  $('#bench-live').textContent = 'Benchmark 完成'
   profile.pose_benchmark = result
+  // 跑完直接自動保存，避免漏按：匯出即含 benchmark
+  try {
+    await putProfile({ ...profile })
+    $('#bench-live').textContent = 'Benchmark 完成，已自動保存，可直接匯出 JSON'
+  } catch (e) {
+    $('#bench-live').textContent = 'Benchmark 完成，但自動保存失敗：' + String(e)
+  }
   const hzOk: Status = result.effective_pose_hz >= 8 ? 'ok' : (result.effective_pose_hz >= 5 ? 'warn' : 'fail')
   renderRows('#cam-results', [
     { key: '時長 / 推論次數', value: `${result.duration_s}s / ${result.inference_count} 次`, status: 'ok' },
@@ -223,6 +229,9 @@ async function saveProfile(): Promise<void> {
 }
 
 function exportProfile(): void {
+  if (!profile.pose_benchmark) {
+    alert('注意：這份 Profile 還沒有 Benchmark 結果。請先跑完 60 秒 Benchmark 再匯出，才有 p50/p95 與 Pose Hz 數據。')
+  }
   const blob = new Blob([JSON.stringify(profile, null, 2)], { type: 'application/json' })
   const a = document.createElement('a')
   a.href = URL.createObjectURL(blob)
