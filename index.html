@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI 健身教練</title>
+<meta name="description" content="Local-first AI 健身教練 PWA（OPPO Reno2 驗收版）">
+<meta name="theme-color" content="#0ea5e9">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png">
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+</head>
+<body>
+<main class="shell">
+  <h1>AI 健身教練</h1>
+  <p class="sub">Local-first PWA v0.1 — Iteration 1（裝置能力驗收）</p>
+
+  <section class="card">
+    <h2>第一步：裝置能力檢測</h2>
+    <p>在正式訓練前，先確認這支手機的相機、姿態推論效能、本地儲存與語音都可用。結果只存在本機。</p>
+    <a class="btn-primary" href="./device-check.html">開始裝置檢測</a>
+  </section>
+
+  <section class="card">
+    <h2>狀態</h2>
+    <ul class="status-list">
+      <li>安全來源：<span id="sec-ctx">檢查中</span></li>
+      <li>離線快取：<span id="sw-state">檢查中</span></li>
+      <li>已存能力檢測結果：<span id="profile-state">檢查中</span></li>
+    </ul>
+  </section>
+
+  <section class="card muted">
+    <h2>本版不包含</h2>
+    <p>動作計數、錄影、雲端分析尚未開放——依規格，這些在裝置檢測（G0/G1）通過後的下一個迭代才啟用。</p>
+  </section>
+</main>
+<script type="module" src="./src/main.ts"></script>
+</body>
+</html>

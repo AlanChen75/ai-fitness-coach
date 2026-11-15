@@ -1,0 +1,75 @@
+:root {
+  --bg: #0b1220;
+  --surface: #16233b;
+  --surface-2: #1f3254;
+  --text: #e2e8f0;
+  --text-dim: #94a3b8;
+  --accent: #0ea5e9;
+  --ok: #10b981;
+  --warn: #f59e0b;
+  --fail: #ef4444;
+  --radius: 14px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 17px;
+  line-height: 1.65;
+}
+
+.shell { max-width: 640px; margin: 0 auto; padding: 20px 16px 48px; }
+
+h1 { font-size: 24px; color: var(--accent); margin-bottom: 2px; }
+h2 { font-size: 17px; margin-bottom: 8px; }
+.sub { color: var(--text-dim); font-size: 14px; margin-bottom: 18px; }
+.sub a { color: var(--accent); }
+
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 14px;
+}
+.card p { color: var(--text-dim); font-size: 14px; margin-bottom: 12px; }
+.card.muted { opacity: .75; }
+
+.btn-primary, .btn-secondary {
+  display: block; width: 100%; text-align: center; text-decoration: none;
+  padding: 13px; font-size: 16px; font-weight: 600;
+  border: none; border-radius: 10px; cursor: pointer; min-height: 48px;
+  margin-bottom: 8px;
+}
+.btn-primary { background: var(--accent); color: #06202e; }
+.btn-primary:disabled { opacity: .4; }
+.btn-secondary { background: var(--surface-2); color: var(--text); }
+
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.opt { display: block; color: var(--text-dim); font-size: 14px; margin: 4px 0 10px; }
+
+.status-list { list-style: none; }
+.status-list li { padding: 6px 0; border-bottom: 1px solid var(--surface-2); font-size: 15px; }
+
+.result-table { margin-top: 8px; }
+.result-row {
+  display: flex; justify-content: space-between; gap: 12px;
+  padding: 8px 0; border-bottom: 1px solid var(--surface-2);
+  font-size: 14px;
+}
+.result-row .k { color: var(--text-dim); flex-shrink: 0; }
+.result-row .v { text-align: right; word-break: break-all; }
+.v.ok { color: var(--ok); }
+.v.warn { color: var(--warn); }
+.v.fail { color: var(--fail); }
+
+.video-wrap { position: relative; margin-top: 10px; border-radius: 10px; overflow: hidden; background: #000; }
+.video-wrap video { display: block; width: 100%; }
+.video-wrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+.bench-live {
+  font-variant-numeric: tabular-nums;
+  color: var(--accent); font-size: 15px; margin-top: 8px; min-height: 24px;
+}
