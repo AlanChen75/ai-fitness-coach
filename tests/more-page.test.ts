@@ -68,7 +68,8 @@ describe('Iteration 4a HTML 頁面結構 (T4a.6)', () => {
 
   it('sw.js 升版且 PRECACHE 含 demo.html、不含 figures/', () => {
     const sw = readPage('public/sw.js')
-    expect(sw).toMatch(/CACHE_NAME\s*=\s*['"]fitness-coach-v0\.5\.2['"]/)
+    // 只驗版本化命名格式，不驗死版本號（每次發版都會升版）
+    expect(sw).toMatch(/CACHE_NAME\s*=\s*['"]fitness-coach-v\d+\.\d+\.\d+['"]/)
     const precacheMatch = sw.match(/const PRECACHE = \[([\s\S]*?)\]/)
     expect(precacheMatch).not.toBeNull()
     const precacheBlock = precacheMatch![1]

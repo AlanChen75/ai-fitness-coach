@@ -83,9 +83,22 @@ function interpolatePose(keyframes, phase) {
   const result = {};
 
   for (const k of keySet) {
-    const values = keyframes.map((kf) =>
+    let values = keyframes.map((kf) =>
       kf.pose[k] !== undefined ? kf.pose[k] : keyframes[0].pose[k] || 0
     );
+    // 角度通道走最短旋轉路徑：連續 keyframe 差超過 180 度時 unwrap（加減 360），
+    // 否則 -156 -> +154 這種跨 ±180 的對稱姿勢會被數值直線內插成反向大迴旋
+    // （肢體掃過身體中線）。旋轉渲染對 360 週期不敏感，unwrap 後畫面等價。
+    if (k.endsWith('Angle')) {
+      values = values.reduce((acc, v) => {
+        if (acc.length === 0) return [v];
+        const prev = acc[acc.length - 1];
+        let adjusted = v;
+        while (adjusted - prev > 180) adjusted -= 360;
+        while (adjusted - prev < -180) adjusted += 360;
+        return [...acc, adjusted];
+      }, []);
+    }
     result[k] = pchipScalar(times, values, t);
   }
   return result;
