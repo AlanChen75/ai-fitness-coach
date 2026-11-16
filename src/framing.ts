@@ -13,7 +13,7 @@ export interface FramingRules {
 }
 
 export const DEFAULT_FRAMING_RULES: FramingRules = {
-  rules_version: 'framing-v0.1',
+  rules_version: 'framing-v0.2',
   minVisibility: 0.5,
   marginMin: 0.03,
   marginMax: 0.97,
@@ -105,9 +105,13 @@ export function checkBodyInFrame(
     return { inFrame: false, missing: 'all' }
   }
 
+  // v0.2：每區段「單側可見即可」。側面站位時遠側膝/踝被近側腿遮擋是常態
+  // （2026-11-16 真機 session b37ad7d8：遠側膝 vis 中位數 0.38、遠側踝 0.33，
+  // 雙側 AND 規則讓 345/376 幀判不入鏡，入位引導永遠過不了）。
+  // 指標計算本來就取可見度較高的那一側，單側規則與計數需求一致。
   const regionMissing = (region: FramingRegion): boolean =>
     requiredRegions.includes(region) &&
-    REGION_INDICES[region].some((idx) => !isLandmarkInFrame(landmarks[idx], rules))
+    REGION_INDICES[region].every((idx) => !isLandmarkInFrame(landmarks[idx], rules))
 
   const upperMissing = regionMissing('upper')
   const lowerMissing = regionMissing('knees') || regionMissing('ankles')

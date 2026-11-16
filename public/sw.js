@@ -1,7 +1,7 @@
 'use strict';
 
 // 版本化快取：改版時務必升版號，activate 會清掉舊版
-const CACHE_NAME = 'fitness-coach-v0.4.3';
+const CACHE_NAME = 'fitness-coach-v0.4.4';
 
 // 核心預快取：頁面、模型、manifest。
 // Vite 產出的 hashed JS/CSS 與 wasm 走 runtime cache-first（首次線上載入後即可離線）。

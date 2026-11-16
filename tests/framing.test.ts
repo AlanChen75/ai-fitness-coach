@@ -55,7 +55,7 @@ function makeSideLandmarks(visibility = 0.95): readonly NormalizedLandmark[] {
 describe('Framing & Positioning (R8 / R10)', () => {
   it('T10.1: detects front facing when shoulder x-span is wide', () => {
     const lm = makeFrontLandmarks()
-    expect(DEFAULT_FRAMING_RULES.rules_version).toBe('framing-v0.1')
+    expect(DEFAULT_FRAMING_RULES.rules_version).toBe('framing-v0.2')
     expect(detectFacing(lm)).toBe('front')
     expect(checkBodyInFrame(lm)).toEqual({ inFrame: true, missing: null })
   })
@@ -113,6 +113,20 @@ describe('Framing & Positioning (R8 / R10)', () => {
       inFrame: true,
       missing: null
     })
+  })
+
+  it('T10.3c: far-side occlusion passes — one visible side per region suffices', () => {
+    // 真機側面站位：遠側膝/踝被近側腿遮擋（session b37ad7d8 實測 vis 0.33-0.38）
+    const farSideOccluded = makeSideLandmarks().map((p, idx) =>
+      idx === 25 || idx === 27 ? { ...p, visibility: 0.35 } : p
+    )
+    expect(checkBodyInFrame(farSideOccluded)).toEqual({ inFrame: true, missing: null })
+
+    // 單側肩膀出鏡也不擋（另一側仍在）
+    const oneShoulderOut = makeSideLandmarks().map((p, idx) =>
+      idx === 11 ? { ...p, y: 0.01 } : p
+    )
+    expect(checkBodyInFrame(oneShoulderOut)).toEqual({ inFrame: true, missing: null })
   })
 
   it('T10.4: updatePositioning holds 1200ms for ready and resets on interruption', () => {
