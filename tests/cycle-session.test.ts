@@ -117,7 +117,7 @@ describe('Exercise Session Cycle-to-SetSummary mapping (R18)', () => {
 
     expect(summary.exercise).toBe('march')
     expect(summary.view).toBe('front')
-    expect(summary.rules_version).toBe('march-v0.1')
+    expect(summary.rules_version).toBe('march-v0.2')
     expect(summary.reps).toHaveLength(1)
     expect(summary.reps[0].status).toBe('complete')
     expect(summary.reps[0].metrics.min_knee_angle).toBeNull()

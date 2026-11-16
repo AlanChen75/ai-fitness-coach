@@ -62,16 +62,19 @@ const CALF_RAISE_RULES: CycleRules = {
 }
 
 // v0 限制：以單次最高抬膝幅度計數，不強制左右交替
+// v0.2 門檻由真機實測校準（2026-11-16 Xiaomi 13 Pro session 6c41c6b2）：
+// 站立 lift 約 -0.70，抬到髖部高度峰值 0.25-0.32。v0.1 的 bottom 0.40
+// 幾何上不可達（要求膝高過髖 0.4 軀幹長），導致全部動作 aborted_before_bottom。
 const MARCH_RULES: CycleRules = {
-  rules_version: 'march-v0.1',
+  rules_version: 'march-v0.2',
   direction: 'up',
   thresholdMode: 'absolute',
-  enterThreshold: 0.25,
-  bottomThreshold: 0.4,
-  exitThreshold: 0.15,
+  enterThreshold: -0.35,
+  bottomThreshold: -0.15,
+  exitThreshold: -0.5,
   calibrationMs: 1000,
   minRepMs: 400,
-  minBottomSamples: 3,
+  minBottomSamples: 2,
   maxGapMs: 300,
   invalidResetMs: 1000
 }
