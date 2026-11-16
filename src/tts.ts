@@ -40,6 +40,7 @@ export interface CoachTts {
   announceCalibration(): boolean
   announceInvalid(): boolean
   announceFacing(): boolean
+  announceFacingFront(): boolean
   announceCue(kind: TtsCueKind, text: string): boolean
   stop(): void
 }
@@ -124,6 +125,9 @@ export function createCoachTts(options: CoachTtsOptions = {}): CoachTts {
     },
     announceFacing(): boolean {
       return announceCue('facing', '請側面對鏡頭')
+    },
+    announceFacingFront(): boolean {
+      return announceCue('facing', '請正面對鏡頭')
     },
     announceCue,
     stop(): void {

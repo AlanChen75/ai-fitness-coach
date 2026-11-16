@@ -7,6 +7,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
+        exercises: resolve(__dirname, 'exercises.html'),
         deviceCheck: resolve(__dirname, 'device-check.html'),
         train: resolve(__dirname, 'train.html'),
         review: resolve(__dirname, 'review.html')

@@ -1,6 +1,12 @@
 import './style.css'
 import type { PoseLandmarker } from '@mediapipe/tasks-vision'
 import { getLatestProfile } from './db'
+import {
+  createCycleState,
+  stepCycle,
+  toCycleUiStatus
+} from './engine/cycle-fsm'
+import type { CycleEvent, CycleFsmState, CycleRepEvent } from './engine/cycle-fsm'
 import { extractFeatures } from './engine/features'
 import {
   createRepEngineState,
@@ -15,8 +21,14 @@ import type {
   CameraMetadata,
   NormalizedLandmark,
   PoseSample,
+  SetSummary,
   SquatPhase
 } from './engine/types'
+import { buildCycleSetSummary } from './exercise-session'
+import { EXERCISES, getExercise } from './exercises/catalog'
+import type { ExerciseDef } from './exercises/catalog'
+import { computeMetric } from './exercises/metrics'
+import type { MetricId } from './exercises/metrics'
 import {
   checkBodyInFrame,
   coverTransform,
@@ -50,7 +62,7 @@ const TARGET_INTERVAL_MS = 100
 const CHECKPOINT_INTERVAL_MS = 10_000
 const CHECKPOINT_SAMPLE_THRESHOLD = 100
 const INVALID_WARN_MS = 3000
-const FRONT_FACING_WARN_MS = 3000
+const FACING_WARN_MS = 3000
 const POSE_MODEL_NAME = 'pose_landmarker_lite.task'
 
 const SKELETON: ReadonlyArray<readonly [number, number]> = [
@@ -66,6 +78,13 @@ const ACTIVE_PHASE_LABELS: Record<Exclude<SquatPhase, 'NOT_READY'>, string> = {
   ASCENDING: '起身中'
 }
 
+const METRIC_LABELS: Record<MetricId, string> = {
+  kneeAngle: '膝角',
+  elbowAngle: '肘角',
+  shoulderRise: '肩升',
+  kneeLift: '抬膝'
+}
+
 function $(sel: string): HTMLElement {
   const el = document.querySelector(sel)
   if (!el) throw new Error(`Missing element: ${sel}`)
@@ -79,7 +98,15 @@ function makeId(): string {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`
 }
 
+function resolveCurrentExercise(): ExerciseDef {
+  const id = new URLSearchParams(window.location.search).get('exercise')?.trim() ?? ''
+  return (id ? getExercise(id) : null) ?? getExercise('squat') ?? EXERCISES[0]
+}
+
+const currentExercise: ExerciseDef = resolveCurrentExercise()
+
 const elTopBand = $('#top-band')
+const elTopExerciseName = $('#top-exercise-name')
 const elTopStatusText = $('#top-status-text')
 const elSetProgress = $('#set-progress')
 const elRepComplete = $('#rep-complete')
@@ -94,10 +121,21 @@ const elVideo = $('#cam') as HTMLVideoElement
 const elOverlay = $('#overlay') as HTMLCanvasElement
 const elTtsToggle = $('#tts-toggle') as HTMLInputElement
 
+const elPreviewOverlay = $('#preview-overlay')
+const elPreviewFigure = $('#preview-figure')
+const elPreviewName = $('#preview-name')
+const elPreviewViewTag = $('#preview-view-tag')
+const elPreviewSteps = $('#preview-steps')
+const elPreviewSafety = $('#preview-safety')
+const btnPreviewStart = $('#btn-preview-start') as HTMLButtonElement
+
 const elGuideOverlay = $('#guide-overlay')
+const elGuideFigure = $('#guide-figure')
+const elGuideTitle = $('#guide-title')
 const elGuideHint = $('#guide-hint')
 const elChkInFrame = $('#chk-in-frame')
 const elChkFacingSide = $('#chk-facing-side')
+const elChkFacingLabel = $('#chk-facing-label')
 const elChkHoldStable = $('#chk-hold-stable')
 const elChkHoldLabel = $('#chk-hold-label')
 
@@ -111,6 +149,7 @@ const btnRestart = $('#btn-restart') as HTMLButtonElement
 const tts = createCoachTts({ enabled: elTtsToggle.checked })
 
 // ---------- 執行期狀態 ----------
+let previewDismissed = false
 let landmarker: PoseLandmarker | null = null
 let facing: 'environment' | 'user' = 'environment'
 let cameraInfo: CameraInfo | null = null
@@ -126,6 +165,9 @@ let sessionId: string | null = null
 let sessionStartedAt: string | null = null
 let completedSets: StoredSet[] = []
 let engineState: RepEngineState | null = null
+let cycleState: CycleFsmState | null = null
+let cycleSetId: string | null = null
+let cycleRepEvents: CycleRepEvent[] = []
 let setStartPerfMs = 0
 let lastSampleTms = -1
 let pendingSamples: PoseSample[] = []
@@ -140,12 +182,34 @@ let sessionPoseEvidenceOk = true
 let cachedDeviceProfileId: string | null = null
 
 let positioningState: PositioningState = createInitialPositioningState()
-let frontFacingSinceMs: number | null = null
+let wrongFacingSinceMs: number | null = null
 let lastInFrame: BodyInFrameResult = { inFrame: false, missing: 'all' }
 let lastFacing: FacingOrientation = 'unknown'
 let lastFrameValid = false
-let lastKneeAngle: number | null = null
+let lastMetricValue: number | null = null
 let lastLandmarkCount = 0
+
+function initExerciseUi(): void {
+  const viewText = currentExercise.view === 'front' ? '正面' : '側面'
+  document.title = `${currentExercise.nameZh}訓練 - AI 健身教練`
+  elTopExerciseName.textContent = currentExercise.nameZh
+
+  elPreviewName.textContent = currentExercise.nameZh
+  elPreviewViewTag.textContent = viewText
+  elPreviewFigure.innerHTML = currentExercise.figureSvg
+  elPreviewSteps.replaceChildren(
+    ...currentExercise.stepsZh.map((step) => {
+      const li = document.createElement('li')
+      li.textContent = step
+      return li
+    })
+  )
+  elPreviewSafety.textContent = currentExercise.safetyZh
+
+  elGuideFigure.innerHTML = currentExercise.figureSvg
+  elGuideTitle.textContent = currentExercise.view === 'front' ? '正面站位準備' : '側面站位準備'
+  elChkFacingLabel.textContent = currentExercise.view === 'front' ? '正面站位' : '側面站位'
+}
 
 function showStatus(msg: string, tone: 'ok' | 'warn' | 'fail' | '' = ''): void {
   elStatusBanner.textContent = msg
@@ -250,11 +314,11 @@ function getFramingPrompt(
     }
     return '請讓全身入鏡（後退一點）'
   }
-  if (bodyFacing === 'front' || bodyFacing === 'oblique') {
-    return '請側面對鏡頭（轉身 90 度）'
-  }
   if (bodyFacing === 'unknown') {
     return '偵測不到人'
+  }
+  if (currentExercise.view === 'front') {
+    return '請正面對鏡頭'
   }
   return '請側面對鏡頭（轉身 90 度）'
 }
@@ -263,6 +327,9 @@ function resolveTopBandState(): { readonly tone: 'neutral' | 'red' | 'yellow' | 
   if (interrupted) {
     return { tone: 'red', text: '訓練已中斷（已保存本地紀錄）' }
   }
+  if (!previewDismissed) {
+    return { tone: 'neutral', text: '請先閱讀動作示範' }
+  }
   if (!cameraInfo || !landmarker) {
     return {
       tone: initFailed ? 'red' : 'neutral',
@@ -270,10 +337,12 @@ function resolveTopBandState(): { readonly tone: 'neutral' | 'red' | 'yellow' | 
     }
   }
 
+  const requiredView = currentExercise.view
+
   if (inSet && engineState) {
     const phase = engineState.fsm.phase
     if (phase === 'NOT_READY') {
-      if (!lastInFrame.inFrame || lastFacing !== 'side') {
+      if (!lastInFrame.inFrame || lastFacing !== requiredView) {
         return { tone: 'red', text: getFramingPrompt(lastInFrame, lastFacing, lastLandmarkCount) }
       }
       return { tone: 'yellow', text: '校準中：請站直不動' }
@@ -284,18 +353,43 @@ function resolveTopBandState(): { readonly tone: 'neutral' | 'red' | 'yellow' | 
     return { tone: 'green', text: `計數中 · ${ACTIVE_PHASE_LABELS[phase]}` }
   }
 
-  if (!lastInFrame.inFrame || lastFacing !== 'side') {
+  if (inSet && cycleState) {
+    const uiStatus = toCycleUiStatus(cycleState.phase)
+    if (uiStatus === 'calibrating') {
+      if (!lastInFrame.inFrame || lastFacing !== requiredView) {
+        return { tone: 'red', text: getFramingPrompt(lastInFrame, lastFacing, lastLandmarkCount) }
+      }
+      return { tone: 'yellow', text: '校準中：請保持起始姿勢' }
+    }
+    if (!lastFrameValid && lastLandmarkCount === 0) {
+      return { tone: 'red', text: '偵測不到人' }
+    }
+    if (uiStatus === 'ready') {
+      return { tone: 'green', text: '準備好了，開始動作' }
+    }
+    return { tone: 'green', text: '計數中' }
+  }
+
+  if (!lastInFrame.inFrame || lastFacing !== requiredView) {
     return { tone: 'red', text: getFramingPrompt(lastInFrame, lastFacing, lastLandmarkCount) }
   }
-  return { tone: 'yellow', text: '入位確認中：請保持側面站穩' }
+  return {
+    tone: 'yellow',
+    text: requiredView === 'front' ? '入位確認中：請保持正面站穩' : '入位確認中：請保持側面站穩'
+  }
 }
 
 function updateGuideOverlay(): void {
-  const showGuide = !inSet && !interrupted
+  elPreviewOverlay.classList.toggle('is-hidden', previewDismissed || interrupted)
+
+  const showGuide = previewDismissed && !inSet && !interrupted
   elGuideOverlay.classList.toggle('is-hidden', !showGuide)
 
+  const requiredView = currentExercise.view
+  const facingMatched = lastFacing === requiredView
+
   elChkInFrame.classList.toggle('passed', lastInFrame.inFrame)
-  elChkFacingSide.classList.toggle('passed', lastFacing === 'side')
+  elChkFacingSide.classList.toggle('passed', facingMatched)
   elChkHoldStable.classList.toggle('passed', positioningState.ready)
 
   if (positioningState.holdStartMs !== null && !positioningState.ready) {
@@ -310,10 +404,13 @@ function updateGuideOverlay(): void {
       : '正在開啟相機與載入姿態模型…'
   } else if (!lastInFrame.inFrame && lastInFrame.missing === 'lower') {
     elGuideHint.textContent = '請後退，讓腳也入鏡'
-  } else if (!lastInFrame.inFrame || lastFacing !== 'side') {
+  } else if (!lastInFrame.inFrame || !facingMatched) {
     elGuideHint.textContent = getFramingPrompt(lastInFrame, lastFacing, lastLandmarkCount)
   } else if (!positioningState.ready) {
-    elGuideHint.textContent = '請保持全身側面站穩，即將自動開始'
+    elGuideHint.textContent =
+      requiredView === 'front'
+        ? '請保持全身正面站穩，即將自動開始'
+        : '請保持全身側面站穩，即將自動開始'
   } else {
     elGuideHint.textContent = '入位完成，開始校準'
   }
@@ -321,28 +418,38 @@ function updateGuideOverlay(): void {
   btnInitCam.classList.toggle('hidden', !initFailed || initInFlight)
 }
 
+function formatMetricReadout(value: number | null): string {
+  const metric: MetricId =
+    currentExercise.engine.kind === 'cycle' ? currentExercise.engine.metric : 'kneeAngle'
+  const label = METRIC_LABELS[metric]
+  if (value === null) return `${label} --`
+  if (metric === 'kneeAngle') {
+    return `${label} ${Math.round(value)}°`
+  }
+  return `${label} ${value.toFixed(2)}`
+}
+
 function updateHud(): void {
   const band = resolveTopBandState()
   elTopBand.className = `top-band tone-${band.tone}`
   elTopStatusText.textContent = band.text
 
-  if (!engineState) {
+  const activeReps = engineState?.reps ?? cycleState?.reps ?? null
+  if (!activeReps) {
     elRepComplete.textContent = '0'
     elRepUncertain.textContent = '0'
     elSetProgress.textContent = sessionId
       ? `準備下一組 · 已完成 ${completedSets.length} 組`
       : '尚未開始 · 已完成 0 組'
   } else {
-    const completeCount = engineState.reps.filter((r) => r.status === 'complete').length
-    const uncertainCount = engineState.reps.filter((r) => r.status === 'uncertain').length
+    const completeCount = activeReps.filter((r) => r.status === 'complete').length
+    const uncertainCount = activeReps.filter((r) => r.status === 'uncertain').length
     elRepComplete.textContent = String(completeCount)
     elRepUncertain.textContent = String(uncertainCount)
     elSetProgress.textContent = `第 ${completedSets.length + 1} 組 · 已完成 ${completedSets.length} 組`
   }
 
-  elKneeAngleLive.textContent =
-    lastKneeAngle !== null ? `膝角 ${Math.round(lastKneeAngle)}°` : '膝角 --'
-
+  elKneeAngleLive.textContent = formatMetricReadout(lastMetricValue)
   updateGuideOverlay()
 }
 
@@ -433,6 +540,31 @@ function buildConsent(): StoredConsentMetadata {
   }
 }
 
+function currentRulesVersion(): string {
+  return currentExercise.engine.kind === 'cycle'
+    ? currentExercise.engine.rules.rules_version
+    : DEFAULT_SQUAT_RULES.rules_version
+}
+
+function buildActiveSetSummary(): { readonly setId: string; readonly summary: SetSummary } | null {
+  if (engineState) {
+    return { setId: engineState.setId, summary: getSetSummary(engineState) }
+  }
+  if (cycleState && cycleSetId) {
+    return {
+      setId: cycleSetId,
+      summary: buildCycleSetSummary({
+        setId: cycleSetId,
+        exercise: currentExercise,
+        state: cycleState,
+        reps: cycleRepEvents,
+        idFactory: makeId
+      })
+    }
+  }
+  return null
+}
+
 async function flushPendingSamples(activeSessionId: string, activeSetId: string): Promise<boolean> {
   if (pendingSamples.length === 0) return currentSetOpfsOk
   const batch = pendingSamples
@@ -465,7 +597,7 @@ async function buildStoredSession(
     deviceProfileId,
     startedAt,
     poseModel: POSE_MODEL_NAME,
-    rulesVersion: DEFAULT_SQUAT_RULES.rules_version,
+    rulesVersion: currentRulesVersion(),
     camera: readCameraMetadata(),
     consent: buildConsent(),
     sets
@@ -482,11 +614,12 @@ async function buildStoredSession(
 
 async function saveCheckpointSession(isInterrupted: boolean, endedAt: string | null): Promise<void> {
   if (!sessionId) return
-  const activeSetSnapshot: StoredSet[] = engineState
+  const active = buildActiveSetSummary()
+  const activeSetSnapshot: StoredSet[] = active
     ? [
         toStoredSet(
-          getSetSummary(engineState),
-          currentSetOpfsOk ? buildPoseFileRef(sessionId, engineState.setId) : null
+          active.summary,
+          currentSetOpfsOk ? buildPoseFileRef(sessionId, active.setId) : null
         )
       ]
     : []
@@ -536,29 +669,86 @@ function handleEventsForTts(
   }
 }
 
+function handleCycleEventsForTts(
+  prevState: CycleFsmState,
+  nextState: CycleFsmState,
+  events: readonly CycleEvent[],
+  now: number,
+  frameValid: boolean
+): void {
+  if (frameValid) {
+    invalidSinceMs = null
+  } else if (invalidSinceMs === null) {
+    invalidSinceMs = now
+  }
+
+  for (const ev of events) {
+    if (ev.type === 'state_change') {
+      if (ev.from === 'NOT_READY' && ev.to === 'READY') {
+        tts.announceCalibration()
+      } else if (ev.reason === 'invalid_streak_exceeded') {
+        tts.announceInvalid()
+      }
+      continue
+    }
+    if (ev.type === 'rep_complete') {
+      const completeCount = nextState.reps.filter((r) => r.status === 'complete').length
+      tts.announceRep(completeCount)
+    }
+  }
+
+  const prevComplete = prevState.reps.filter((r) => r.status === 'complete').length
+  const nextComplete = nextState.reps.filter((r) => r.status === 'complete').length
+  if (
+    prevComplete === nextComplete &&
+    nextState.phase === 'NOT_READY' &&
+    invalidSinceMs !== null &&
+    now - invalidSinceMs >= INVALID_WARN_MS
+  ) {
+    tts.announceInvalid()
+  }
+}
+
 function handleGuidanceFrame(
   landmarks: readonly NormalizedLandmark[],
   now: number
 ): void {
-  const preview = extractFeatures(landmarks)
-  lastFrameValid = preview.valid
-  lastKneeAngle = preview.kneeAngle
-  renderSkeletonOverlay(landmarks, preview.valid)
+  if (currentExercise.engine.kind === 'cycle') {
+    const preview = computeMetric(currentExercise.engine.metric, landmarks)
+    lastFrameValid = preview.valid
+    lastMetricValue = preview.value
+  } else {
+    const preview = extractFeatures(landmarks)
+    lastFrameValid = preview.valid
+    lastMetricValue = preview.kneeAngle
+  }
+  renderSkeletonOverlay(landmarks, lastFrameValid)
 
+  const requiredView = currentExercise.view
+  // framing.updatePositioning 僅檢查 'side'，正面動作先將符合目標視角的結果映射過去沿用同一穩定計時規則
+  const effectiveFacing: FacingOrientation = lastFacing === requiredView ? 'side' : 'unknown'
   positioningState = updatePositioning(
     positioningState,
-    { inFrame: lastInFrame.inFrame, facing: lastFacing },
+    { inFrame: lastInFrame.inFrame, facing: effectiveFacing },
     now
   )
 
-  if (lastFacing === 'front') {
-    if (frontFacingSinceMs === null) {
-      frontFacingSinceMs = now
-    } else if (now - frontFacingSinceMs >= FRONT_FACING_WARN_MS) {
-      tts.announceCue('facing', '請側面對鏡頭')
+  const wrongFacing =
+    requiredView === 'side'
+      ? lastFacing === 'front'
+      : lastFacing === 'side' || lastFacing === 'oblique'
+  if (wrongFacing) {
+    if (wrongFacingSinceMs === null) {
+      wrongFacingSinceMs = now
+    } else if (now - wrongFacingSinceMs >= FACING_WARN_MS) {
+      if (requiredView === 'front') {
+        tts.announceFacingFront()
+      } else {
+        tts.announceFacing()
+      }
     }
   } else {
-    frontFacingSinceMs = null
+    wrongFacingSinceMs = null
   }
 
   updateHud()
@@ -588,7 +778,8 @@ function stepFrame(now: number): void {
     lastInFrame = checkBodyInFrame(landmarks)
     lastFacing = detectFacing(landmarks)
 
-    if (!inSet || !engineState || !sessionId) {
+    const hasActiveSet = Boolean(inSet && sessionId && (engineState || (cycleState && cycleSetId)))
+    if (!hasActiveSet || !sessionId) {
       handleGuidanceFrame(landmarks, now)
       return
     }
@@ -597,32 +788,64 @@ function stepFrame(now: number): void {
     const t_ms = lastSampleTms >= 0 ? Math.max(lastSampleTms + 1, rawTms) : rawTms
     lastSampleTms = t_ms
 
-    const prevState = engineState
-    const res = processSample(prevState, {
-      t_ms,
-      landmarks,
-      valid: landmarks.length > 0
-    })
-    engineState = res.state
-    lastFrameValid = res.features.valid
-    lastKneeAngle = res.features.kneeAngle
+    let activeSetId: string | null = null
 
-    renderSkeletonOverlay(landmarks, res.features.valid)
+    if (currentExercise.engine.kind === 'squat' && engineState) {
+      const prevState = engineState
+      const res = processSample(prevState, {
+        t_ms,
+        landmarks,
+        valid: landmarks.length > 0
+      })
+      engineState = res.state
+      activeSetId = engineState.setId
+      lastFrameValid = res.features.valid
+      lastMetricValue = res.features.kneeAngle
 
-    pendingSamples.push({
-      t_ms,
-      landmarks,
-      valid: res.features.valid
-    })
+      renderSkeletonOverlay(landmarks, res.features.valid)
+      pendingSamples.push({
+        t_ms,
+        landmarks,
+        valid: res.features.valid
+      })
 
-    handleEventsForTts(prevState, engineState, res.events, now, res.features.valid)
+      handleEventsForTts(prevState, engineState, res.events, now, res.features.valid)
+    } else if (currentExercise.engine.kind === 'cycle' && cycleState && cycleSetId) {
+      const prevState = cycleState
+      const metricSample = computeMetric(currentExercise.engine.metric, landmarks)
+      const res = stepCycle(
+        prevState,
+        { t_ms, value: metricSample.value, valid: metricSample.valid },
+        currentExercise.engine.rules
+      )
+      cycleState = res.state
+      activeSetId = cycleSetId
+      lastFrameValid = metricSample.valid
+      lastMetricValue = metricSample.value
+
+      for (const ev of res.events) {
+        if (ev.type === 'rep_complete' || ev.type === 'rep_uncertain') {
+          cycleRepEvents.push(ev)
+        }
+      }
+
+      renderSkeletonOverlay(landmarks, metricSample.valid)
+      pendingSamples.push({
+        t_ms,
+        landmarks,
+        valid: metricSample.valid
+      })
+
+      handleCycleEventsForTts(prevState, cycleState, res.events, now, metricSample.valid)
+    }
+
     updateHud()
 
     if (
-      pendingSamples.length >= CHECKPOINT_SAMPLE_THRESHOLD ||
-      (now - lastCheckpointAt >= CHECKPOINT_INTERVAL_MS && pendingSamples.length > 0)
+      activeSetId &&
+      (pendingSamples.length >= CHECKPOINT_SAMPLE_THRESHOLD ||
+        (now - lastCheckpointAt >= CHECKPOINT_INTERVAL_MS && pendingSamples.length > 0))
     ) {
-      const activeSetId = engineState.setId
       void flushPendingSamples(sessionId, activeSetId).then(() => saveCheckpointSession(false, null))
     }
   } catch (err) {
@@ -697,7 +920,7 @@ async function switchCamera(): Promise<void> {
   facing = facing === 'environment' ? 'user' : 'environment'
   elCamWrap.classList.toggle('mirrored', facing === 'user')
   positioningState = createInitialPositioningState()
-  frontFacingSinceMs = null
+  wrongFacingSinceMs = null
   try {
     detachTrackListener()
     cameraInfo = await startCamera(elVideo, facing)
@@ -730,7 +953,18 @@ async function startSet(): Promise<void> {
     }
 
     const setId = makeId()
-    engineState = createRepEngineState({ setId, idFactory: makeId })
+    if (currentExercise.engine.kind === 'cycle') {
+      engineState = null
+      cycleSetId = setId
+      cycleState = createCycleState(currentExercise.engine.rules)
+      cycleRepEvents = []
+    } else {
+      cycleState = null
+      cycleSetId = null
+      cycleRepEvents = []
+      engineState = createRepEngineState({ setId, idFactory: makeId })
+    }
+
     setStartPerfMs = performance.now()
     lastSampleTms = -1
     pendingSamples = []
@@ -748,15 +982,19 @@ async function startSet(): Promise<void> {
 }
 
 async function finalizeCurrentSet(): Promise<void> {
-  if (!engineState || !sessionId) return
+  if (!sessionId) return
+  const active = buildActiveSetSummary()
+  if (!active) return
+
   inSet = false
-  const currentEngine = engineState
-  const currentSetId = currentEngine.setId
-  const opfsOk = await flushPendingSamples(sessionId, currentSetId)
-  const summary = getSetSummary(currentEngine)
-  const poseRef = opfsOk ? buildPoseFileRef(sessionId, currentSetId) : null
-  completedSets = [...completedSets, toStoredSet(summary, poseRef)]
+  const opfsOk = await flushPendingSamples(sessionId, active.setId)
+  const poseRef = opfsOk ? buildPoseFileRef(sessionId, active.setId) : null
+  completedSets = [...completedSets, toStoredSet(active.summary, poseRef)]
+
   engineState = null
+  cycleState = null
+  cycleSetId = null
+  cycleRepEvents = []
   await saveCheckpointSession(false, null)
 }
 
@@ -765,7 +1003,7 @@ async function endSet(): Promise<void> {
   btnEndSet.disabled = true
   await finalizeCurrentSet()
   positioningState = createInitialPositioningState()
-  frontFacingSinceMs = null
+  wrongFacingSinceMs = null
   showStatus(`第 ${completedSets.length} 組已結束並保存，回到入位準備。`, 'ok')
   updateHud()
   syncButtons()
@@ -804,7 +1042,7 @@ async function triggerInterrupt(reasonLabel: string): Promise<void> {
   syncButtons()
 
   if (sessionId) {
-    const activeSetId = engineState?.setId
+    const activeSetId = engineState?.setId ?? cycleSetId
     if (activeSetId) {
       await flushPendingSamples(sessionId, activeSetId)
     }
@@ -832,6 +1070,9 @@ function restartTraining(): void {
   sessionStartedAt = null
   completedSets = []
   engineState = null
+  cycleState = null
+  cycleSetId = null
+  cycleRepEvents = []
   pendingSamples = []
   lastSampleTms = -1
   invalidSinceMs = null
@@ -841,11 +1082,11 @@ function restartTraining(): void {
   sessionPoseEvidenceOk = true
   currentSetOpfsOk = true
   positioningState = createInitialPositioningState()
-  frontFacingSinceMs = null
+  wrongFacingSinceMs = null
   lastInFrame = { inFrame: false, missing: 'all' }
   lastFacing = 'unknown'
   lastFrameValid = false
-  lastKneeAngle = null
+  lastMetricValue = null
   lastLandmarkCount = 0
 
   elInterruptBanner.classList.add('hidden')
@@ -855,9 +1096,18 @@ function restartTraining(): void {
   void initCameraAndModel()
 }
 
+function dismissPreviewAndInit(): void {
+  if (previewDismissed) return
+  previewDismissed = true
+  updateHud()
+  syncButtons()
+  void initCameraAndModel()
+}
+
 elTtsToggle.addEventListener('change', () => {
   tts.setEnabled(elTtsToggle.checked)
 })
+btnPreviewStart.addEventListener('click', dismissPreviewAndInit)
 btnInitCam.addEventListener('click', () => { void initCameraAndModel() })
 btnSkipGuide.addEventListener('click', () => { void startSet() })
 btnSwitchCam.addEventListener('click', () => { void switchCamera() })
@@ -866,6 +1116,6 @@ btnEndSession.addEventListener('click', () => { void endSession() })
 btnRestart.addEventListener('click', restartTraining)
 document.addEventListener('visibilitychange', handleVisibilityChange)
 
+initExerciseUi()
 updateHud()
 syncButtons()
-void initCameraAndModel()

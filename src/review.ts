@@ -1,4 +1,5 @@
 import './style.css'
+import { getExercise } from './exercises/catalog'
 import {
   deleteSession,
   getSession,
@@ -38,6 +39,15 @@ function formatDateTime(iso: string): string {
   if (Number.isNaN(d.getTime())) return iso
   const pad = (n: number) => String(n).padStart(2, '0')
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`
+}
+
+function getExerciseNameZh(exerciseId: string): string {
+  return getExercise(exerciseId)?.nameZh ?? exerciseId
+}
+
+function getSessionExerciseLabel(session: StoredSession): string {
+  const names = Array.from(new Set(session.sets.map((s) => getExerciseNameZh(s.exercise))))
+  return names.length > 0 ? names.join('、') : '未記錄動作'
 }
 
 function summarizeSession(session: StoredSession): {
@@ -105,13 +115,14 @@ function showBanner(msg: string, tone: 'ok' | 'warn' | 'fail'): void {
 
 function renderSessionList(sessions: readonly StoredSession[]): void {
   if (sessions.length === 0) {
-    elList.innerHTML = '<p>尚無訓練紀錄。請先前往 <a href="./train.html" style="color:var(--accent)">訓練頁</a> 開始深蹲訓練。</p>'
+    elList.innerHTML = '<p>尚無訓練紀錄。請先前往 <a href="./exercises.html" style="color:var(--accent)">選擇動作</a> 開始訓練。</p>'
     return
   }
 
   elList.innerHTML = sessions
     .map((s) => {
       const sum = summarizeSession(s)
+      const exerciseLabel = getSessionExerciseLabel(s)
       const selectedClass = s.session_id === selectedSessionId ? ' selected' : ''
       return `
         <button class="session-card-btn${selectedClass}" data-session-id="${escapeHtml(s.session_id)}">
@@ -120,7 +131,7 @@ function renderSessionList(sessions: readonly StoredSession[]): void {
             <span class="badge ${sum.integrityTone}">${escapeHtml(sum.integrityLabel)}</span>
           </div>
           <div class="session-meta">
-            組數 ${s.sets.length} 組 · 完成 ${sum.complete} 下 · 待確認 ${sum.uncertain} 下
+            ${escapeHtml(exerciseLabel)} · 組數 ${s.sets.length} 組 · 完成 ${sum.complete} 下 · 待確認 ${sum.uncertain} 下
           </div>
         </button>
       `
@@ -143,7 +154,7 @@ function renderSetBlock(set: StoredSet, index: number, poseCount: number): strin
     ? '<tr><td colspan="6" style="color:var(--text-dim)">本組無計數 rep</td></tr>'
     : set.reps
         .map((r, i) => {
-          const angle = r.metrics.min_knee_angle !== null
+          const peak = r.metrics.min_knee_angle !== null && r.metrics.min_knee_angle !== undefined
             ? `${Math.round(r.metrics.min_knee_angle)}°`
             : '--'
           const tone = r.status === 'complete' ? 'ok' : 'warn'
@@ -152,7 +163,7 @@ function renderSetBlock(set: StoredSet, index: number, poseCount: number): strin
               <td>${i + 1}</td>
               <td><span class="badge ${tone}">${escapeHtml(r.status)}</span></td>
               <td>${Math.round(r.metrics.tempo_ms)}</td>
-              <td>${escapeHtml(angle)}</td>
+              <td>${escapeHtml(peak)}</td>
               <td>${Math.round(r.quality.tracking_gap_ms)}</td>
               <td>${escapeHtml(r.reason)}</td>
             </tr>
@@ -160,9 +171,13 @@ function renderSetBlock(set: StoredSet, index: number, poseCount: number): strin
         })
         .join('')
 
+  const exerciseName = getExerciseNameZh(set.exercise)
+  const rawView: string = set.view
+  const viewText = rawView === 'front' ? '正面' : rawView === 'side' ? '側面' : rawView
+
   return `
     <div class="card" style="background:var(--surface-2); margin-top:12px;">
-      <h2>第 ${index + 1} 組（${escapeHtml(set.exercise)} / ${escapeHtml(set.view)}）</h2>
+      <h2>第 ${index + 1} 組（${escapeHtml(exerciseName)} / ${escapeHtml(viewText)}）</h2>
       <div class="session-meta">
         樣本 ${set.valid_sample_count}/${set.total_sample_count}（${validPct}） · 總缺口 ${Math.round(set.total_tracking_gap_ms)} ms · OPFS Pose 樣本：${poseCount} 筆
       </div>
@@ -173,7 +188,7 @@ function renderSetBlock(set: StoredSet, index: number, poseCount: number): strin
               <th>序號</th>
               <th>status</th>
               <th>tempo_ms</th>
-              <th>min_knee_angle</th>
+              <th>峰值</th>
               <th>tracking_gap_ms</th>
               <th>reason</th>
             </tr>
@@ -230,6 +245,7 @@ async function openSession(sessionId: string): Promise<void> {
   elDetailSection.classList.remove('hidden')
   elDetail.innerHTML = `
     <div class="result-table">
+      <div class="result-row"><span class="k">動作</span><span class="v">${escapeHtml(getSessionExerciseLabel(session))}</span></div>
       <div class="result-row"><span class="k">Session ID</span><span class="v">${escapeHtml(session.session_id)}</span></div>
       <div class="result-row"><span class="k">開始時間</span><span class="v">${escapeHtml(formatDateTime(session.started_at))}</span></div>
       <div class="result-row"><span class="k">資料狀態</span><span class="v ${sum.integrityTone}">${escapeHtml(sum.integrityLabel)}</span></div>

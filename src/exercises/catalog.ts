@@ -153,7 +153,7 @@ export const EXERCISES: readonly ExerciseDef[] = [
     stepsZh: [
       '正面對鏡頭站穩，上身保持挺直不後仰',
       '輪流將單側膝蓋抬高至接近腰部高度後放下',
-      '依自身節奏穩定交替踏步（v0 不強制左右交替計次）'
+      '依自身節奏穩定交替踏步，每次抬腿都算一下'
     ],
     safetyZh: '身旁可擺放椅子方便隨時輕扶，抬腿高度以骨盆不歪斜為原則',
     figureSvg: MARCH_FIGURE_SVG,
