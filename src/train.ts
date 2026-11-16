@@ -17,6 +17,20 @@ import type {
   PoseSample,
   SquatPhase
 } from './engine/types'
+import {
+  checkBodyInFrame,
+  coverTransform,
+  createInitialPositioningState,
+  DEFAULT_FRAMING_RULES,
+  detectFacing,
+  updatePositioning
+} from './framing'
+import type {
+  BodyInFrameResult,
+  CoverTransform,
+  FacingOrientation,
+  PositioningState
+} from './framing'
 import { loadPose, startCamera } from './pose-benchmark'
 import type { CameraInfo } from './pose-benchmark'
 import {
@@ -36,6 +50,7 @@ const TARGET_INTERVAL_MS = 100
 const CHECKPOINT_INTERVAL_MS = 10_000
 const CHECKPOINT_SAMPLE_THRESHOLD = 100
 const INVALID_WARN_MS = 3000
+const FRONT_FACING_WARN_MS = 3000
 const POSE_MODEL_NAME = 'pose_landmarker_lite.task'
 
 const SKELETON: ReadonlyArray<readonly [number, number]> = [
@@ -44,8 +59,7 @@ const SKELETON: ReadonlyArray<readonly [number, number]> = [
   [23, 25], [25, 27], [24, 26], [26, 28]
 ]
 
-const PHASE_LABELS: Record<SquatPhase, string> = {
-  NOT_READY: '校準中（請站直）',
+const ACTIVE_PHASE_LABELS: Record<Exclude<SquatPhase, 'NOT_READY'>, string> = {
   STANDING: '站立準備',
   DESCENDING: '下蹲中',
   BOTTOM: '蹲底',
@@ -65,13 +79,14 @@ function makeId(): string {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`
 }
 
+const elTopBand = $('#top-band')
+const elTopStatusText = $('#top-status-text')
+const elSetProgress = $('#set-progress')
 const elRepComplete = $('#rep-complete')
 const elRepUncertain = $('#rep-uncertain')
-const elFsmPhase = $('#fsm-phase')
-const elValidRatio = $('#valid-ratio')
-const elSetProgress = $('#set-progress')
-const elLiveInfo = $('#live-info')
+const elKneeAngleLive = $('#knee-angle-live')
 const elInterruptBanner = $('#interrupt-banner')
+const elInterruptMsg = $('#interrupt-msg')
 const elOpfsBanner = $('#opfs-banner')
 const elStatusBanner = $('#status-banner')
 const elCamWrap = $('#cam-wrap')
@@ -79,9 +94,16 @@ const elVideo = $('#cam') as HTMLVideoElement
 const elOverlay = $('#overlay') as HTMLCanvasElement
 const elTtsToggle = $('#tts-toggle') as HTMLInputElement
 
+const elGuideOverlay = $('#guide-overlay')
+const elGuideHint = $('#guide-hint')
+const elChkInFrame = $('#chk-in-frame')
+const elChkFacingSide = $('#chk-facing-side')
+const elChkHoldStable = $('#chk-hold-stable')
+const elChkHoldLabel = $('#chk-hold-label')
+
 const btnInitCam = $('#btn-init-cam') as HTMLButtonElement
+const btnSkipGuide = $('#btn-skip-guide') as HTMLButtonElement
 const btnSwitchCam = $('#btn-switch-cam') as HTMLButtonElement
-const btnStartSet = $('#btn-start-set') as HTMLButtonElement
 const btnEndSet = $('#btn-end-set') as HTMLButtonElement
 const btnEndSession = $('#btn-end-session') as HTMLButtonElement
 const btnRestart = $('#btn-restart') as HTMLButtonElement
@@ -90,10 +112,11 @@ const tts = createCoachTts({ enabled: elTtsToggle.checked })
 
 // ---------- 執行期狀態 ----------
 let landmarker: PoseLandmarker | null = null
-let delegateName = ''
 let facing: 'environment' | 'user' = 'environment'
 let cameraInfo: CameraInfo | null = null
 let trackedVideoTrack: MediaStreamTrack | null = null
+let initInFlight = false
+let initFailed = false
 
 let loopRafId: number | null = null
 let lastInferenceAt = 0
@@ -109,11 +132,20 @@ let pendingSamples: PoseSample[] = []
 let lastCheckpointAt = 0
 let invalidSinceMs: number | null = null
 let inSet = false
+let startingSet = false
 let interrupted = false
 let opfsSupported = true
 let currentSetOpfsOk = true
 let sessionPoseEvidenceOk = true
 let cachedDeviceProfileId: string | null = null
+
+let positioningState: PositioningState = createInitialPositioningState()
+let frontFacingSinceMs: number | null = null
+let lastInFrame: BodyInFrameResult = { inFrame: false, missing: 'all' }
+let lastFacing: FacingOrientation = 'unknown'
+let lastFrameValid = false
+let lastKneeAngle: number | null = null
+let lastLandmarkCount = 0
 
 function showStatus(msg: string, tone: 'ok' | 'warn' | 'fail' | '' = ''): void {
   elStatusBanner.textContent = msg
@@ -125,70 +157,200 @@ function hideStatus(): void {
   elStatusBanner.textContent = ''
 }
 
+function averageVisibility(landmarks: readonly NormalizedLandmark[]): number {
+  if (landmarks.length === 0) return 0
+  let sum = 0
+  for (const p of landmarks) {
+    const v = typeof p.visibility === 'number' && Number.isFinite(p.visibility) ? p.visibility : 0
+    sum += Math.max(0, Math.min(1, v))
+  }
+  return sum / landmarks.length
+}
+
+function renderSkeletonOverlay(
+  landmarks: readonly NormalizedLandmark[],
+  frameValid: boolean
+): void {
+  const viewW = elOverlay.clientWidth || window.innerWidth
+  const viewH = elOverlay.clientHeight || window.innerHeight
+  if (viewW <= 0 || viewH <= 0) return
+
+  const dpr = Math.min(window.devicePixelRatio || 1, 2)
+  const targetW = Math.round(viewW * dpr)
+  const targetH = Math.round(viewH * dpr)
+  if (elOverlay.width !== targetW || elOverlay.height !== targetH) {
+    elOverlay.width = targetW
+    elOverlay.height = targetH
+  }
+
+  const ctx = elOverlay.getContext('2d')
+  if (!ctx) return
+
+  ctx.save()
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+  ctx.clearRect(0, 0, viewW, viewH)
+
+  if (landmarks.length > 0 && elVideo.videoWidth > 0 && elVideo.videoHeight > 0) {
+    const tf = coverTransform(elVideo.videoWidth, elVideo.videoHeight, viewW, viewH)
+    const qualityOk = frameValid && averageVisibility(landmarks) >= DEFAULT_FRAMING_RULES.minVisibility
+    const color = qualityOk ? '#10b981' : '#f59e0b'
+    drawSkeleton(ctx, landmarks, elVideo.videoWidth, elVideo.videoHeight, tf, color)
+  }
+
+  ctx.restore()
+}
+
 function drawSkeleton(
   ctx: CanvasRenderingContext2D,
   lm: readonly NormalizedLandmark[],
-  w: number,
-  h: number
+  videoW: number,
+  videoH: number,
+  tf: CoverTransform,
+  color: string
 ): void {
-  ctx.clearRect(0, 0, w, h)
-  ctx.strokeStyle = '#0ea5e9'
+  ctx.strokeStyle = color
   ctx.lineWidth = 3
+  ctx.lineCap = 'round'
   for (const [a, b] of SKELETON) {
     const pa = lm[a]
     const pb = lm[b]
     if (!pa || !pb) continue
+    if (!Number.isFinite(pa.x) || !Number.isFinite(pa.y) || !Number.isFinite(pb.x) || !Number.isFinite(pb.y)) {
+      continue
+    }
     ctx.beginPath()
-    ctx.moveTo(pa.x * w, pa.y * h)
-    ctx.lineTo(pb.x * w, pb.y * h)
+    ctx.moveTo(pa.x * videoW * tf.scale + tf.offsetX, pa.y * videoH * tf.scale + tf.offsetY)
+    ctx.lineTo(pb.x * videoW * tf.scale + tf.offsetX, pb.y * videoH * tf.scale + tf.offsetY)
     ctx.stroke()
   }
-  ctx.fillStyle = '#10b981'
+
+  ctx.fillStyle = color
   for (const p of lm) {
+    if (!Number.isFinite(p.x) || !Number.isFinite(p.y)) continue
     ctx.beginPath()
-    ctx.arc(p.x * w, p.y * h, 4, 0, Math.PI * 2)
+    ctx.arc(p.x * videoW * tf.scale + tf.offsetX, p.y * videoH * tf.scale + tf.offsetY, 4, 0, Math.PI * 2)
     ctx.fill()
   }
 }
 
+function getFramingPrompt(
+  inFrame: BodyInFrameResult,
+  bodyFacing: FacingOrientation,
+  landmarkCount: number
+): string {
+  if (landmarkCount === 0 || inFrame.missing === 'all') {
+    return '偵測不到人'
+  }
+  if (!inFrame.inFrame) {
+    if (inFrame.missing === 'lower') {
+      return '請讓全身入鏡（後退一點）'
+    }
+    if (inFrame.missing === 'upper') {
+      return '請讓全身入鏡（調整鏡頭高度）'
+    }
+    return '請讓全身入鏡（後退一點）'
+  }
+  if (bodyFacing === 'front' || bodyFacing === 'oblique') {
+    return '請側面對鏡頭（轉身 90 度）'
+  }
+  if (bodyFacing === 'unknown') {
+    return '偵測不到人'
+  }
+  return '請側面對鏡頭（轉身 90 度）'
+}
+
+function resolveTopBandState(): { readonly tone: 'neutral' | 'red' | 'yellow' | 'green'; readonly text: string } {
+  if (interrupted) {
+    return { tone: 'red', text: '訓練已中斷（已保存本地紀錄）' }
+  }
+  if (!cameraInfo || !landmarker) {
+    return {
+      tone: initFailed ? 'red' : 'neutral',
+      text: initFailed ? '相機或模型尚未就緒' : '正在開啟相機與載入模型…'
+    }
+  }
+
+  if (inSet && engineState) {
+    const phase = engineState.fsm.phase
+    if (phase === 'NOT_READY') {
+      if (!lastInFrame.inFrame || lastFacing !== 'side') {
+        return { tone: 'red', text: getFramingPrompt(lastInFrame, lastFacing, lastLandmarkCount) }
+      }
+      return { tone: 'yellow', text: '校準中：請站直不動' }
+    }
+    if (!lastFrameValid && lastLandmarkCount === 0) {
+      return { tone: 'red', text: '偵測不到人' }
+    }
+    return { tone: 'green', text: `計數中 · ${ACTIVE_PHASE_LABELS[phase]}` }
+  }
+
+  if (!lastInFrame.inFrame || lastFacing !== 'side') {
+    return { tone: 'red', text: getFramingPrompt(lastInFrame, lastFacing, lastLandmarkCount) }
+  }
+  return { tone: 'yellow', text: '入位確認中：請保持側面站穩' }
+}
+
+function updateGuideOverlay(): void {
+  const showGuide = !inSet && !interrupted
+  elGuideOverlay.classList.toggle('is-hidden', !showGuide)
+
+  elChkInFrame.classList.toggle('passed', lastInFrame.inFrame)
+  elChkFacingSide.classList.toggle('passed', lastFacing === 'side')
+  elChkHoldStable.classList.toggle('passed', positioningState.ready)
+
+  if (positioningState.holdStartMs !== null && !positioningState.ready) {
+    elChkHoldLabel.textContent = `保持穩定（${(positioningState.heldMs / 1000).toFixed(1)} / 1.2 秒）`
+  } else {
+    elChkHoldLabel.textContent = '保持穩定'
+  }
+
+  if (!cameraInfo || !landmarker) {
+    elGuideHint.textContent = initFailed
+      ? '無法開啟相機或載入模型，請確認權限後重試'
+      : '正在開啟相機與載入姿態模型…'
+  } else if (!lastInFrame.inFrame && lastInFrame.missing === 'lower') {
+    elGuideHint.textContent = '請後退，讓腳也入鏡'
+  } else if (!lastInFrame.inFrame || lastFacing !== 'side') {
+    elGuideHint.textContent = getFramingPrompt(lastInFrame, lastFacing, lastLandmarkCount)
+  } else if (!positioningState.ready) {
+    elGuideHint.textContent = '請保持全身側面站穩，即將自動開始'
+  } else {
+    elGuideHint.textContent = '入位完成，開始校準'
+  }
+
+  btnInitCam.classList.toggle('hidden', !initFailed || initInFlight)
+}
+
 function updateHud(): void {
+  const band = resolveTopBandState()
+  elTopBand.className = `top-band tone-${band.tone}`
+  elTopStatusText.textContent = band.text
+
   if (!engineState) {
     elRepComplete.textContent = '0'
     elRepUncertain.textContent = '0'
-    elValidRatio.textContent = '--'
-    elFsmPhase.textContent = interrupted ? '已中斷' : (landmarker && cameraInfo ? '待機就緒' : '待機')
-    elFsmPhase.className = `phase-badge ${interrupted ? 'not-ready' : 'standing'}`
     elSetProgress.textContent = sessionId
-      ? `組間休息 / 已完成 ${completedSets.length} 組`
-      : '尚未開始 / 0 組'
-    return
+      ? `準備下一組 · 已完成 ${completedSets.length} 組`
+      : '尚未開始 · 已完成 0 組'
+  } else {
+    const completeCount = engineState.reps.filter((r) => r.status === 'complete').length
+    const uncertainCount = engineState.reps.filter((r) => r.status === 'uncertain').length
+    elRepComplete.textContent = String(completeCount)
+    elRepUncertain.textContent = String(uncertainCount)
+    elSetProgress.textContent = `第 ${completedSets.length + 1} 組 · 已完成 ${completedSets.length} 組`
   }
 
-  const completeCount = engineState.reps.filter((r) => r.status === 'complete').length
-  const uncertainCount = engineState.reps.filter((r) => r.status === 'uncertain').length
-  const ratio = engineState.totalSampleCount > 0
-    ? `${Math.round((engineState.validSampleCount / engineState.totalSampleCount) * 100)}%`
-    : '--'
-  const phase = engineState.fsm.phase
+  elKneeAngleLive.textContent =
+    lastKneeAngle !== null ? `膝角 ${Math.round(lastKneeAngle)}°` : '膝角 --'
 
-  elRepComplete.textContent = String(completeCount)
-  elRepUncertain.textContent = String(uncertainCount)
-  elValidRatio.textContent = ratio
-  elFsmPhase.textContent = PHASE_LABELS[phase]
-  elFsmPhase.className =
-    phase === 'NOT_READY'
-      ? 'phase-badge not-ready'
-      : phase === 'STANDING'
-        ? 'phase-badge standing'
-        : 'phase-badge active'
-  elSetProgress.textContent = `第 ${completedSets.length + 1} 組進行中 / 已完成 ${completedSets.length} 組`
+  updateGuideOverlay()
 }
 
 function syncButtons(): void {
   const ready = Boolean(landmarker && cameraInfo && !interrupted)
-  btnInitCam.disabled = inSet
-  btnSwitchCam.disabled = !cameraInfo || inSet || interrupted
-  btnStartSet.disabled = !ready || inSet
+  btnInitCam.disabled = initInFlight || inSet
+  btnSkipGuide.disabled = !ready || inSet || startingSet
+  btnSwitchCam.disabled = !cameraInfo || inSet || interrupted || initInFlight
   btnEndSet.disabled = !inSet || interrupted
   btnEndSession.disabled = !sessionId || interrupted
   btnRestart.classList.toggle('hidden', !interrupted)
@@ -374,6 +536,37 @@ function handleEventsForTts(
   }
 }
 
+function handleGuidanceFrame(
+  landmarks: readonly NormalizedLandmark[],
+  now: number
+): void {
+  const preview = extractFeatures(landmarks)
+  lastFrameValid = preview.valid
+  lastKneeAngle = preview.kneeAngle
+  renderSkeletonOverlay(landmarks, preview.valid)
+
+  positioningState = updatePositioning(
+    positioningState,
+    { inFrame: lastInFrame.inFrame, facing: lastFacing },
+    now
+  )
+
+  if (lastFacing === 'front') {
+    if (frontFacingSinceMs === null) {
+      frontFacingSinceMs = now
+    } else if (now - frontFacingSinceMs >= FRONT_FACING_WARN_MS) {
+      tts.announceCue('facing', '請側面對鏡頭')
+    }
+  } else {
+    frontFacingSinceMs = null
+  }
+
+  updateHud()
+  if (positioningState.ready && !startingSet) {
+    void startSet()
+  }
+}
+
 function stepFrame(now: number): void {
   if (!landmarker || !cameraInfo || interrupted) return
   if (inferenceInFlight || elVideo.readyState < 2) return
@@ -382,11 +575,6 @@ function stepFrame(now: number): void {
   inferenceInFlight = true
   lastInferenceAt = now
   try {
-    if (elOverlay.width !== elVideo.videoWidth || elOverlay.height !== elVideo.videoHeight) {
-      elOverlay.width = elVideo.videoWidth
-      elOverlay.height = elVideo.videoHeight
-    }
-
     const result = landmarker.detectForVideo(elVideo, now)
     const rawLm = result.landmarks?.[0] ?? []
     const landmarks: NormalizedLandmark[] = rawLm.map((p) => ({
@@ -396,22 +584,12 @@ function stepFrame(now: number): void {
       visibility: p.visibility
     }))
 
-    const ctx = elOverlay.getContext('2d')
-    if (ctx) {
-      if (landmarks.length > 0) {
-        drawSkeleton(ctx, landmarks, elOverlay.width, elOverlay.height)
-      } else {
-        ctx.clearRect(0, 0, elOverlay.width, elOverlay.height)
-      }
-    }
+    lastLandmarkCount = landmarks.length
+    lastInFrame = checkBodyInFrame(landmarks)
+    lastFacing = detectFacing(landmarks)
 
     if (!inSet || !engineState || !sessionId) {
-      const preview = extractFeatures(landmarks)
-      if (preview.valid && preview.kneeAngle !== null) {
-        elLiveInfo.textContent = `預覽就緒 · ${preview.side === 'left' ? '左側' : '右側'} · 膝角 ${Math.round(preview.kneeAngle)}°`
-      } else {
-        elLiveInfo.textContent = '預覽中 · 請讓全身側面入鏡'
-      }
+      handleGuidanceFrame(landmarks, now)
       return
     }
 
@@ -426,6 +604,10 @@ function stepFrame(now: number): void {
       valid: landmarks.length > 0
     })
     engineState = res.state
+    lastFrameValid = res.features.valid
+    lastKneeAngle = res.features.kneeAngle
+
+    renderSkeletonOverlay(landmarks, res.features.valid)
 
     pendingSamples.push({
       t_ms,
@@ -434,9 +616,6 @@ function stepFrame(now: number): void {
     })
 
     handleEventsForTts(prevState, engineState, res.events, now, res.features.valid)
-
-    const angleText = res.features.kneeAngle !== null ? `${Math.round(res.features.kneeAngle)}°` : '--'
-    elLiveInfo.textContent = `推論中 · 膝角 ${angleText} · 樣本 ${engineState.totalSampleCount}`
     updateHud()
 
     if (
@@ -471,20 +650,23 @@ function stopLoop(): void {
 }
 
 async function initCameraAndModel(): Promise<void> {
+  if (initInFlight) return
+  initInFlight = true
+  initFailed = false
   hideStatus()
-  btnInitCam.disabled = true
-  elLiveInfo.textContent = '開啟相機與載入模型中…'
+  syncButtons()
+  updateHud()
   elCamWrap.classList.toggle('mirrored', facing === 'user')
 
   try {
     detachTrackListener()
     cameraInfo = await startCamera(elVideo, facing)
     attachTrackListener()
-    elOverlay.width = elVideo.videoWidth
-    elOverlay.height = elVideo.videoHeight
   } catch (err) {
+    initFailed = true
+    initInFlight = false
     showStatus(`相機開啟失敗：${String(err)}`, 'fail')
-    elLiveInfo.textContent = '相機無法開啟'
+    updateHud()
     syncButtons()
     return
   }
@@ -493,69 +675,76 @@ async function initCameraAndModel(): Promise<void> {
     if (!landmarker) {
       const loaded = await loadPose()
       landmarker = loaded.landmarker
-      delegateName = loaded.delegate
     }
     opfsSupported = await isOpfsAvailable()
     if (!opfsSupported) {
       sessionPoseEvidenceOk = false
       elOpfsBanner.classList.remove('hidden')
     }
-    elLiveInfo.textContent = `相機與模型就緒（delegate: ${delegateName}）`
     startLoop()
   } catch (err) {
+    initFailed = true
     showStatus(`模型載入失敗：${String(err)}`, 'fail')
-    elLiveInfo.textContent = '模型載入失敗'
+  } finally {
+    initInFlight = false
   }
   updateHud()
   syncButtons()
 }
 
 async function switchCamera(): Promise<void> {
-  if (inSet || interrupted) return
+  if (inSet || interrupted || initInFlight) return
   facing = facing === 'environment' ? 'user' : 'environment'
   elCamWrap.classList.toggle('mirrored', facing === 'user')
+  positioningState = createInitialPositioningState()
+  frontFacingSinceMs = null
   try {
     detachTrackListener()
     cameraInfo = await startCamera(elVideo, facing)
     attachTrackListener()
-    elOverlay.width = elVideo.videoWidth
-    elOverlay.height = elVideo.videoHeight
-    elLiveInfo.textContent = `已切換為${facing === 'user' ? '前鏡頭（鏡像）' : '後鏡頭'}`
+    hideStatus()
   } catch (err) {
     showStatus(`切換鏡頭失敗：${String(err)}`, 'fail')
   }
+  updateHud()
   syncButtons()
 }
 
 async function startSet(): Promise<void> {
-  if (!landmarker || !cameraInfo || inSet || interrupted) return
+  if (!landmarker || !cameraInfo || inSet || interrupted || startingSet) return
+  startingSet = true
   hideStatus()
-
-  if (!sessionId) {
-    sessionId = makeId()
-    sessionStartedAt = new Date().toISOString()
-    completedSets = []
-    opfsSupported = await isOpfsAvailable()
-    sessionPoseEvidenceOk = opfsSupported
-    if (!opfsSupported) {
-      elOpfsBanner.classList.remove('hidden')
-    }
-    void resolveDeviceProfileId()
-  }
-
-  const setId = makeId()
-  engineState = createRepEngineState({ setId, idFactory: makeId })
-  setStartPerfMs = performance.now()
-  lastSampleTms = -1
-  pendingSamples = []
-  lastCheckpointAt = performance.now()
-  invalidSinceMs = null
-  currentSetOpfsOk = opfsSupported
-  inSet = true
-
-  updateHud()
   syncButtons()
-  startLoop()
+
+  try {
+    if (!sessionId) {
+      sessionId = makeId()
+      sessionStartedAt = new Date().toISOString()
+      completedSets = []
+      opfsSupported = await isOpfsAvailable()
+      sessionPoseEvidenceOk = opfsSupported
+      if (!opfsSupported) {
+        elOpfsBanner.classList.remove('hidden')
+      }
+      void resolveDeviceProfileId()
+    }
+
+    const setId = makeId()
+    engineState = createRepEngineState({ setId, idFactory: makeId })
+    setStartPerfMs = performance.now()
+    lastSampleTms = -1
+    pendingSamples = []
+    lastCheckpointAt = performance.now()
+    invalidSinceMs = null
+    currentSetOpfsOk = opfsSupported
+    inSet = true
+
+    updateHud()
+    startLoop()
+  } finally {
+    startingSet = false
+    syncButtons()
+  }
 }
 
 async function finalizeCurrentSet(): Promise<void> {
@@ -575,7 +764,9 @@ async function endSet(): Promise<void> {
   if (!inSet) return
   btnEndSet.disabled = true
   await finalizeCurrentSet()
-  showStatus(`第 ${completedSets.length} 組已結束並保存。可開始下一組或結束訓練。`, 'ok')
+  positioningState = createInitialPositioningState()
+  frontFacingSinceMs = null
+  showStatus(`第 ${completedSets.length} 組已結束並保存，回到入位準備。`, 'ok')
   updateHud()
   syncButtons()
 }
@@ -584,7 +775,7 @@ async function endSession(): Promise<void> {
   if (!sessionId || interrupted) return
   btnEndSession.disabled = true
   btnEndSet.disabled = true
-  btnStartSet.disabled = true
+  btnSkipGuide.disabled = true
 
   if (inSet) {
     await finalizeCurrentSet()
@@ -607,9 +798,8 @@ async function triggerInterrupt(reasonLabel: string): Promise<void> {
   stopLoop()
   tts.stop()
 
-  elInterruptBanner.textContent = `已中斷（${reasonLabel}）：已立即停止取樣並寫入本地儲存。請按「重新開始」重新訓練，或前往回顧頁查看紀錄。`
+  elInterruptMsg.textContent = `已中斷（${reasonLabel}）：已立即停止取樣並寫入本地儲存。請按「重新開始」重新訓練，或前往回顧頁查看紀錄。`
   elInterruptBanner.classList.remove('hidden')
-  elLiveInfo.textContent = '訓練已中斷'
   updateHud()
   syncButtons()
 
@@ -646,23 +836,31 @@ function restartTraining(): void {
   lastSampleTms = -1
   invalidSinceMs = null
   inSet = false
+  startingSet = false
   interrupted = false
   sessionPoseEvidenceOk = true
   currentSetOpfsOk = true
+  positioningState = createInitialPositioningState()
+  frontFacingSinceMs = null
+  lastInFrame = { inFrame: false, missing: 'all' }
+  lastFacing = 'unknown'
+  lastFrameValid = false
+  lastKneeAngle = null
+  lastLandmarkCount = 0
 
   elInterruptBanner.classList.add('hidden')
   hideStatus()
-  elLiveInfo.textContent = '請重新開啟相機與模型'
   updateHud()
   syncButtons()
+  void initCameraAndModel()
 }
 
 elTtsToggle.addEventListener('change', () => {
   tts.setEnabled(elTtsToggle.checked)
 })
 btnInitCam.addEventListener('click', () => { void initCameraAndModel() })
+btnSkipGuide.addEventListener('click', () => { void startSet() })
 btnSwitchCam.addEventListener('click', () => { void switchCamera() })
-btnStartSet.addEventListener('click', () => { void startSet() })
 btnEndSet.addEventListener('click', () => { void endSet() })
 btnEndSession.addEventListener('click', () => { void endSession() })
 btnRestart.addEventListener('click', restartTraining)
@@ -670,3 +868,4 @@ document.addEventListener('visibilitychange', handleVisibilityChange)
 
 updateHud()
 syncButtons()
+void initCameraAndModel()

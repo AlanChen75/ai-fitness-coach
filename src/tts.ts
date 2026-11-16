@@ -1,5 +1,5 @@
 // R5.4 繁體中文語音播報（含同類提示 cooldown 與不打斷報數設計）
-export type TtsCueKind = 'calibration' | 'invalid'
+export type TtsCueKind = 'calibration' | 'invalid' | 'facing'
 
 export const DEFAULT_CUE_COOLDOWN_MS = 3000
 
@@ -39,6 +39,7 @@ export interface CoachTts {
   announceRep(count: number): boolean
   announceCalibration(): boolean
   announceInvalid(): boolean
+  announceFacing(): boolean
   announceCue(kind: TtsCueKind, text: string): boolean
   stop(): void
 }
@@ -120,6 +121,9 @@ export function createCoachTts(options: CoachTtsOptions = {}): CoachTts {
     },
     announceInvalid(): boolean {
       return announceCue('invalid', '辨識不清，請調整鏡頭')
+    },
+    announceFacing(): boolean {
+      return announceCue('facing', '請側面對鏡頭')
     },
     announceCue,
     stop(): void {
