@@ -3,37 +3,68 @@ import { expect, test } from '@playwright/test'
 // 假相機提供合成畫面（無人體），所以入位清單不會通過——
 // 快樂路徑改走「跳過引導直接開始」，驗證整條 UI 狀態機到回顧頁無斷點。
 
-test('T4b.5 首頁三個 tier 各 6 張可點卡且無鎖定卡，點弓步蹲進訓練頁且示範卡標題正確', async ({ page }) => {
+test('T4b.5 & 5B.R2 首頁四個 tier 各 6 張可點卡且圖片為 figures/*.gif，點弓步蹲進訓練頁且預覽為 GIF', async ({ page }) => {
   await page.goto('/index.html')
 
   const tabs = page.locator('.tier-tab[role="tab"]')
-  await expect(tabs).toHaveCount(3)
+  await expect(tabs).toHaveCount(4)
   await expect(page.locator('#tab-beginner')).toHaveAttribute('aria-selected', 'true')
   await expect(page.locator('.exercise-card.is-locked')).toHaveCount(0)
 
   const beginnerPanel = page.locator('#panel-beginner')
   await expect(beginnerPanel).toBeVisible()
   await expect(beginnerPanel.locator('a.exercise-card')).toHaveCount(6)
+  await expect(beginnerPanel.locator('.exercise-figure img').first()).toHaveAttribute('src', /figures\/.*\.gif/)
 
-  // 切換中級 / 高階 tab，各有 6 張可點卡
+  // 切換中級 / 高階 / 器械 tab，各有 6 張可點卡，且卡片圖皆指向 figures/
   await page.locator('#tab-intermediate').click()
   await expect(page.locator('#tab-intermediate')).toHaveAttribute('aria-selected', 'true')
   await expect(page.locator('#panel-intermediate')).toBeVisible()
   await expect(page.locator('#panel-beginner')).toBeHidden()
   await expect(page.locator('#panel-intermediate a.exercise-card')).toHaveCount(6)
+  await expect(page.locator('#panel-intermediate .exercise-figure img').first()).toHaveAttribute('src', /figures\/.*\.gif/)
 
   await page.locator('#tab-advanced').click()
   await expect(page.locator('#tab-advanced')).toHaveAttribute('aria-selected', 'true')
   await expect(page.locator('#panel-advanced')).toBeVisible()
   await expect(page.locator('#panel-advanced a.exercise-card')).toHaveCount(6)
+  await expect(page.locator('#panel-advanced .exercise-figure img').first()).toHaveAttribute('src', /figures\/.*\.gif/)
 
-  // 切回中級點「弓步蹲」進訓練頁並驗證示範卡標題
+  await page.locator('#tab-machine').click()
+  await expect(page.locator('#tab-machine')).toHaveAttribute('aria-selected', 'true')
+  await expect(page.locator('#panel-machine')).toBeVisible()
+  await expect(page.locator('#panel-machine a.exercise-card')).toHaveCount(6)
+  await expect(page.locator('#panel-machine .exercise-figure img').first()).toHaveAttribute('src', /figures\/.*\.gif/)
+
+  // 切回中級點「弓步蹲」進訓練頁並驗證示範卡標題與 GIF
   await page.locator('#tab-intermediate').click()
   await page.locator('#panel-intermediate a.exercise-card', { hasText: '弓步蹲' }).click()
   await expect(page).toHaveURL(/train\.html\?exercise=lunge/)
   await expect(page.locator('#preview-overlay')).toBeVisible()
   await expect(page.locator('#preview-name')).toHaveText('弓步蹲')
   await expect(page.locator('#top-exercise-name')).toHaveText('弓步蹲')
+  await expect(page.locator('#preview-figure img')).toHaveAttribute('src', /figures\/lunge\.gif/)
+})
+
+test('5B.R3 點器械卡進 demo.html 顯示名稱、目標肌群、要點與 GIF', async ({ page }) => {
+  await page.goto('/index.html')
+
+  await page.locator('#tab-machine').click()
+  await expect(page.locator('#panel-machine')).toBeVisible()
+  await page.locator('#panel-machine a.exercise-card', { hasText: '滑輪下拉' }).click()
+
+  await expect(page).toHaveURL(/demo\.html\?exercise=lat-pulldown/)
+  await expect(page.locator('#demo-name')).toHaveText('滑輪下拉')
+  await expect(page.locator('#demo-targets')).toContainText('背闊肌')
+  await expect(page.locator('#demo-fig img')).toHaveAttribute('src', /figures\/lat-pulldown\.gif/)
+  const stepCount = await page.locator('#demo-steps li').count()
+  expect(stepCount).toBeGreaterThanOrEqual(3)
+})
+
+test('5B.R4 demoOnly 動作進 train.html 直接被導向 demo.html', async ({ page }) => {
+  await page.goto('/train.html?exercise=lat-pulldown')
+  await expect(page).toHaveURL(/demo\.html\?exercise=lat-pulldown/)
+  await expect(page.locator('#demo-name')).toHaveText('滑輪下拉')
 })
 
 test('T4a.5 exercises.html 自動轉址到 index.html', async ({ page }) => {

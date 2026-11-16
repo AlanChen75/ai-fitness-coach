@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { createCycleState, stepCycle, type CycleRules, type CycleSample } from '../src/engine/cycle-fsm'
 import type { NormalizedLandmark } from '../src/engine/types'
-import { EXERCISES, getExercise } from '../src/exercises/catalog'
+import { EXERCISES, TIER_LABELS, getExercise } from '../src/exercises/catalog'
 import {
   SUPPORTED_METRIC_IDS,
   computeMetric,
@@ -241,10 +241,11 @@ describe('Exercise Metrics & Catalog (R12-R15 T15.7-T15.8)', () => {
     }
   })
 
-  it('T4b.2: catalog 恰 18 筆、各 tier 6 筆、id 唯一、metric 支援、rules_version 前綴與欄位合規', () => {
-    expect(EXERCISES).toHaveLength(18)
+  it('T4b.2 & 5B.R1: catalog 恰 24 筆、各 tier 6 筆、6 筆 demoOnly 含 steps、id 唯一、metric 支援與欄位合規', () => {
+    expect(EXERCISES).toHaveLength(24)
     const ids = EXERCISES.map((e) => e.id)
-    expect(new Set(ids).size).toBe(18)
+    expect(new Set(ids).size).toBe(24)
+    expect(TIER_LABELS.machine).toBe('器械')
 
     const expectedBeginner = [
       'squat',
@@ -270,6 +271,14 @@ describe('Exercise Metrics & Catalog (R12-R15 T15.7-T15.8)', () => {
       'single-leg-rdl',
       'pistol-squat'
     ]
+    const expectedMachine = [
+      'lat-pulldown',
+      'chest-press-machine',
+      'seated-row',
+      'leg-press',
+      'shoulder-press-machine',
+      'leg-extension'
+    ]
 
     expect(EXERCISES.filter((e) => e.tier === 'beginner').map((e) => e.id)).toEqual(
       expectedBeginner
@@ -280,6 +289,13 @@ describe('Exercise Metrics & Catalog (R12-R15 T15.7-T15.8)', () => {
     expect(EXERCISES.filter((e) => e.tier === 'advanced').map((e) => e.id)).toEqual(
       expectedAdvanced
     )
+    expect(EXERCISES.filter((e) => e.tier === 'machine').map((e) => e.id)).toEqual(
+      expectedMachine
+    )
+
+    const demoExercises = EXERCISES.filter((e) => e.demoOnly === true)
+    expect(demoExercises).toHaveLength(6)
+    expect(demoExercises.map((e) => e.id)).toEqual(expectedMachine)
 
     // 準備一組所有關節皆有效且有軀幹長度的合成 landmarks 驗證每個 metricId
     const validLandmarks = makeBaseLandmarks()
@@ -300,10 +316,24 @@ describe('Exercise Metrics & Catalog (R12-R15 T15.7-T15.8)', () => {
 
     for (const ex of EXERCISES) {
       expect(ex.nameZh.trim().length).toBeGreaterThan(0)
-      expect(['beginner', 'intermediate', 'advanced']).toContain(ex.tier)
+      expect(['beginner', 'intermediate', 'advanced', 'machine']).toContain(ex.tier)
       expect(['side', 'front']).toContain(ex.view)
       expect(ex.targetsZh.length).toBeGreaterThanOrEqual(2)
       expect(ex.targetsZh.length).toBeLessThanOrEqual(3)
+
+      if (ex.demoOnly) {
+        expect(ex.tier).toBe('machine')
+        expect(ex.steps).toBeDefined()
+        expect(ex.steps!.length).toBeGreaterThanOrEqual(3)
+        expect(ex.steps!.length).toBeLessThanOrEqual(4)
+        for (const step of ex.steps!) {
+          expect(step.trim().length).toBeGreaterThan(0)
+        }
+        expect(ex.engine.kind).toBe('demo')
+        expect(getExercise(ex.id)).toEqual(ex)
+        continue
+      }
+
       expect(ex.stepsZh.length).toBeGreaterThanOrEqual(2)
       expect(ex.stepsZh.length).toBeLessThanOrEqual(4)
       expect(ex.safetyZh.trim().length).toBeGreaterThan(0)

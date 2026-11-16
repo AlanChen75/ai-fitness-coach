@@ -109,6 +109,9 @@ function resolveCurrentExercise(): ExerciseDef {
 }
 
 const currentExercise: ExerciseDef = resolveCurrentExercise()
+if (currentExercise.demoOnly) {
+  window.location.replace(`./demo.html?exercise=${encodeURIComponent(currentExercise.id)}`)
+}
 
 // 入鏡範圍文案隨動作需求縮放：不需要腳踝的動作不要求全身入鏡（室內距離常不夠）
 const frameScopeText = currentExercise.framingRegions.includes('ankles')
@@ -208,9 +211,19 @@ function initExerciseUi(): void {
   document.title = `${currentExercise.nameZh}訓練 - AI 健身教練`
   elTopExerciseName.textContent = currentExercise.nameZh
 
+  const mountFigureGif = (container: HTMLElement): void => {
+    const img = document.createElement('img')
+    img.src = `./figures/${encodeURIComponent(currentExercise.id)}.gif`
+    img.alt = `${currentExercise.nameZh}示範`
+    img.addEventListener('error', () => {
+      container.innerHTML = currentExercise.figureSvg
+    }, { once: true })
+    container.replaceChildren(img)
+  }
+
   elPreviewName.textContent = currentExercise.nameZh
   elPreviewViewTag.textContent = viewText
-  elPreviewFigure.innerHTML = currentExercise.figureSvg
+  mountFigureGif(elPreviewFigure)
   elPreviewSteps.replaceChildren(
     ...currentExercise.stepsZh.map((step) => {
       const li = document.createElement('li')
@@ -220,7 +233,7 @@ function initExerciseUi(): void {
   )
   elPreviewSafety.textContent = currentExercise.safetyZh
 
-  elGuideFigure.innerHTML = currentExercise.figureSvg
+  mountFigureGif(elGuideFigure)
   elGuideTitle.textContent = currentExercise.view === 'front' ? '正面站位準備' : '側面站位準備'
   elChkFacingLabel.textContent = currentExercise.view === 'front' ? '正面站位' : '側面站位'
   elChkFrameLabel.textContent = `${frameScopeText}入鏡`

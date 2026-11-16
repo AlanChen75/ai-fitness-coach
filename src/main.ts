@@ -5,7 +5,7 @@ import { registerSw } from './sw-register'
 
 registerSw()
 
-const TIER_ORDER: readonly ExerciseTier[] = ['beginner', 'intermediate', 'advanced']
+const TIER_ORDER: readonly ExerciseTier[] = ['beginner', 'intermediate', 'advanced', 'machine']
 
 function escapeHtml(raw: string): string {
   return raw
@@ -22,13 +22,18 @@ function viewLabel(view: ExerciseView): string {
 
 function renderExerciseCard(ex: ExerciseDef): string {
   const targetsLine = ex.targetsZh.join(' · ')
+  const href = ex.demoOnly
+    ? `./demo.html?exercise=${encodeURIComponent(ex.id)}`
+    : `./train.html?exercise=${encodeURIComponent(ex.id)}`
+  const tagText = ex.demoOnly ? '示範' : viewLabel(ex.view)
+  const figAlt = `${ex.nameZh}示範`
 
   return `
-    <a class="exercise-card" href="./train.html?exercise=${encodeURIComponent(ex.id)}">
+    <a class="exercise-card" href="${href}">
       <div class="exercise-card-top">
-        <span class="exercise-view-tag">${escapeHtml(viewLabel(ex.view))}</span>
+        <span class="exercise-view-tag">${escapeHtml(tagText)}</span>
       </div>
-      <div class="exercise-figure">${ex.figureSvg}</div>
+      <div class="exercise-figure"><img src="./figures/${encodeURIComponent(ex.id)}.gif" loading="lazy" alt="${escapeHtml(figAlt)}"></div>
       <div class="exercise-name">${escapeHtml(ex.nameZh)}</div>
       <div class="exercise-targets">${escapeHtml(targetsLine)}</div>
     </a>

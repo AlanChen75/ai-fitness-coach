@@ -1,4 +1,4 @@
-// R13 全級別動作目錄（初級／中級／高階各 6 個，集中管理動作元資料、指標映射與循環引擎門檻）
+// R13 全級別動作目錄（初級／中級／高階／器械各 6 個，集中管理動作元資料、指標映射與循環引擎門檻）
 
 import type { CycleRules } from '../engine/cycle-fsm'
 import type { FramingRegion } from '../framing'
@@ -25,11 +25,19 @@ import {
 } from './figure-specs'
 import type { MetricId } from './metrics'
 
-export type ExerciseTier = 'beginner' | 'intermediate' | 'advanced'
+export type ExerciseTier = 'beginner' | 'intermediate' | 'advanced' | 'machine'
 export type ExerciseView = 'side' | 'front'
+
+export const TIER_LABELS: Record<ExerciseTier, string> = {
+  beginner: '初級',
+  intermediate: '中級',
+  advanced: '高階',
+  machine: '器械'
+}
 
 export type ExerciseEngineConfig =
   | { readonly kind: 'squat' }
+  | { readonly kind: 'demo' }
   | {
       readonly kind: 'cycle'
       readonly metric: MetricId
@@ -41,7 +49,9 @@ export interface ExerciseDef {
   readonly nameZh: string
   readonly tier: ExerciseTier
   readonly view: ExerciseView
+  readonly demoOnly?: boolean
   readonly targetsZh: readonly string[]
+  readonly steps?: readonly string[]
   readonly stepsZh: readonly string[]
   readonly safetyZh: string
   readonly figureSvg: string
@@ -636,6 +646,138 @@ export const EXERCISES: readonly ExerciseDef[] = [
       rules: PISTOL_SQUAT_RULES
     },
     framingRegions: ['upper', 'hips', 'knees', 'ankles']
+  },
+  {
+    id: 'lat-pulldown',
+    nameZh: '滑輪下拉',
+    tier: 'machine',
+    view: 'side',
+    demoOnly: true,
+    targetsZh: ['背闊肌', '二頭肌', '中下斜方肌'],
+    steps: [
+      '調整大腿壓墊高度並穩坐，雙手寬握橫桿',
+      '肩胛下沉帶動手肘向下拉，橫桿拉至鎖骨上方',
+      '控制速度緩慢回放至雙臂伸直，保持軀幹穩定不後仰'
+    ],
+    stepsZh: [
+      '調整大腿壓墊高度並穩坐，雙手寬握橫桿',
+      '肩胛下沉帶動手肘向下拉，橫桿拉至鎖骨上方',
+      '控制速度緩慢回放至雙臂伸直，保持軀幹穩定不後仰'
+    ],
+    safetyZh: '避免身體大幅度後仰借力，下放時保持肩胛穩定不聳肩',
+    figureSvg: '',
+    engine: { kind: 'demo' },
+    framingRegions: []
+  },
+  {
+    id: 'chest-press-machine',
+    nameZh: '坐姿胸推',
+    tier: 'machine',
+    view: 'side',
+    demoOnly: true,
+    targetsZh: ['胸大肌', '前三角肌', '三頭肌'],
+    steps: [
+      '調整座椅高度使握把與胸口中線齊高，背部緊貼椅背',
+      '雙手握把呼氣向前推出，手肘保持微彎不鎖死',
+      '控制力量緩慢回收握把至胸側起始位置，不聳肩'
+    ],
+    stepsZh: [
+      '調整座椅高度使握把與胸口中線齊高，背部緊貼椅背',
+      '雙手握把呼氣向前推出，手肘保持微彎不鎖死',
+      '控制力量緩慢回收握把至胸側起始位置，不聳肩'
+    ],
+    safetyZh: '肩胛骨貼穩椅背，避免推舉時肩膀前引代償',
+    figureSvg: '',
+    engine: { kind: 'demo' },
+    framingRegions: []
+  },
+  {
+    id: 'seated-row',
+    nameZh: '坐姿划船',
+    tier: 'machine',
+    view: 'side',
+    demoOnly: true,
+    targetsZh: ['背闊肌', '菱形肌', '後三角肌'],
+    steps: [
+      '雙腳踩穩前方踏板，挺胸坐直並雙手握住握把',
+      '夾緊肩胛骨帶動手肘向後拉，將握把拉近腹部',
+      '控制回放伸直雙臂，全程保持下背挺直不圓背'
+    ],
+    stepsZh: [
+      '雙腳踩穩前方踏板，挺胸坐直並雙手握住握把',
+      '夾緊肩胛骨帶動手肘向後拉，將握把拉近腹部',
+      '控制回放伸直雙臂，全程保持下背挺直不圓背'
+    ],
+    safetyZh: '勿利用腰部前後甩動借力，動作過程中不聳肩',
+    figureSvg: '',
+    engine: { kind: 'demo' },
+    framingRegions: []
+  },
+  {
+    id: 'leg-press',
+    nameZh: '腿部推蹬',
+    tier: 'machine',
+    view: 'side',
+    demoOnly: true,
+    targetsZh: ['股四頭肌', '臀大肌', '腿後肌群'],
+    steps: [
+      '背部與臀部緊貼斜躺椅墊，雙腳與肩同寬踩在踏板中央',
+      '解開安全鎖後屈膝緩慢下放踏板，至膝關節約九十度',
+      '腳掌踩實發力推直雙腿，推到頂點時膝蓋保持微彎不鎖死'
+    ],
+    stepsZh: [
+      '背部與臀部緊貼斜躺椅墊，雙腳與肩同寬踩在踏板中央',
+      '解開安全鎖後屈膝緩慢下放踏板，至膝關節約九十度',
+      '腳掌踩實發力推直雙腿，推到頂點時膝蓋保持微彎不鎖死'
+    ],
+    safetyZh: '推直時切勿鎖死膝關節，下放到底時臀部不可離開椅墊',
+    figureSvg: '',
+    engine: { kind: 'demo' },
+    framingRegions: []
+  },
+  {
+    id: 'shoulder-press-machine',
+    nameZh: '肩推機',
+    tier: 'machine',
+    view: 'front',
+    demoOnly: true,
+    targetsZh: ['三角肌', '三頭肌', '上斜方肌'],
+    steps: [
+      '調整座椅使握把略高於肩膀，背部貼穩椅背、雙手握把',
+      '核心收緊呼氣將握把向上推起，至雙臂接近伸直不鎖死',
+      '緩慢控制下放回肩膀高度，手肘微朝前減少肩關節壓力'
+    ],
+    stepsZh: [
+      '調整座椅使握把略高於肩膀，背部貼穩椅背、雙手握把',
+      '核心收緊呼氣將握把向上推起，至雙臂接近伸直不鎖死',
+      '緩慢控制下放回肩膀高度，手肘微朝前減少肩關節壓力'
+    ],
+    safetyZh: '避免推舉時腰椎過度反弓，上推不過度聳肩',
+    figureSvg: '',
+    engine: { kind: 'demo' },
+    framingRegions: []
+  },
+  {
+    id: 'leg-extension',
+    nameZh: '腿部伸展',
+    tier: 'machine',
+    view: 'side',
+    demoOnly: true,
+    targetsZh: ['股四頭肌', '膝關節穩定'],
+    steps: [
+      '調整椅背使膝關節對齊器械轉軸，腳墊滾筒置於腳踝上方',
+      '雙手握住兩側輔助把手穩定骨盆，股四頭肌發力伸直小腿',
+      '在水平頂點短暫停留收縮後，緩慢控制下放回垂直起始位置'
+    ],
+    stepsZh: [
+      '調整椅背使膝關節對齊器械轉軸，腳墊滾筒置於腳踝上方',
+      '雙手握住兩側輔助把手穩定骨盆，股四頭肌發力伸直小腿',
+      '在水平頂點短暫停留收縮後，緩慢控制下放回垂直起始位置'
+    ],
+    safetyZh: '下放時勿讓配重片重撞，避免用甩腿慣性踢起',
+    figureSvg: '',
+    engine: { kind: 'demo' },
+    framingRegions: []
   }
 ]
 

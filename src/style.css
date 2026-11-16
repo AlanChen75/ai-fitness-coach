@@ -548,7 +548,7 @@ body.train-page {
 
 .tier-tabs {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
   margin-bottom: 16px;
   padding: 4px;
@@ -662,6 +662,14 @@ body.train-page {
   margin: 0;
 }
 
+.exercise-figure img {
+  display: block;
+  width: 112px;
+  height: 112px;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
 .exercise-name {
   font-size: 16px;
   font-weight: 700;
@@ -755,6 +763,14 @@ body.train-page {
   margin: 0;
 }
 
+.preview-figure img {
+  display: block;
+  width: 180px;
+  height: 180px;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
 .preview-header {
   display: flex;
   align-items: center;
@@ -799,4 +815,47 @@ body.train-page {
 
 .guide-figure .guide-silhouette {
   margin: 0;
+}
+
+.guide-figure img {
+  display: block;
+  width: 128px;
+  height: 128px;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+/* ---------- 5B 器械示範頁 ---------- */
+.demo-figure {
+  display: flex;
+  justify-content: center;
+  margin: 12px 0 16px;
+}
+
+.demo-figure img {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  border-radius: 12px;
+}
+
+.demo-targets {
+  font-size: 14px;
+  color: var(--accent);
+  margin-bottom: 14px;
+  font-weight: 600;
+}
+
+.demo-steps {
+  margin: 0 0 16px 20px;
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.demo-steps li {
+  margin-bottom: 8px;
 }
