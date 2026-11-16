@@ -1,6 +1,7 @@
 // R13 初級動作目錄（集中管理動作元資料、指標映射與循環引擎門檻）
 
 import type { CycleRules } from '../engine/cycle-fsm'
+import type { FramingRegion } from '../framing'
 import {
   CALF_RAISE_FIGURE_SVG,
   MARCH_FIGURE_SVG,
@@ -31,6 +32,8 @@ export interface ExerciseDef {
   readonly safetyZh: string
   readonly figureSvg: string
   readonly engine: ExerciseEngineConfig
+  /** 入鏡檢查只要求計數指標實際用到的區段；室內距離不足時不會被腳踝卡關 */
+  readonly framingRegions: readonly FramingRegion[]
 }
 
 const SIT_TO_STAND_RULES: CycleRules = {
@@ -107,7 +110,9 @@ export const EXERCISES: readonly ExerciseDef[] = [
     ],
     safetyZh: '膝蓋朝腳尖方向不內扣，感覺吃力時可扶穩固椅背輔助',
     figureSvg: SQUAT_FIGURE_SVG,
-    engine: { kind: 'squat' }
+    engine: { kind: 'squat' },
+    // 膝角度 = 髖-膝-踝 三點，腳踝必要
+    framingRegions: ['upper', 'hips', 'knees', 'ankles']
   },
   {
     id: 'sit-to-stand',
@@ -126,7 +131,9 @@ export const EXERCISES: readonly ExerciseDef[] = [
       kind: 'cycle',
       metric: 'kneeAngle',
       rules: SIT_TO_STAND_RULES
-    }
+    },
+    // 膝角度 = 髖-膝-踝 三點，腳踝必要
+    framingRegions: ['upper', 'hips', 'knees', 'ankles']
   },
   {
     id: 'calf-raise',
@@ -145,7 +152,9 @@ export const EXERCISES: readonly ExerciseDef[] = [
       kind: 'cycle',
       metric: 'shoulderRise',
       rules: CALF_RAISE_RULES
-    }
+    },
+    // shoulderRise 只用肩與軀幹長，下半身不需入鏡
+    framingRegions: ['upper', 'hips']
   },
   {
     id: 'march',
@@ -164,7 +173,9 @@ export const EXERCISES: readonly ExerciseDef[] = [
       kind: 'cycle',
       metric: 'kneeLift',
       rules: MARCH_RULES
-    }
+    },
+    // kneeLift 只用肩、髖、膝，腳踝出鏡不影響計數（室內前鏡頭距離常不夠）
+    framingRegions: ['upper', 'hips', 'knees']
   },
   {
     id: 'wall-pushup',
@@ -183,7 +194,9 @@ export const EXERCISES: readonly ExerciseDef[] = [
       kind: 'cycle',
       metric: 'elbowAngle',
       rules: WALL_PUSHUP_RULES
-    }
+    },
+    // elbowAngle 用肩-肘-腕，下半身不需入鏡
+    framingRegions: ['upper', 'hips']
   }
 ]
 

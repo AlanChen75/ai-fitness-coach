@@ -48,10 +48,18 @@ export interface CoverTransform {
   readonly offsetY: number
 }
 
-const UPPER_INDICES = [11, 12] as const
-const HIP_INDICES = [23, 24] as const
-const LOWER_INDICES = [25, 26, 27, 28] as const
-const ALL_REQUIRED_INDICES = [11, 12, 23, 24, 25, 26, 27, 28] as const
+/** 入鏡檢查的身體區段。各動作只要求計數指標真正用到的區段（室內距離不足時不過度擋人） */
+export type FramingRegion = 'upper' | 'hips' | 'knees' | 'ankles'
+
+export const ALL_FRAMING_REGIONS: readonly FramingRegion[] = ['upper', 'hips', 'knees', 'ankles']
+
+const REGION_INDICES: Record<FramingRegion, readonly number[]> = {
+  upper: [11, 12],
+  hips: [23, 24],
+  knees: [25, 26],
+  ankles: [27, 28]
+}
+
 const FACING_INDICES = [11, 12, 23, 24] as const
 const MIN_LANDMARK_COUNT = 29
 const EPSILON = 1e-6
@@ -79,23 +87,31 @@ function isLandmarkInFrame(lm: NormalizedLandmark | undefined, rules: FramingRul
   )
 }
 
-/** 檢查肩、髖、膝、踝是否全部在有效視域與可見度門檻內 */
+/** 檢查指定區段（預設全身：肩、髖、膝、踝）是否全部在有效視域與可見度門檻內 */
 export function checkBodyInFrame(
   landmarks: readonly NormalizedLandmark[],
-  rules: FramingRules = DEFAULT_FRAMING_RULES
+  rules: FramingRules = DEFAULT_FRAMING_RULES,
+  regions: readonly FramingRegion[] = ALL_FRAMING_REGIONS
 ): BodyInFrameResult {
   if (landmarks.length < MIN_LANDMARK_COUNT) {
     return { inFrame: false, missing: 'all' }
   }
 
-  const anyPresent = ALL_REQUIRED_INDICES.some((idx) => isLandmarkInFrame(landmarks[idx], rules))
+  const requiredRegions = regions.length > 0 ? regions : ALL_FRAMING_REGIONS
+  const requiredIndices = requiredRegions.flatMap((region) => REGION_INDICES[region])
+
+  const anyPresent = requiredIndices.some((idx) => isLandmarkInFrame(landmarks[idx], rules))
   if (!anyPresent) {
     return { inFrame: false, missing: 'all' }
   }
 
-  const upperMissing = UPPER_INDICES.some((idx) => !isLandmarkInFrame(landmarks[idx], rules))
-  const lowerMissing = LOWER_INDICES.some((idx) => !isLandmarkInFrame(landmarks[idx], rules))
-  const hipMissing = HIP_INDICES.some((idx) => !isLandmarkInFrame(landmarks[idx], rules))
+  const regionMissing = (region: FramingRegion): boolean =>
+    requiredRegions.includes(region) &&
+    REGION_INDICES[region].some((idx) => !isLandmarkInFrame(landmarks[idx], rules))
+
+  const upperMissing = regionMissing('upper')
+  const lowerMissing = regionMissing('knees') || regionMissing('ankles')
+  const hipMissing = regionMissing('hips')
 
   if (!upperMissing && !lowerMissing && !hipMissing) {
     return { inFrame: true, missing: null }

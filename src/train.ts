@@ -105,6 +105,13 @@ function resolveCurrentExercise(): ExerciseDef {
 
 const currentExercise: ExerciseDef = resolveCurrentExercise()
 
+// 入鏡範圍文案隨動作需求縮放：不需要腳踝的動作不要求全身入鏡（室內距離常不夠）
+const frameScopeText = currentExercise.framingRegions.includes('ankles')
+  ? '全身'
+  : currentExercise.framingRegions.includes('knees')
+    ? '膝蓋以上'
+    : '上半身'
+
 const elTopBand = $('#top-band')
 const elTopExerciseName = $('#top-exercise-name')
 const elTopStatusText = $('#top-status-text')
@@ -134,6 +141,7 @@ const elGuideFigure = $('#guide-figure')
 const elGuideTitle = $('#guide-title')
 const elGuideHint = $('#guide-hint')
 const elChkInFrame = $('#chk-in-frame')
+const elChkFrameLabel = $('#chk-frame-label')
 const elChkFacingSide = $('#chk-facing-side')
 const elChkFacingLabel = $('#chk-facing-label')
 const elChkHoldStable = $('#chk-hold-stable')
@@ -210,6 +218,8 @@ function initExerciseUi(): void {
   elGuideFigure.innerHTML = currentExercise.figureSvg
   elGuideTitle.textContent = currentExercise.view === 'front' ? '正面站位準備' : '側面站位準備'
   elChkFacingLabel.textContent = currentExercise.view === 'front' ? '正面站位' : '側面站位'
+  elChkFrameLabel.textContent = `${frameScopeText}入鏡`
+  elGuideHint.textContent = `請${viewText}對鏡頭，讓${frameScopeText}完整入鏡`
 }
 
 function showStatus(msg: string, tone: 'ok' | 'warn' | 'fail' | '' = ''): void {
@@ -308,12 +318,12 @@ function getFramingPrompt(
   }
   if (!inFrame.inFrame) {
     if (inFrame.missing === 'lower') {
-      return '請讓全身入鏡（後退一點）'
+      return `請讓${frameScopeText}入鏡（後退一點）`
     }
     if (inFrame.missing === 'upper') {
-      return '請讓全身入鏡（調整鏡頭高度）'
+      return `請讓${frameScopeText}入鏡（調整鏡頭高度）`
     }
-    return '請讓全身入鏡（後退一點）'
+    return `請讓${frameScopeText}入鏡（後退一點）`
   }
   if (bodyFacing === 'unknown') {
     return '偵測不到人'
@@ -404,14 +414,16 @@ function updateGuideOverlay(): void {
       ? '無法開啟相機或載入模型，請確認權限後重試'
       : '正在開啟相機與載入姿態模型…'
   } else if (!lastInFrame.inFrame && lastInFrame.missing === 'lower') {
-    elGuideHint.textContent = '請後退，讓腳也入鏡'
+    elGuideHint.textContent = currentExercise.framingRegions.includes('ankles')
+      ? '請後退，讓腳也入鏡'
+      : '請後退，讓膝蓋也入鏡'
   } else if (!lastInFrame.inFrame || !facingMatched) {
     elGuideHint.textContent = getFramingPrompt(lastInFrame, lastFacing, lastLandmarkCount)
   } else if (!positioningState.ready) {
     elGuideHint.textContent =
       requiredView === 'front'
-        ? '請保持全身正面站穩，即將自動開始'
-        : '請保持全身側面站穩，即將自動開始'
+        ? `請保持${frameScopeText}正面入鏡站穩，即將自動開始`
+        : `請保持${frameScopeText}側面入鏡站穩，即將自動開始`
   } else {
     elGuideHint.textContent = '入位完成，開始校準'
   }
@@ -776,7 +788,7 @@ function stepFrame(now: number): void {
     }))
 
     lastLandmarkCount = landmarks.length
-    lastInFrame = checkBodyInFrame(landmarks)
+    lastInFrame = checkBodyInFrame(landmarks, DEFAULT_FRAMING_RULES, currentExercise.framingRegions)
     lastFacing = detectFacing(landmarks)
 
     const hasActiveSet = Boolean(inSet && sessionId && (engineState || (cycleState && cycleSetId)))

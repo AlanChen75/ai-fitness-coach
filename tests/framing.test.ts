@@ -89,6 +89,32 @@ describe('Framing & Positioning (R8 / R10)', () => {
     expect(checkBodyInFrame(allLow)).toEqual({ inFrame: false, missing: 'all' })
   })
 
+  it('T10.3b: exercise-scoped regions ignore landmarks the metric does not use', () => {
+    // 腳踝出鏡（室內前鏡頭距離不足的真實場景）
+    const anklesOut = makeFrontLandmarks().map((p, idx) =>
+      idx === 27 || idx === 28 ? { ...p, visibility: 0.2 } : p
+    )
+    // 全身需求（深蹲/坐站）仍擋
+    expect(checkBodyInFrame(anklesOut)).toEqual({ inFrame: false, missing: 'lower' })
+    // 踏步只需肩髖膝 -> 通過
+    expect(
+      checkBodyInFrame(anklesOut, DEFAULT_FRAMING_RULES, ['upper', 'hips', 'knees'])
+    ).toEqual({ inFrame: true, missing: null })
+
+    // 膝蓋也出鏡時，踏步仍要擋並回報 lower
+    const kneesOut = anklesOut.map((p, idx) =>
+      idx === 25 || idx === 26 ? { ...p, visibility: 0.2 } : p
+    )
+    expect(
+      checkBodyInFrame(kneesOut, DEFAULT_FRAMING_RULES, ['upper', 'hips', 'knees'])
+    ).toEqual({ inFrame: false, missing: 'lower' })
+    // 上半身需求（牆壁伏地挺身/提踵）不受下半身影響
+    expect(checkBodyInFrame(kneesOut, DEFAULT_FRAMING_RULES, ['upper', 'hips'])).toEqual({
+      inFrame: true,
+      missing: null
+    })
+  })
+
   it('T10.4: updatePositioning holds 1200ms for ready and resets on interruption', () => {
     const s0 = createInitialPositioningState()
     const s1 = updatePositioning(s0, { inFrame: true, facing: 'side' }, 1000)
