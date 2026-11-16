@@ -21,6 +21,18 @@ describe('Iteration 4a HTML 頁面結構 (T4a.6)', () => {
     expect(html).toContain('src="./src/more-page.ts"')
   })
 
+  it('more.html 含安裝到桌面說明（Android 與 iPhone）與分享按鈕', () => {
+    const html = readPage('more.html')
+
+    expect(html).toContain('安裝到手機桌面')
+    expect(html).toContain('加入主畫面')
+    expect(html).toContain('Android')
+    expect(html).toContain('iPhone')
+    expect(html).toContain('id="btn-install"')
+    expect(html).toContain('id="btn-share"')
+    expect(html).toContain('id="share-status"')
+  })
+
   it('index.html 為動作選單首頁，含紀錄與更多連結及三個等級 tab', () => {
     const html = readPage('index.html')
 

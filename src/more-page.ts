@@ -61,6 +61,65 @@ resolveSwVersion()
     getEl('#sw-version').textContent = '讀取失敗'
   })
 
+// ---------- 安裝到桌面（Android beforeinstallprompt 直接安裝） ----------
+
+interface BeforeInstallPromptEvent extends Event {
+  prompt(): Promise<void>
+  readonly userChoice: Promise<{ readonly outcome: 'accepted' | 'dismissed' }>
+}
+
+let deferredInstall: BeforeInstallPromptEvent | null = null
+const btnInstall = getEl('#btn-install') as HTMLButtonElement
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault()
+  deferredInstall = e as BeforeInstallPromptEvent
+  btnInstall.classList.remove('hidden')
+})
+
+btnInstall.addEventListener('click', () => {
+  const evt = deferredInstall
+  if (!evt) return
+  deferredInstall = null
+  btnInstall.classList.add('hidden')
+  void evt.prompt()
+})
+
+// ---------- 分享給朋友 ----------
+
+const SHARE_URL = 'https://alanchen75.github.io/oppo-fitness-coach/'
+const btnShare = getEl('#btn-share') as HTMLButtonElement
+const shareStatus = getEl('#share-status')
+
+function showShareStatus(text: string): void {
+  shareStatus.textContent = text
+  shareStatus.classList.remove('hidden')
+}
+
+btnShare.addEventListener('click', () => {
+  void (async () => {
+    const shareData = {
+      title: 'AI 健身教練',
+      text: '手機就能用的 AI 健身教練，鏡頭即時辨識動作幫你計數',
+      url: SHARE_URL
+    }
+    if (typeof navigator.share === 'function') {
+      try {
+        await navigator.share(shareData)
+        return
+      } catch {
+        // 使用者取消或不支援該內容，退回複製連結
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(SHARE_URL)
+      showShareStatus('連結已複製，貼給朋友即可')
+    } catch {
+      showShareStatus(`複製失敗，請手動複製：${SHARE_URL}`)
+    }
+  })()
+})
+
 getLatestProfile()
   .then((p) => {
     getEl('#profile-state').textContent = p
