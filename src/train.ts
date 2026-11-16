@@ -82,7 +82,12 @@ const METRIC_LABELS: Record<MetricId, string> = {
   kneeAngle: '膝角',
   elbowAngle: '肘角',
   shoulderRise: '肩升',
-  kneeLift: '抬膝'
+  kneeLift: '抬膝',
+  legAbduction: '側抬腿',
+  hipDrop: '降髖',
+  hipLift: '抬臀',
+  wristRaise: '舉手',
+  torsoLean: '前傾'
 }
 
 function $(sel: string): HTMLElement {

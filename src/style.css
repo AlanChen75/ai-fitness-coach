@@ -342,7 +342,9 @@ body.train-page {
   justify-content: center;
   padding: 84px 16px 84px;
   background: rgba(11, 18, 32, 0.62);
-  transition: opacity 0.25s ease, visibility 0.25s ease;
+  /* visibility 不進 transition：主執行緒被推論佔滿時 transition 結束事件會延遲數秒，
+     覆層會卡在可見狀態；立即翻轉 visibility、只淡出 opacity */
+  transition: opacity 0.25s ease;
 }
 
 .guide-overlay.is-hidden {
@@ -721,7 +723,7 @@ body.train-page {
   padding: 96px 16px 84px;
   background: rgba(11, 18, 32, 0.88);
   overflow-y: auto;
-  transition: opacity 0.2s ease, visibility 0.2s ease;
+  transition: opacity 0.2s ease;
 }
 
 .preview-overlay.is-hidden {

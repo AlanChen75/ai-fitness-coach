@@ -5,35 +5,7 @@ import { registerSw } from './sw-register'
 
 registerSw()
 
-const LOCK_ICON_SVG =
-  '<svg class="lock-icon" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">' +
-  '<rect x="5" y="11" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2" />' +
-  '<path d="M8 11V7a4 4 0 0 1 8 0v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />' +
-  '</svg>'
-
-interface TierSectionSpec {
-  readonly tier: ExerciseTier
-  readonly lockedCards: ReadonlyArray<{
-    readonly title: string
-    readonly subtitle?: string
-    readonly wide: boolean
-  }>
-}
-
-const TIER_SECTIONS: readonly TierSectionSpec[] = [
-  {
-    tier: 'beginner',
-    lockedCards: [{ title: '站姿側抬腿（即將推出）', wide: false }]
-  },
-  {
-    tier: 'intermediate',
-    lockedCards: [{ title: '即將推出', subtitle: '線條雕塑 / 體態維持', wide: true }]
-  },
-  {
-    tier: 'advanced',
-    lockedCards: [{ title: '即將推出', subtitle: '進階肌力 / 全身協調', wide: true }]
-  }
-]
+const TIER_ORDER: readonly ExerciseTier[] = ['beginner', 'intermediate', 'advanced']
 
 function escapeHtml(raw: string): string {
   return raw
@@ -63,44 +35,25 @@ function renderExerciseCard(ex: ExerciseDef): string {
   `
 }
 
-function renderLockedCard(title: string, subtitle: string | undefined, wide: boolean): string {
-  const wideClass = wide ? ' is-locked-wide' : ''
-  const subHtml = subtitle
-    ? `<div class="exercise-lock-sub">${escapeHtml(subtitle)}</div>`
-    : ''
-  return `
-    <div class="exercise-card is-locked${wideClass}" aria-disabled="true">
-      <div class="exercise-lock-wrap">
-        ${LOCK_ICON_SVG}
-        <div class="exercise-lock-text">${escapeHtml(title)}</div>
-        ${subHtml}
-      </div>
-    </div>
-  `
-}
-
 function renderCatalog(activeTier: ExerciseTier): void {
   const root = document.querySelector('#exercise-catalog')
   if (!root) throw new Error('Missing #exercise-catalog')
 
-  const html = TIER_SECTIONS.map((sec) => {
-    const items = EXERCISES.filter((ex) => ex.tier === sec.tier)
-    const activeHtml = items.map(renderExerciseCard).join('')
-    const lockedHtml = sec.lockedCards
-      .map((card) => renderLockedCard(card.title, card.subtitle, card.wide))
-      .join('')
-    const hiddenAttr = sec.tier === activeTier ? '' : ' hidden'
+  const html = TIER_ORDER.map((tier) => {
+    const items = EXERCISES.filter((ex) => ex.tier === tier)
+    const cardsHtml = items.map(renderExerciseCard).join('')
+    const hiddenAttr = tier === activeTier ? '' : ' hidden'
 
     return `
       <section
         class="tier-panel"
-        id="panel-${sec.tier}"
+        id="panel-${tier}"
         role="tabpanel"
-        aria-labelledby="tab-${sec.tier}"
-        data-tier="${sec.tier}"${hiddenAttr}
+        aria-labelledby="tab-${tier}"
+        data-tier="${tier}"${hiddenAttr}
       >
         <div class="exercise-grid">
-          ${activeHtml}${lockedHtml}
+          ${cardsHtml}
         </div>
       </section>
     `

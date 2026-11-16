@@ -4,7 +4,28 @@
 import { DEFAULT_MIN_VISIBILITY, extractFeatures } from '../engine/features'
 import type { NormalizedLandmark } from '../engine/types'
 
-export type MetricId = 'kneeAngle' | 'elbowAngle' | 'shoulderRise' | 'kneeLift'
+export type MetricId =
+  | 'kneeAngle'
+  | 'elbowAngle'
+  | 'shoulderRise'
+  | 'kneeLift'
+  | 'legAbduction'
+  | 'hipDrop'
+  | 'hipLift'
+  | 'wristRaise'
+  | 'torsoLean'
+
+export const SUPPORTED_METRIC_IDS: readonly MetricId[] = [
+  'kneeAngle',
+  'elbowAngle',
+  'shoulderRise',
+  'kneeLift',
+  'legAbduction',
+  'hipDrop',
+  'hipLift',
+  'wristRaise',
+  'torsoLean'
+]
 
 export interface MetricSample {
   readonly value: number | null
@@ -65,31 +86,60 @@ function computeAngleDeg(
   return { angle, avgVis }
 }
 
-function computeTorsoLength(
+interface TorsoMidpoints {
+  readonly midSX: number
+  readonly midSY: number
+  readonly midHX: number
+  readonly midHY: number
+  readonly torsoLen: number
+}
+
+function getTorsoMidpoints(
   landmarks: readonly NormalizedLandmark[],
-  minVisibility: number,
-  allowSingleSide: boolean
-): number | null {
+  minVisibility: number
+): TorsoMidpoints | null {
   const lShoulder = landmarks[11]
   const rShoulder = landmarks[12]
   const lHip = landmarks[23]
   const rHip = landmarks[24]
 
+  if (
+    !isPointUsable(lShoulder, minVisibility) ||
+    !isPointUsable(rShoulder, minVisibility) ||
+    !isPointUsable(lHip, minVisibility) ||
+    !isPointUsable(rHip, minVisibility)
+  ) {
+    return null
+  }
+
+  const midSX = (lShoulder.x + rShoulder.x) / 2
+  const midSY = (lShoulder.y + rShoulder.y) / 2
+  const midHX = (lHip.x + rHip.x) / 2
+  const midHY = (lHip.y + rHip.y) / 2
+  const torsoLen = Math.hypot(midSX - midHX, midSY - midHY)
+  if (!Number.isFinite(torsoLen) || torsoLen < EPSILON) return null
+
+  return { midSX, midSY, midHX, midHY, torsoLen }
+}
+
+function computeTorsoLength(
+  landmarks: readonly NormalizedLandmark[],
+  minVisibility: number,
+  allowSingleSide: boolean
+): number | null {
+  const dual = getTorsoMidpoints(landmarks, minVisibility)
+  if (dual !== null) return dual.torsoLen
+
+  if (!allowSingleSide) return null
+
+  const lShoulder = landmarks[11]
+  const rShoulder = landmarks[12]
+  const lHip = landmarks[23]
+  const rHip = landmarks[24]
   const hasLS = isPointUsable(lShoulder, minVisibility)
   const hasRS = isPointUsable(rShoulder, minVisibility)
   const hasLH = isPointUsable(lHip, minVisibility)
   const hasRH = isPointUsable(rHip, minVisibility)
-
-  if (hasLS && hasRS && hasLH && hasRH) {
-    const midSX = (lShoulder.x + rShoulder.x) / 2
-    const midSY = (lShoulder.y + rShoulder.y) / 2
-    const midHX = (lHip.x + rHip.x) / 2
-    const midHY = (lHip.y + rHip.y) / 2
-    const len = Math.hypot(midSX - midHX, midSY - midHY)
-    return Number.isFinite(len) && len >= EPSILON ? len : null
-  }
-
-  if (!allowSingleSide) return null
 
   if (hasLS && hasLH) {
     const len = Math.hypot(lShoulder.x - lHip.x, lShoulder.y - lHip.y)
@@ -193,6 +243,88 @@ export function kneeLiftMetric(
   return INVALID_METRIC
 }
 
+/** 正面側抬腿外展幅度（max(|ankleX_L - hipX_L|, |ankleX_R - hipX_R|) / torsoLen；雙側 11/12/23/24/27/28 皆需可見） */
+export function legAbductionMetric(
+  landmarks: readonly NormalizedLandmark[],
+  minVisibility: number = DEFAULT_MIN_VISIBILITY
+): MetricSample {
+  const torso = getTorsoMidpoints(landmarks, minVisibility)
+  if (torso === null) return INVALID_METRIC
+
+  const lAnkle = landmarks[27]
+  const rAnkle = landmarks[28]
+  if (!isPointUsable(lAnkle, minVisibility) || !isPointUsable(rAnkle, minVisibility)) {
+    return INVALID_METRIC
+  }
+
+  const leftAbd = Math.abs(lAnkle.x - landmarks[23].x)
+  const rightAbd = Math.abs(rAnkle.x - landmarks[24].x)
+  const value = Math.max(leftAbd, rightAbd) / torso.torsoLen
+  if (!Number.isFinite(value)) return INVALID_METRIC
+  return { value, valid: true }
+}
+
+/** 正面相撲深蹲降髖比例（midHipY / torsoLen；雙側肩髖 11/12/23/24 需可見，搭配 baseline-delta） */
+export function hipDropMetric(
+  landmarks: readonly NormalizedLandmark[],
+  minVisibility: number = DEFAULT_MIN_VISIBILITY
+): MetricSample {
+  const torso = getTorsoMidpoints(landmarks, minVisibility)
+  if (torso === null) return INVALID_METRIC
+
+  const value = torso.midHY / torso.torsoLen
+  if (!Number.isFinite(value)) return INVALID_METRIC
+  return { value, valid: true }
+}
+
+/** 側面躺姿橋式抬臀比例（-(midHipY) / torsoLen；雙側肩髖 11/12/23/24 需可見，搭配 baseline-delta） */
+export function hipLiftMetric(
+  landmarks: readonly NormalizedLandmark[],
+  minVisibility: number = DEFAULT_MIN_VISIBILITY
+): MetricSample {
+  const torso = getTorsoMidpoints(landmarks, minVisibility)
+  if (torso === null) return INVALID_METRIC
+
+  const value = -torso.midHY / torso.torsoLen
+  if (!Number.isFinite(value)) return INVALID_METRIC
+  return { value, valid: true }
+}
+
+/** 正面雙手上舉高度（((shoulderY_L - wristY_L) + (shoulderY_R - wristY_R)) / 2 / torsoLen；雙側 11/12/15/16/23/24 皆需可見） */
+export function wristRaiseMetric(
+  landmarks: readonly NormalizedLandmark[],
+  minVisibility: number = DEFAULT_MIN_VISIBILITY
+): MetricSample {
+  const torso = getTorsoMidpoints(landmarks, minVisibility)
+  if (torso === null) return INVALID_METRIC
+
+  const lWrist = landmarks[15]
+  const rWrist = landmarks[16]
+  if (!isPointUsable(lWrist, minVisibility) || !isPointUsable(rWrist, minVisibility)) {
+    return INVALID_METRIC
+  }
+
+  const avgRaise = (landmarks[11].y - lWrist.y + (landmarks[12].y - rWrist.y)) / 2
+  const value = avgRaise / torso.torsoLen
+  if (!Number.isFinite(value)) return INVALID_METRIC
+  return { value, valid: true }
+}
+
+/** 側面軀幹前傾角（肩中點到髖中點向量與鉛直線夾角，度；雙側肩髖 11/12/23/24 需可見，直立約 0 度） */
+export function torsoLeanMetric(
+  landmarks: readonly NormalizedLandmark[],
+  minVisibility: number = DEFAULT_MIN_VISIBILITY
+): MetricSample {
+  const torso = getTorsoMidpoints(landmarks, minVisibility)
+  if (torso === null) return INVALID_METRIC
+
+  const dx = Math.abs(torso.midSX - torso.midHX)
+  const dy = torso.midHY - torso.midSY
+  const angleDeg = (Math.atan2(dx, dy) * 180) / Math.PI
+  if (!Number.isFinite(angleDeg)) return INVALID_METRIC
+  return { value: angleDeg, valid: true }
+}
+
 export function computeMetric(
   metricId: MetricId,
   landmarks: readonly NormalizedLandmark[]
@@ -206,5 +338,15 @@ export function computeMetric(
       return shoulderRiseMetric(landmarks)
     case 'kneeLift':
       return kneeLiftMetric(landmarks)
+    case 'legAbduction':
+      return legAbductionMetric(landmarks)
+    case 'hipDrop':
+      return hipDropMetric(landmarks)
+    case 'hipLift':
+      return hipLiftMetric(landmarks)
+    case 'wristRaise':
+      return wristRaiseMetric(landmarks)
+    case 'torsoLean':
+      return torsoLeanMetric(landmarks)
   }
 }

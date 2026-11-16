@@ -14,7 +14,15 @@ export interface RigPose {
   readonly heelRaise: number
 }
 
-export type FigureProp = 'chair' | 'wall'
+export type FigureProp = 'chair' | 'wall' | 'bench'
+
+/**
+ * 腳掌錨定模式。'leftFoot'（預設）：髖部位移由前（左）腳踝反推，
+ * 保證起始與動作兩姿勢的左腳踝釘在同一個地板點（深蹲、坐站這類腳踩地動作
+ * 不會出現腳掌滑動）；此時 pose.hipY 不參與計算。
+ * 'none'：沿用作者指定的 hipY（躺姿、跪姿、開合跳等腳掌本來就要移動的動作）。
+ */
+export type FigureAnchor = 'leftFoot' | 'none'
 
 export interface FigureSpec {
   readonly id: string
@@ -23,6 +31,9 @@ export interface FigureSpec {
   readonly action: RigPose
   readonly durationMs: number
   readonly prop?: FigureProp
+  readonly rootX?: number
+  readonly bodyScale?: number
+  readonly anchor?: FigureAnchor
 }
 
 const STROKE_ATTR =
@@ -40,6 +51,58 @@ function fmt(n: number): string {
 function hipTransform(pose: RigPose): string {
   const netY = pose.hipY - (pose.heelRaise ?? 0)
   return `translateY(${fmt(netY)}px)`
+}
+
+// 腿段長度（與 renderSideLeg / renderFrontBody 內的線段長一致）
+const SIDE_THIGH_LEN = 34
+const SIDE_SHIN_LEN = 32
+const FRONT_THIGH_LEN = 30
+const FRONT_SHIN_LEN = 36
+const FRONT_LEG_ROOT_X = -10
+
+function limbDir(deg: number): { readonly x: number; readonly y: number } {
+  const rad = (deg * Math.PI) / 180
+  // rotate(deg) 對向下單位向量 (0,1) 的映射
+  return { x: -Math.sin(rad), y: Math.cos(rad) }
+}
+
+/** 左（前）腳踝相對髖部根節點的正向運動學位置（含前視圖腿根偏移） */
+export function leftAnkleOffset(
+  view: 'side' | 'front',
+  pose: RigPose
+): { readonly x: number; readonly y: number } {
+  const thighLen = view === 'side' ? SIDE_THIGH_LEN : FRONT_THIGH_LEN
+  const shinLen = view === 'side' ? SIDE_SHIN_LEN : FRONT_SHIN_LEN
+  const rootX = view === 'side' ? 0 : FRONT_LEG_ROOT_X
+  const thighDir = limbDir(pose.thighL)
+  const shinDir = limbDir(pose.thighL + pose.shinL)
+  return {
+    x: rootX + thighLen * thighDir.x + shinLen * shinDir.x,
+    y: thighLen * thighDir.y + shinLen * shinDir.y
+  }
+}
+
+/** 錨定模式下的髖部位移：讓左腳踝固定在直立姿勢的地板點 */
+export function anchoredHipOffset(
+  view: 'side' | 'front',
+  pose: RigPose
+): { readonly x: number; readonly y: number } {
+  // 直立姿勢（thigh=shin=0）時左腳踝的位置：兩種視圖腿長總和皆為 66
+  const anchorX = view === 'side' ? 0 : FRONT_LEG_ROOT_X
+  const anchorY = 66
+  const ankle = leftAnkleOffset(view, pose)
+  return {
+    x: anchorX - ankle.x,
+    y: anchorY - ankle.y - (pose.heelRaise ?? 0)
+  }
+}
+
+function hipTransformFor(spec: FigureSpec, pose: RigPose): string {
+  if ((spec.anchor ?? 'leftFoot') === 'none') {
+    return hipTransform(pose)
+  }
+  const t = anchoredHipOffset(spec.view, pose)
+  return `translate(${fmt(t.x)}px, ${fmt(t.y)}px)`
 }
 
 function rotateTransform(deg: number): string {
@@ -74,12 +137,35 @@ function buildReducedMotionCss(tracks: readonly AnimatedTrack[]): string {
 
 function renderProp(prop?: FigureProp): string {
   if (prop === 'chair') {
-    return `<path d="M26 82 L26 130 L62 130 M28 130 L28 166 M58 130 L58 166" ${STROKE_ATTR} stroke-width="4" opacity="0.65" />`
+    // 椅面 y=137 對齊 sit-to-stand 坐姿髖部（rootX 70、FK 反推髖落點 x≈32 y≈135）
+    return `<path d="M14 84 L14 137 L48 137 M16 137 L16 166 M46 137 L46 166" ${STROKE_ATTR} stroke-width="4" opacity="0.65" />`
   }
   if (prop === 'wall') {
     return `<line x1="98" y1="16" x2="98" y2="168" ${STROKE_ATTR} stroke-width="6" opacity="0.65" />`
   }
+  if (prop === 'bench') {
+    return `<path d="M12 138 L38 138 M16 138 L16 166 M34 138 L34 166" ${STROKE_ATTR} stroke-width="4" opacity="0.65" />`
+  }
   return ''
+}
+
+function hasSplitLegs(spec: FigureSpec): boolean {
+  const { start, action } = spec
+  return (
+    start.thighL !== start.thighR ||
+    start.shinL !== start.shinR ||
+    action.thighL !== action.thighR ||
+    action.shinL !== action.shinR
+  )
+}
+
+function rootTransformAttr(defaultX: number, defaultY: number, spec: FigureSpec): string {
+  const x = spec.rootX ?? defaultX
+  const scaleSuffix =
+    spec.bodyScale !== undefined && spec.bodyScale !== 1
+      ? ` scale(${fmt(spec.bodyScale)})`
+      : ''
+  return `translate(${fmt(x)}, ${fmt(defaultY)})${scaleSuffix}`
 }
 
 function buildTracks(prefix: string, spec: FigureSpec): readonly AnimatedTrack[] {
@@ -88,8 +174,8 @@ function buildTracks(prefix: string, spec: FigureSpec): readonly AnimatedTrack[]
     {
       cls: `${prefix}-hip`,
       kf: `${prefix}-kf-hip`,
-      from: hipTransform(start),
-      to: hipTransform(action)
+      from: hipTransformFor(spec, start),
+      to: hipTransformFor(spec, action)
     },
     {
       cls: `${prefix}-torso`,
@@ -124,13 +210,31 @@ function buildTracks(prefix: string, spec: FigureSpec): readonly AnimatedTrack[]
   ]
 
   if (view === 'side') {
-    return [
+    const sideTracks: AnimatedTrack[] = [
       ...base,
       {
         cls: `${prefix}-ft-l`,
         kf: `${prefix}-kf-ft-l`,
         from: rotateTransform(footTiltDeg(start)),
         to: rotateTransform(footTiltDeg(action))
+      }
+    ]
+    if (!hasSplitLegs(spec)) {
+      return sideTracks
+    }
+    return [
+      ...sideTracks,
+      {
+        cls: `${prefix}-th-r`,
+        kf: `${prefix}-kf-th-r`,
+        from: rotateTransform(start.thighR),
+        to: rotateTransform(action.thighR)
+      },
+      {
+        cls: `${prefix}-sh-r`,
+        kf: `${prefix}-kf-sh-r`,
+        from: rotateTransform(start.shinR),
+        to: rotateTransform(action.shinR)
       }
     ]
   }
@@ -164,9 +268,32 @@ function buildTracks(prefix: string, spec: FigureSpec): readonly AnimatedTrack[]
   ]
 }
 
-function renderSideBody(prefix: string): string {
+function renderSideLeg(prefix: string, side: 'l' | 'r', opacity?: string): string {
+  const opAttr = opacity ? ` opacity="${opacity}"` : ''
   return [
-    '<g transform="translate(54, 98)">',
+    `<g class="${prefix}-th-${side}"${opAttr}>`,
+    `<line x1="0" y1="0" x2="0" y2="34" ${STROKE_ATTR} stroke-width="5" />`,
+    '<g transform="translate(0, 34)">',
+    `<g class="${prefix}-sh-${side}">`,
+    `<line x1="0" y1="0" x2="0" y2="32" ${STROKE_ATTR} stroke-width="5" />`,
+    '<g transform="translate(0, 32)">',
+    side === 'l'
+      ? `<g class="${prefix}-ft-l"><line x1="0" y1="0" x2="11" y2="0" ${STROKE_ATTR} stroke-width="4.5" /></g>`
+      : `<line x1="0" y1="0" x2="11" y2="0" ${STROKE_ATTR} stroke-width="4.5" />`,
+    '</g>',
+    '</g>',
+    '</g>',
+    '</g>'
+  ].join('')
+}
+
+function renderSideBody(prefix: string, spec: FigureSpec): string {
+  const split = hasSplitLegs(spec)
+  const backLeg = split ? renderSideLeg(prefix, 'r', '0.55') : ''
+  const frontLeg = renderSideLeg(prefix, 'l')
+
+  return [
+    `<g transform="${rootTransformAttr(54, 98, spec)}">`,
     `<g class="${prefix}-hip">`,
     `<g class="${prefix}-torso">`,
     `<line x1="0" y1="0" x2="0" y2="-42" ${STROKE_ATTR} stroke-width="5" />`,
@@ -181,28 +308,17 @@ function renderSideBody(prefix: string): string {
     '</g>',
     '</g>',
     '</g>',
-    `<g class="${prefix}-th-l">`,
-    `<line x1="0" y1="0" x2="0" y2="34" ${STROKE_ATTR} stroke-width="5" />`,
-    '<g transform="translate(0, 34)">',
-    `<g class="${prefix}-sh-l">`,
-    `<line x1="0" y1="0" x2="0" y2="32" ${STROKE_ATTR} stroke-width="5" />`,
-    '<g transform="translate(0, 32)">',
-    `<g class="${prefix}-ft-l">`,
-    `<line x1="0" y1="0" x2="11" y2="0" ${STROKE_ATTR} stroke-width="4.5" />`,
-    '</g>',
-    '</g>',
-    '</g>',
-    '</g>',
-    '</g>',
+    backLeg,
+    frontLeg,
     '</g>',
     '</g>',
     '</g>'
   ].join('')
 }
 
-function renderFrontBody(prefix: string): string {
+function renderFrontBody(prefix: string, spec: FigureSpec): string {
   return [
-    '<g transform="translate(60, 96)">',
+    `<g transform="${rootTransformAttr(60, 96, spec)}">`,
     `<g class="${prefix}-hip">`,
     `<g class="${prefix}-torso">`,
     `<line x1="-10" y1="0" x2="10" y2="0" ${STROKE_ATTR} stroke-width="5" />`,
@@ -262,7 +378,8 @@ export function buildAnimatedFigure(spec: FigureSpec): string {
   const tracks = buildTracks(prefix, spec)
   const css = tracks.map((t) => buildTrackCss(t, durationMs)).join('') + buildReducedMotionCss(tracks)
   const propSvg = renderProp(spec.prop)
-  const bodySvg = spec.view === 'front' ? renderFrontBody(prefix) : renderSideBody(prefix)
+  const bodySvg =
+    spec.view === 'front' ? renderFrontBody(prefix, spec) : renderSideBody(prefix, spec)
   const floorSvg = `<line x1="18" y1="166" x2="102" y2="166" ${STROKE_ATTR} stroke-width="4" opacity="0.5" />`
 
   return [

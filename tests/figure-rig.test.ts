@@ -73,19 +73,20 @@ describe('Figure Rig (R2 T4a.1-T4a.3)', () => {
     expect(namesA.some((n) => namesB.includes(n))).toBe(false)
   })
 
-  it('T4a.3: 5 個現有動作的 figureSvg 皆由 rig 產生且非空、含 animation 且各 id 獨立', () => {
-    expect(EXERCISES).toHaveLength(5)
+  it('T4b.4: 18 個動作的 figureSvg 皆由 rig 產生且非空、含 animation 且各 id 獨立', () => {
+    expect(EXERCISES).toHaveLength(18)
 
     for (const ex of EXERCISES) {
       expect(ex.figureSvg.length).toBeGreaterThan(0)
       expect(ex.figureSvg).toContain('<svg')
+      expect(ex.figureSvg).toContain('viewBox="0 0 120 180"')
       expect(ex.figureSvg).toContain('animation:')
       expect(ex.figureSvg).toContain(`@keyframes rig-${ex.id}-`)
       expect(ex.figureSvg).toContain('prefers-reduced-motion')
     }
   })
 
-  it('front view 包含雙側手臂與雙腿，prop 會渲染對應道具幾何', () => {
+  it('front view 包含雙側手臂與雙腿，prop 會渲染對應道具幾何，side 分腿動作含後側腿', () => {
     const frontSvg = buildAnimatedFigure({
       ...SAMPLE_SPEC,
       id: 'front-test',
@@ -100,7 +101,7 @@ describe('Figure Rig (R2 T4a.1-T4a.3)', () => {
       id: 'chair-test',
       prop: 'chair'
     })
-    expect(chairSvg).toContain('<path d="M26 82')
+    expect(chairSvg).toContain('<path d="M14 84')
 
     const wallSvg = buildAnimatedFigure({
       ...SAMPLE_SPEC,
@@ -108,5 +109,56 @@ describe('Figure Rig (R2 T4a.1-T4a.3)', () => {
       prop: 'wall'
     })
     expect(wallSvg).toContain('x1="98"')
+
+    const benchSvg = buildAnimatedFigure({
+      ...SAMPLE_SPEC,
+      id: 'bench-test',
+      prop: 'bench'
+    })
+    expect(benchSvg).toContain('<path d="M12 138')
+
+    const splitSvg = buildAnimatedFigure({
+      ...SAMPLE_SPEC,
+      id: 'split-test',
+      view: 'side',
+      action: {
+        ...SAMPLE_SPEC.action,
+        thighR: 15,
+        shinR: 60
+      }
+    })
+    expect(splitSvg).toContain('rig-split-test-th-l')
+    expect(splitSvg).toContain('rig-split-test-th-r')
+  })
+})
+
+describe('Foot anchoring invariant (planted feet never slide)', () => {
+  it('anchored specs keep the left ankle at the canonical floor point in both poses', async () => {
+    const specs = await import('../src/exercises/figure-specs')
+    const { anchoredHipOffset, leftAnkleOffset } = await import('../src/exercises/figure-rig')
+    const all = Object.values(specs).filter(
+      (v): v is FigureSpec => typeof v === 'object' && v !== null && 'start' in v && 'action' in v
+    )
+    expect(all.length).toBe(18)
+    for (const spec of all) {
+      if ((spec.anchor ?? 'leftFoot') === 'none') continue
+      for (const pose of [spec.start, spec.action]) {
+        const t = anchoredHipOffset(spec.view, pose)
+        const ankle = leftAnkleOffset(spec.view, pose)
+        const globalX = t.x + ankle.x
+        const globalY = t.y + ankle.y + (pose.heelRaise ?? 0)
+        const anchorX = spec.view === 'side' ? 0 : -10
+        expect(Math.abs(globalX - anchorX), `${spec.id} ankle x`).toBeLessThan(0.01)
+        expect(Math.abs(globalY - 66), `${spec.id} ankle y`).toBeLessThan(0.01)
+      }
+    }
+  })
+
+  it('calf-raise heel raise lifts the body while the toe point stays on the floor line', async () => {
+    const { CALF_RAISE_FIGURE_SPEC } = await import('../src/exercises/figure-specs')
+    const { anchoredHipOffset } = await import('../src/exercises/figure-rig')
+    const start = anchoredHipOffset('side', CALF_RAISE_FIGURE_SPEC.start)
+    const action = anchoredHipOffset('side', CALF_RAISE_FIGURE_SPEC.action)
+    expect(action.y).toBeLessThan(start.y)
   })
 })
