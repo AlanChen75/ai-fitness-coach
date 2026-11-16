@@ -501,7 +501,86 @@ body.train-page {
   accent-color: var(--accent);
 }
 
-/* ---------- R16 動作選單頁 ---------- */
+/* ---------- R16 動作選單頁 & Iteration 4a 首頁 ---------- */
+.home-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.home-title {
+  margin: 0;
+  font-size: 24px;
+  color: var(--accent);
+}
+
+.home-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.home-nav-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--surface-2);
+  color: var(--text);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.home-nav-link:hover,
+.home-nav-link:focus-visible {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.tier-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 4px;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--surface-2);
+}
+
+.tier-tab {
+  min-height: 44px;
+  border: none;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.tier-tab.is-active {
+  background: var(--accent);
+  color: #06202e;
+}
+
+.tier-tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.tier-panel[hidden] {
+  display: none;
+}
+
 .tier-section {
   margin-bottom: 20px;
 }
@@ -540,7 +619,6 @@ body.train-page {
 }
 
 .exercise-card.is-locked {
-  grid-column: 1 / -1;
   opacity: 0.45;
   cursor: default;
   pointer-events: none;
@@ -548,6 +626,10 @@ body.train-page {
   justify-content: center;
   align-items: center;
   text-align: center;
+}
+
+.exercise-card.is-locked-wide {
+  grid-column: 1 / -1;
 }
 
 .exercise-card-top {
@@ -585,6 +667,15 @@ body.train-page {
   text-align: center;
 }
 
+.exercise-targets {
+  font-size: 12px;
+  color: var(--text-dim);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .exercise-chips {
   display: flex;
   flex-wrap: wrap;
@@ -612,6 +703,11 @@ body.train-page {
 .exercise-lock-text {
   font-size: 14px;
   font-weight: 600;
+}
+
+.exercise-lock-sub {
+  font-size: 12px;
+  color: var(--text-dim);
 }
 
 /* ---------- R17.2 訓練頁示範預覽層 ---------- */

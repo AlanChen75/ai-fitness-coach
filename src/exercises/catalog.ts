@@ -2,13 +2,8 @@
 
 import type { CycleRules } from '../engine/cycle-fsm'
 import type { FramingRegion } from '../framing'
-import {
-  CALF_RAISE_FIGURE_SVG,
-  MARCH_FIGURE_SVG,
-  SIT_TO_STAND_FIGURE_SVG,
-  SQUAT_FIGURE_SVG,
-  WALL_PUSHUP_FIGURE_SVG
-} from './figures'
+import { buildAnimatedFigure } from './figure-rig'
+import type { FigureSpec } from './figure-rig'
 import type { MetricId } from './metrics'
 
 export type ExerciseTier = 'beginner' | 'intermediate' | 'advanced'
@@ -96,6 +91,168 @@ const WALL_PUSHUP_RULES: CycleRules = {
   invalidResetMs: 1000
 }
 
+const SQUAT_FIGURE_SPEC: FigureSpec = {
+  id: 'squat',
+  view: 'side',
+  durationMs: 1800,
+  start: {
+    torsoTilt: 0,
+    hipY: 0,
+    thighL: 0,
+    thighR: 0,
+    shinL: 0,
+    shinR: 0,
+    upperArmL: 6,
+    upperArmR: 6,
+    forearmL: -10,
+    forearmR: -10,
+    heelRaise: 0
+  },
+  action: {
+    torsoTilt: 28,
+    hipY: 26,
+    thighL: -103,
+    thighR: -103,
+    shinL: 85,
+    shinR: 85,
+    upperArmL: -95,
+    upperArmR: -95,
+    forearmL: -10,
+    forearmR: -10,
+    heelRaise: 0
+  }
+}
+
+const SIT_TO_STAND_FIGURE_SPEC: FigureSpec = {
+  id: 'sit-to-stand',
+  view: 'side',
+  prop: 'chair',
+  durationMs: 2200,
+  start: {
+    torsoTilt: 8,
+    hipY: 30,
+    thighL: -95,
+    thighR: -95,
+    shinL: 87,
+    shinR: 87,
+    upperArmL: -35,
+    upperArmR: -35,
+    forearmL: -25,
+    forearmR: -25,
+    heelRaise: 0
+  },
+  action: {
+    torsoTilt: 0,
+    hipY: 0,
+    thighL: 0,
+    thighR: 0,
+    shinL: 0,
+    shinR: 0,
+    upperArmL: 6,
+    upperArmR: 6,
+    forearmL: -8,
+    forearmR: -8,
+    heelRaise: 0
+  }
+}
+
+const CALF_RAISE_FIGURE_SPEC: FigureSpec = {
+  id: 'calf-raise',
+  view: 'side',
+  durationMs: 1400,
+  start: {
+    torsoTilt: 0,
+    hipY: 0,
+    thighL: 0,
+    thighR: 0,
+    shinL: 0,
+    shinR: 0,
+    upperArmL: 6,
+    upperArmR: 6,
+    forearmL: -10,
+    forearmR: -10,
+    heelRaise: 0
+  },
+  action: {
+    torsoTilt: 0,
+    hipY: 0,
+    thighL: 0,
+    thighR: 0,
+    shinL: 0,
+    shinR: 0,
+    upperArmL: 10,
+    upperArmR: 10,
+    forearmL: -14,
+    forearmR: -14,
+    heelRaise: 14
+  }
+}
+
+const MARCH_FIGURE_SPEC: FigureSpec = {
+  id: 'march',
+  view: 'front',
+  durationMs: 1200,
+  start: {
+    torsoTilt: 0,
+    hipY: 0,
+    thighL: 0,
+    thighR: 0,
+    shinL: 0,
+    shinR: 0,
+    upperArmL: 8,
+    upperArmR: -8,
+    forearmL: -6,
+    forearmR: 6,
+    heelRaise: 0
+  },
+  action: {
+    torsoTilt: 0,
+    hipY: 0,
+    thighL: 0,
+    thighR: -78,
+    shinL: 0,
+    shinR: 78,
+    upperArmL: 24,
+    upperArmR: -18,
+    forearmL: -35,
+    forearmR: 25,
+    heelRaise: 0
+  }
+}
+
+const WALL_PUSHUP_FIGURE_SPEC: FigureSpec = {
+  id: 'wall-pushup',
+  view: 'side',
+  prop: 'wall',
+  durationMs: 1800,
+  start: {
+    torsoTilt: 12,
+    hipY: 2,
+    thighL: 0,
+    thighR: 0,
+    shinL: 0,
+    shinR: 0,
+    upperArmL: -102,
+    upperArmR: -102,
+    forearmL: 0,
+    forearmR: 0,
+    heelRaise: 0
+  },
+  action: {
+    torsoTilt: 26,
+    hipY: 7,
+    thighL: 0,
+    thighR: 0,
+    shinL: 0,
+    shinR: 0,
+    upperArmL: -64,
+    upperArmR: -64,
+    forearmL: -94,
+    forearmR: -94,
+    heelRaise: 0
+  }
+}
+
 export const EXERCISES: readonly ExerciseDef[] = [
   {
     id: 'squat',
@@ -109,7 +266,7 @@ export const EXERCISES: readonly ExerciseDef[] = [
       '雙腳踩穩推回站姿，動作放慢不急促'
     ],
     safetyZh: '膝蓋朝腳尖方向不內扣，感覺吃力時可扶穩固椅背輔助',
-    figureSvg: SQUAT_FIGURE_SVG,
+    figureSvg: buildAnimatedFigure(SQUAT_FIGURE_SPEC),
     engine: { kind: 'squat' },
     // 膝角度 = 髖-膝-踝 三點，腳踝必要
     framingRegions: ['upper', 'hips', 'knees', 'ankles']
@@ -126,7 +283,7 @@ export const EXERCISES: readonly ExerciseDef[] = [
       '全程保持呼吸順暢，避免突然坐重跌落'
     ],
     safetyZh: '請使用無輪子且靠牆放置的穩固椅子，起立前先確認雙腳踩穩',
-    figureSvg: SIT_TO_STAND_FIGURE_SVG,
+    figureSvg: buildAnimatedFigure(SIT_TO_STAND_FIGURE_SPEC),
     engine: {
       kind: 'cycle',
       metric: 'kneeAngle',
@@ -147,7 +304,7 @@ export const EXERCISES: readonly ExerciseDef[] = [
       '控制速度將腳跟放回地面，不重踩'
     ],
     safetyZh: '可輕扶牆面或椅背保持平衡，小腿微痠即可勿勉強踮過高',
-    figureSvg: CALF_RAISE_FIGURE_SVG,
+    figureSvg: buildAnimatedFigure(CALF_RAISE_FIGURE_SPEC),
     engine: {
       kind: 'cycle',
       metric: 'shoulderRise',
@@ -168,7 +325,7 @@ export const EXERCISES: readonly ExerciseDef[] = [
       '依自身節奏穩定交替踏步，每次抬腿都算一下'
     ],
     safetyZh: '身旁可擺放椅子方便隨時輕扶，抬腿高度以骨盆不歪斜為原則',
-    figureSvg: MARCH_FIGURE_SVG,
+    figureSvg: buildAnimatedFigure(MARCH_FIGURE_SPEC),
     engine: {
       kind: 'cycle',
       metric: 'kneeLift',
@@ -189,7 +346,7 @@ export const EXERCISES: readonly ExerciseDef[] = [
       '雙手輕推牆面回到直臂位置，避免聳肩'
     ],
     safetyZh: '地面務必防滑乾燥，手腕或肩膀不適時可縮短腳距減輕負荷',
-    figureSvg: WALL_PUSHUP_FIGURE_SVG,
+    figureSvg: buildAnimatedFigure(WALL_PUSHUP_FIGURE_SPEC),
     engine: {
       kind: 'cycle',
       metric: 'elbowAngle',

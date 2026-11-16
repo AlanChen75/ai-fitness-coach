@@ -9,6 +9,7 @@ const PRECACHE = [
   './',
   './index.html',
   './exercises.html',
+  './more.html',
   './device-check.html',
   './train.html',
   './review.html',

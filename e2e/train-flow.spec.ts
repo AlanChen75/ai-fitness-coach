@@ -3,16 +3,52 @@ import { expect, test } from '@playwright/test'
 // 假相機提供合成畫面（無人體），所以入位清單不會通過——
 // 快樂路徑改走「跳過引導直接開始」，驗證整條 UI 狀態機到回顧頁無斷點。
 
-test('選單頁列出初級 5 卡，點卡帶 exercise 參數進訓練頁', async ({ page }) => {
-  await page.goto('/exercises.html')
-  const cards = page.locator('.exercise-card:not(.is-locked)')
-  await expect(cards).toHaveCount(5)
-  await expect(page.locator('.exercise-card.is-locked')).toHaveCount(2)
+test('T4a.4 首頁顯示三個 tier tab，初級 5 張可點卡 + 1 張鎖定，點椅子坐站進訓練頁', async ({ page }) => {
+  await page.goto('/index.html')
 
+  const tabs = page.locator('.tier-tab[role="tab"]')
+  await expect(tabs).toHaveCount(3)
+  await expect(page.locator('#tab-beginner')).toHaveAttribute('aria-selected', 'true')
+
+  const beginnerPanel = page.locator('#panel-beginner')
+  await expect(beginnerPanel).toBeVisible()
+  await expect(beginnerPanel.locator('.exercise-card:not(.is-locked)')).toHaveCount(5)
+  await expect(beginnerPanel.locator('.exercise-card.is-locked')).toHaveCount(1)
+  await expect(beginnerPanel.locator('.exercise-card.is-locked')).toContainText('站姿側抬腿（即將推出）')
+
+  // 切換中級 / 高階 tab，同頁顯示鎖定卡
+  await page.locator('#tab-intermediate').click()
+  await expect(page.locator('#tab-intermediate')).toHaveAttribute('aria-selected', 'true')
+  await expect(page.locator('#panel-intermediate')).toBeVisible()
+  await expect(page.locator('#panel-beginner')).toBeHidden()
+  await expect(page.locator('#panel-intermediate .exercise-card.is-locked')).toContainText('即將推出')
+
+  await page.locator('#tab-advanced').click()
+  await expect(page.locator('#tab-advanced')).toHaveAttribute('aria-selected', 'true')
+  await expect(page.locator('#panel-advanced')).toBeVisible()
+  await expect(page.locator('#panel-advanced .exercise-card.is-locked')).toContainText('即將推出')
+
+  // 切回初級點椅子坐站進訓練頁
+  await page.locator('#tab-beginner').click()
   await page.getByText('椅子坐站').click()
   await expect(page).toHaveURL(/train\.html\?exercise=sit-to-stand/)
   await expect(page.locator('#preview-overlay')).toBeVisible()
   await expect(page.locator('#preview-name')).toHaveText('椅子坐站')
+})
+
+test('T4a.5 exercises.html 自動轉址到 index.html', async ({ page }) => {
+  await page.goto('/exercises.html')
+  await expect(page).toHaveURL(/\/(index\.html)?$/)
+  await expect(page.locator('#panel-beginner .exercise-card:not(.is-locked)')).toHaveCount(5)
+})
+
+test('T4a.6 more.html 含裝置檢測連結與系統狀態區塊', async ({ page }) => {
+  await page.goto('/more.html')
+  await expect(page.locator('a[href="./device-check.html"]')).toBeVisible()
+  await expect(page.locator('#sec-ctx')).toBeVisible()
+  await expect(page.locator('#sw-state')).toBeVisible()
+  await expect(page.locator('#sw-version')).toBeVisible()
+  await expect(page.locator('#profile-state')).toBeVisible()
 })
 
 test('訓練頁完整流程：示範卡 -> 相機 -> 引導 -> 開始 -> 儲存 -> 回顧', async ({ page }) => {
@@ -25,7 +61,9 @@ test('訓練頁完整流程：示範卡 -> 相機 -> 引導 -> 開始 -> 儲存 
 
   // 2. 按「我知道了」才開相機（假相機會成功）
   await page.locator('#btn-preview-start').click()
-  await expect(page.locator('#preview-overlay')).toBeHidden()
+  // toBeHidden 在 visibility transition 進行中會誤判（isVisible 與 computed style
+  // 於 500ms 內皆為 hidden，實測三種探針一致），改用 poll 避免競態
+  await expect.poll(() => page.locator('#preview-overlay').isVisible()).toBe(false)
   await expect(page.locator('#guide-overlay')).toBeVisible()
   // 正面動作的引導文案
   await expect(page.locator('#guide-title')).toHaveText('正面站位準備')
