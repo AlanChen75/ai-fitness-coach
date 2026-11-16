@@ -342,11 +342,12 @@ body.train-page {
   justify-content: center;
   padding: 84px 16px 84px;
   background: rgba(11, 18, 32, 0.62);
-  transition: opacity 0.25s ease;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
 }
 
 .guide-overlay.is-hidden {
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
 }
 
@@ -624,11 +625,12 @@ body.train-page {
   padding: 96px 16px 84px;
   background: rgba(11, 18, 32, 0.88);
   overflow-y: auto;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
 }
 
 .preview-overlay.is-hidden {
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
 }
 

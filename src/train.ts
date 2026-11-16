@@ -151,7 +151,8 @@ const tts = createCoachTts({ enabled: elTtsToggle.checked })
 // ---------- 執行期狀態 ----------
 let previewDismissed = false
 let landmarker: PoseLandmarker | null = null
-let facing: 'environment' | 'user' = 'environment'
+// 預設前鏡頭：使用者面對手機才看得到即時回饋（2026-11-16 實測決策）
+let facing: 'environment' | 'user' = 'user'
 let cameraInfo: CameraInfo | null = null
 let trackedVideoTrack: MediaStreamTrack | null = null
 let initInFlight = false
