@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>深蹲訓練 - AI 健身教練</title>
+<meta name="theme-color" content="#0ea5e9">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png">
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+</head>
+<body>
+<main class="shell">
+  <h1>深蹲訓練</h1>
+  <p class="sub"><a href="./index.html">回首頁</a> · <a href="./review.html">訓練回顧</a></p>
+
+  <div id="interrupt-banner" class="alert-banner fail hidden" role="alert">
+    <strong>已中斷：</strong>偵測到頁面切換至背景或相機串流結束，已停止取樣並將進度寫入本地儲存。請按「重新開始」重新進行，或前往回顧頁查看紀錄。
+  </div>
+
+  <div id="opfs-banner" class="alert-banner warn hidden">
+    <strong>無 Pose 證據：</strong>此環境不支援或無法寫入 OPFS，本次將僅保存 Session 摘要與計數結果。
+  </div>
+
+  <div id="status-banner" class="alert-banner hidden"></div>
+
+  <section class="card">
+    <div class="train-hud">
+      <div class="rep-count-box">
+        <div id="rep-complete" class="rep-count-big">0</div>
+        <div class="rep-count-label">本組完成次數</div>
+      </div>
+      <div class="hud-stats">
+        <div class="hud-stat-row">
+          <span class="k">狀態</span>
+          <span id="fsm-phase" class="phase-badge not-ready">待機</span>
+        </div>
+        <div class="hud-stat-row">
+          <span class="k">辨識品質</span>
+          <span id="valid-ratio" class="v">--</span>
+        </div>
+        <div class="hud-stat-row">
+          <span class="k">待確認 (uncertain)</span>
+          <span id="rep-uncertain" class="v">0</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hud-stat-row" style="margin-bottom: 12px;">
+      <span class="k">目前組別 / 已完成組數</span>
+      <span id="set-progress" class="v">尚未開始 / 0 組</span>
+    </div>
+
+    <div class="row2">
+      <button id="btn-start-set" class="btn-primary" disabled>開始一組</button>
+      <button id="btn-end-set" class="btn-secondary" disabled>結束一組</button>
+    </div>
+    <button id="btn-end-session" class="btn-danger" disabled>結束訓練並儲存</button>
+    <button id="btn-restart" class="btn-secondary hidden">重新開始</button>
+  </section>
+
+  <section class="card">
+    <h2>相機與姿態偵測</h2>
+    <p>請將手機架設於身體側面並讓全身入鏡，校準站立約 1 秒聽到「開始」後即可深蹲。</p>
+    <div class="row2">
+      <button id="btn-init-cam" class="btn-primary">開啟相機 + 載入模型</button>
+      <button id="btn-switch-cam" class="btn-secondary" disabled>切換前 / 後鏡頭</button>
+    </div>
+    <label class="toggle-row">
+      <input type="checkbox" id="tts-toggle" checked>
+      <span>語音播報（繁中報數與動作提示）</span>
+    </label>
+    <div id="cam-wrap" class="video-wrap">
+      <video id="cam" playsinline muted></video>
+      <canvas id="overlay"></canvas>
+    </div>
+    <div id="live-info" class="bench-live">尚未開啟相機與模型</div>
+  </section>
+</main>
+<script type="module" src="./src/train.ts"></script>
+</body>
+</html>

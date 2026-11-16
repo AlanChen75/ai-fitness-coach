@@ -1,15 +1,19 @@
-// IndexedDB 薄封裝：device_capability_profile 的保存與讀回
+// IndexedDB 薄封裝：device_capability_profile 與 sessions 的保存與讀回
 const DB_NAME = 'fitness-coach-v01'
-const DB_VERSION = 1
+const DB_VERSION = 2
 const STORE_PROFILES = 'capability_profiles'
+export const STORE_SESSIONS = 'sessions'
 
-function openDb(): Promise<IDBDatabase> {
+export function openDb(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
     const req = indexedDB.open(DB_NAME, DB_VERSION)
     req.onupgradeneeded = () => {
       const db = req.result
       if (!db.objectStoreNames.contains(STORE_PROFILES)) {
         db.createObjectStore(STORE_PROFILES, { keyPath: 'profile_id' })
+      }
+      if (!db.objectStoreNames.contains(STORE_SESSIONS)) {
+        db.createObjectStore(STORE_SESSIONS, { keyPath: 'session_id' })
       }
     }
     req.onsuccess = () => resolve(req.result)
