@@ -95,8 +95,9 @@ describe('Exercise Session Cycle-to-SetSummary mapping (R18)', () => {
     expect(march.engine.kind).toBe('cycle')
     if (march.engine.kind !== 'cycle') return
 
-    const cal = makeCalibration(0, 1000, 100, 0.05)
-    const marchValues = [0.28, 0.42, 0.48, 0.45, 0.30, 0.12]
+    // 真機幾何：站立 lift 約 -0.7，抬至髖部高度約 0 到 +0.1
+    const cal = makeCalibration(0, 1000, 100, -0.7)
+    const marchValues = [-0.3, -0.1, 0.1, -0.05, -0.3, -0.6]
     const marchCycle: CycleSample[] = marchValues.map((value, i) => ({
       t_ms: 1100 + i * 100,
       value,

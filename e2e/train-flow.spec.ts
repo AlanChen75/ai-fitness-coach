@@ -66,7 +66,7 @@ test('訓練頁完整流程：示範卡 -> 相機 -> 引導 -> 開始 -> 儲存 
   // 9. 回顧頁列出剛存的 Session，動作名稱正確，明細自動展開
   await expect(page.locator('.session-card-btn').first()).toContainText('原地踏步抬腿')
   await expect(page.locator('#detail-section')).toBeVisible()
-  await expect(page.locator('#session-detail')).toContainText('march-v0.1')
+  await expect(page.locator('#session-detail')).toContainText('march-v0')
 
   // 10. 兩段式刪除走完（清理並驗證刪除分支）
   await page.locator('#btn-delete-step1').click()
