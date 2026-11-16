@@ -1,0 +1,159 @@
+{
+  "id": "pistol-squat",
+  "name": "Pistol Squat",
+  "view": "side",
+  "anchor": "feet",
+  "backLegMode": "free",
+  "anchorCategory": "standing",
+  "anchorX": 234,
+  "groundY": 454,
+  "durationMs": 2000,
+  "totalFrames": 25,
+  "highlightMuscles": ["quadriceps", "glutes"],
+  "keyframes": [
+    {
+      "t": 0.0,
+      "pose": {
+        "shinAngle": 89,
+        "thighAngle": 91,
+        "torsoAngle": 89,
+        "neckAngle": 89,
+        "headPitch": 0,
+        "upperArmAngle": -58,
+        "forearmAngle": -38,
+        "handAngle": -42,
+        "farUpperArmAngle": -55,
+        "farForearmAngle": -35,
+        "farThighAngle": -68,
+        "farShinAngle": -70,
+        "farFootAngle": -12
+      }
+    },
+    {
+      "t": 0.08,
+      "pose": {
+        "shinAngle": 89,
+        "thighAngle": 91,
+        "torsoAngle": 89,
+        "neckAngle": 89,
+        "headPitch": 0,
+        "upperArmAngle": -58,
+        "forearmAngle": -38,
+        "handAngle": -42,
+        "farUpperArmAngle": -55,
+        "farForearmAngle": -35,
+        "farThighAngle": -68,
+        "farShinAngle": -70,
+        "farFootAngle": -12
+      }
+    },
+    {
+      "t": 0.27,
+      "pose": {
+        "shinAngle": 74,
+        "thighAngle": 144,
+        "torsoAngle": 75,
+        "neckAngle": 82,
+        "headPitch": 4,
+        "upperArmAngle": -22,
+        "forearmAngle": -10,
+        "handAngle": -14,
+        "farUpperArmAngle": -19,
+        "farForearmAngle": -8,
+        "farThighAngle": -28,
+        "farShinAngle": -26,
+        "farFootAngle": -16
+      }
+    },
+    {
+      "t": 0.46,
+      "pose": {
+        "shinAngle": 62,
+        "thighAngle": 192,
+        "torsoAngle": 62,
+        "neckAngle": 76,
+        "headPitch": 8,
+        "upperArmAngle": 4,
+        "forearmAngle": 8,
+        "handAngle": 4,
+        "farUpperArmAngle": 7,
+        "farForearmAngle": 11,
+        "farThighAngle": 6,
+        "farShinAngle": 8,
+        "farFootAngle": -18
+      }
+    },
+    {
+      "t": 0.56,
+      "pose": {
+        "shinAngle": 62,
+        "thighAngle": 192,
+        "torsoAngle": 62,
+        "neckAngle": 76,
+        "headPitch": 8,
+        "upperArmAngle": 4,
+        "forearmAngle": 8,
+        "handAngle": 4,
+        "farUpperArmAngle": 7,
+        "farForearmAngle": 11,
+        "farThighAngle": 6,
+        "farShinAngle": 8,
+        "farFootAngle": -18
+      }
+    },
+    {
+      "t": 0.77,
+      "pose": {
+        "shinAngle": 74,
+        "thighAngle": 144,
+        "torsoAngle": 75,
+        "neckAngle": 82,
+        "headPitch": 4,
+        "upperArmAngle": -22,
+        "forearmAngle": -10,
+        "handAngle": -14,
+        "farUpperArmAngle": -19,
+        "farForearmAngle": -8,
+        "farThighAngle": -28,
+        "farShinAngle": -26,
+        "farFootAngle": -16
+      }
+    },
+    {
+      "t": 0.92,
+      "pose": {
+        "shinAngle": 89,
+        "thighAngle": 91,
+        "torsoAngle": 89,
+        "neckAngle": 89,
+        "headPitch": 0,
+        "upperArmAngle": -58,
+        "forearmAngle": -38,
+        "handAngle": -42,
+        "farUpperArmAngle": -55,
+        "farForearmAngle": -35,
+        "farThighAngle": -68,
+        "farShinAngle": -70,
+        "farFootAngle": -12
+      }
+    },
+    {
+      "t": 1.0,
+      "pose": {
+        "shinAngle": 89,
+        "thighAngle": 91,
+        "torsoAngle": 89,
+        "neckAngle": 89,
+        "headPitch": 0,
+        "upperArmAngle": -58,
+        "forearmAngle": -38,
+        "handAngle": -42,
+        "farUpperArmAngle": -55,
+        "farForearmAngle": -35,
+        "farThighAngle": -68,
+        "farShinAngle": -70,
+        "farFootAngle": -12
+      }
+    }
+  ]
+}

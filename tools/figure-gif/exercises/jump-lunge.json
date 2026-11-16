@@ -1,0 +1,185 @@
+{
+  "id": "jump-lunge",
+  "name": "Jump Lunge",
+  "view": "side",
+  "anchor": "feet",
+  "backLegMode": "split-ik",
+  "anchorCategory": "jump",
+  "anchorX": 294,
+  "backAnkleX": 176,
+  "backAnkleY": 436,
+  "groundY": 470,
+  "durationMs": 2000,
+  "totalFrames": 25,
+  "highlightMuscles": ["quadriceps", "glutes"],
+  "keyframes": [
+    {
+      "t": 0.0,
+      "pose": {
+        "footOffsetY": 0,
+        "nearFootOffsetX": 0,
+        "farFootOffsetX": 0,
+        "farFootOffsetY": 0,
+        "shinAngle": 86,
+        "thighAngle": 164,
+        "torsoAngle": 86,
+        "neckAngle": 88,
+        "headPitch": 2,
+        "upperArmAngle": -74,
+        "forearmAngle": -20,
+        "handAngle": -22,
+        "farUpperArmAngle": -102,
+        "farForearmAngle": -42,
+        "footAngle": 0,
+        "farFootAngle": 34
+      }
+    },
+    {
+      "t": 0.06,
+      "pose": {
+        "footOffsetY": 0,
+        "nearFootOffsetX": 0,
+        "farFootOffsetX": 0,
+        "farFootOffsetY": 0,
+        "shinAngle": 86,
+        "thighAngle": 164,
+        "torsoAngle": 86,
+        "neckAngle": 88,
+        "headPitch": 2,
+        "upperArmAngle": -74,
+        "forearmAngle": -20,
+        "handAngle": -22,
+        "farUpperArmAngle": -102,
+        "farForearmAngle": -42,
+        "footAngle": 0,
+        "farFootAngle": 34
+      }
+    },
+    {
+      "t": 0.25,
+      "pose": {
+        "footOffsetY": -34,
+        "nearFootOffsetX": -56,
+        "farFootOffsetX": 56,
+        "farFootOffsetY": -24,
+        "shinAngle": 72,
+        "thighAngle": 102,
+        "torsoAngle": 88,
+        "neckAngle": 88,
+        "headPitch": -2,
+        "upperArmAngle": -45,
+        "forearmAngle": 12,
+        "handAngle": 10,
+        "farUpperArmAngle": -45,
+        "farForearmAngle": 12,
+        "footAngle": 14,
+        "farFootAngle": 14
+      }
+    },
+    {
+      "t": 0.46,
+      "pose": {
+        "footOffsetY": -4,
+        "nearFootOffsetX": -116,
+        "farFootOffsetX": 116,
+        "farFootOffsetY": 14,
+        "shinAngle": 18,
+        "thighAngle": 116,
+        "torsoAngle": 86,
+        "neckAngle": 88,
+        "headPitch": 2,
+        "upperArmAngle": -102,
+        "forearmAngle": -42,
+        "handAngle": -44,
+        "farUpperArmAngle": -74,
+        "farForearmAngle": -20,
+        "footAngle": 34,
+        "farFootAngle": 0
+      }
+    },
+    {
+      "t": 0.54,
+      "pose": {
+        "footOffsetY": -4,
+        "nearFootOffsetX": -116,
+        "farFootOffsetX": 116,
+        "farFootOffsetY": 14,
+        "shinAngle": 18,
+        "thighAngle": 116,
+        "torsoAngle": 86,
+        "neckAngle": 88,
+        "headPitch": 2,
+        "upperArmAngle": -102,
+        "forearmAngle": -42,
+        "handAngle": -44,
+        "farUpperArmAngle": -74,
+        "farForearmAngle": -20,
+        "footAngle": 34,
+        "farFootAngle": 0
+      }
+    },
+    {
+      "t": 0.75,
+      "pose": {
+        "footOffsetY": -34,
+        "nearFootOffsetX": -56,
+        "farFootOffsetX": 56,
+        "farFootOffsetY": -24,
+        "shinAngle": 72,
+        "thighAngle": 102,
+        "torsoAngle": 88,
+        "neckAngle": 88,
+        "headPitch": -2,
+        "upperArmAngle": -45,
+        "forearmAngle": 12,
+        "handAngle": 10,
+        "farUpperArmAngle": -45,
+        "farForearmAngle": 12,
+        "footAngle": 14,
+        "farFootAngle": 14
+      }
+    },
+    {
+      "t": 0.92,
+      "pose": {
+        "footOffsetY": 0,
+        "nearFootOffsetX": 0,
+        "farFootOffsetX": 0,
+        "farFootOffsetY": 0,
+        "shinAngle": 86,
+        "thighAngle": 164,
+        "torsoAngle": 86,
+        "neckAngle": 88,
+        "headPitch": 2,
+        "upperArmAngle": -74,
+        "forearmAngle": -20,
+        "handAngle": -22,
+        "farUpperArmAngle": -102,
+        "farForearmAngle": -42,
+        "footAngle": 0,
+        "farFootAngle": 34
+      }
+    },
+    {
+      "t": 1.0,
+      "pose": {
+        "footOffsetY": 0,
+        "nearFootOffsetX": 0,
+        "farFootOffsetX": 0,
+        "farFootOffsetY": 0,
+        "shinAngle": 86,
+        "thighAngle": 164,
+        "torsoAngle": 86,
+        "neckAngle": 88,
+        "headPitch": 2,
+        "upperArmAngle": -74,
+        "forearmAngle": -20,
+        "handAngle": -22,
+        "farUpperArmAngle": -102,
+        "farForearmAngle": -42,
+        "footAngle": 0,
+        "farFootAngle": 34
+      }
+    }
+  ]
+}

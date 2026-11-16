@@ -1,0 +1,143 @@
+{
+  "id": "calf-raise",
+  "name": "Standing Calf Raise",
+  "view": "side",
+  "anchor": "feet",
+  "anchorPivot": "metatarsal",
+  "anchorCategory": "standing",
+  "anchorX": 236,
+  "groundY": 468,
+  "durationMs": 2000,
+  "totalFrames": 25,
+  "highlightMuscles": ["calves"],
+  "keyframes": [
+    {
+      "t": 0.0,
+      "pose": {
+        "heelRaise": 0,
+        "shinAngle": 89,
+        "thighAngle": 91,
+        "torsoAngle": 89,
+        "neckAngle": 89,
+        "headPitch": 0,
+        "upperArmAngle": -86,
+        "forearmAngle": -78,
+        "handAngle": -80,
+        "farUpperArmAngle": -84,
+        "farForearmAngle": -76
+      }
+    },
+    {
+      "t": 0.08,
+      "pose": {
+        "heelRaise": 0,
+        "shinAngle": 89,
+        "thighAngle": 91,
+        "torsoAngle": 89,
+        "neckAngle": 89,
+        "headPitch": 0,
+        "upperArmAngle": -86,
+        "forearmAngle": -78,
+        "handAngle": -80,
+        "farUpperArmAngle": -84,
+        "farForearmAngle": -76
+      }
+    },
+    {
+      "t": 0.25,
+      "pose": {
+        "heelRaise": 13,
+        "shinAngle": 88,
+        "thighAngle": 91,
+        "torsoAngle": 89,
+        "neckAngle": 89,
+        "headPitch": 0,
+        "upperArmAngle": -88,
+        "forearmAngle": -76,
+        "handAngle": -78,
+        "farUpperArmAngle": -86,
+        "farForearmAngle": -74
+      }
+    },
+    {
+      "t": 0.44,
+      "pose": {
+        "heelRaise": 24,
+        "shinAngle": 87,
+        "thighAngle": 91,
+        "torsoAngle": 89,
+        "neckAngle": 89,
+        "headPitch": 0,
+        "upperArmAngle": -90,
+        "forearmAngle": -74,
+        "handAngle": -76,
+        "farUpperArmAngle": -88,
+        "farForearmAngle": -72
+      }
+    },
+    {
+      "t": 0.56,
+      "pose": {
+        "heelRaise": 24,
+        "shinAngle": 87,
+        "thighAngle": 91,
+        "torsoAngle": 89,
+        "neckAngle": 89,
+        "headPitch": 0,
+        "upperArmAngle": -90,
+        "forearmAngle": -74,
+        "handAngle": -76,
+        "farUpperArmAngle": -88,
+        "farForearmAngle": -72
+      }
+    },
+    {
+      "t": 0.75,
+      "pose": {
+        "heelRaise": 13,
+        "shinAngle": 88,
+        "thighAngle": 91,
+        "torsoAngle": 89,
+        "neckAngle": 89,
+        "headPitch": 0,
+        "upperArmAngle": -88,
+        "forearmAngle": -76,
+        "handAngle": -78,
+        "farUpperArmAngle": -86,
+        "farForearmAngle": -74
+      }
+    },
+    {
+      "t": 0.92,
+      "pose": {
+        "heelRaise": 0,
+        "shinAngle": 89,
+        "thighAngle": 91,
+        "torsoAngle": 89,
+        "neckAngle": 89,
+        "headPitch": 0,
+        "upperArmAngle": -86,
+        "forearmAngle": -78,
+        "handAngle": -80,
+        "farUpperArmAngle": -84,
+        "farForearmAngle": -76
+      }
+    },
+    {
+      "t": 1.0,
+      "pose": {
+        "heelRaise": 0,
+        "shinAngle": 89,
+        "thighAngle": 91,
+        "torsoAngle": 89,
+        "neckAngle": 89,
+        "headPitch": 0,
+        "upperArmAngle": -86,
+        "forearmAngle": -78,
+        "handAngle": -80,
+        "farUpperArmAngle": -84,
+        "farForearmAngle": -76
+      }
+    }
+  ]
+}

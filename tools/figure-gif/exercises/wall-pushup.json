@@ -1,0 +1,97 @@
+{
+  "id": "wall-pushup",
+  "name": "Wall Push-Up",
+  "view": "side",
+  "prop": "wall",
+  "anchor": "wall-pushup",
+  "anchorCategory": "wall",
+  "anchorX": 170,
+  "wallX": 368,
+  "wristY": 120,
+  "groundY": 454,
+  "durationMs": 2000,
+  "totalFrames": 25,
+  "highlightMuscles": ["pectorals", "triceps"],
+  "keyframes": [
+    {
+      "t": 0.0,
+      "pose": {
+        "shinAngle": 78,
+        "thighAngle": 78,
+        "torsoAngle": 78,
+        "neckAngle": 82,
+        "headPitch": 8
+      }
+    },
+    {
+      "t": 0.08,
+      "pose": {
+        "shinAngle": 78,
+        "thighAngle": 78,
+        "torsoAngle": 78,
+        "neckAngle": 82,
+        "headPitch": 8
+      }
+    },
+    {
+      "t": 0.27,
+      "pose": {
+        "shinAngle": 72,
+        "thighAngle": 72,
+        "torsoAngle": 72,
+        "neckAngle": 76,
+        "headPitch": 10
+      }
+    },
+    {
+      "t": 0.46,
+      "pose": {
+        "shinAngle": 66,
+        "thighAngle": 66,
+        "torsoAngle": 66,
+        "neckAngle": 72,
+        "headPitch": 12
+      }
+    },
+    {
+      "t": 0.56,
+      "pose": {
+        "shinAngle": 66,
+        "thighAngle": 66,
+        "torsoAngle": 66,
+        "neckAngle": 72,
+        "headPitch": 12
+      }
+    },
+    {
+      "t": 0.77,
+      "pose": {
+        "shinAngle": 72,
+        "thighAngle": 72,
+        "torsoAngle": 72,
+        "neckAngle": 76,
+        "headPitch": 10
+      }
+    },
+    {
+      "t": 0.92,
+      "pose": {
+        "shinAngle": 78,
+        "thighAngle": 78,
+        "torsoAngle": 78,
+        "neckAngle": 82,
+        "headPitch": 8
+      }
+    },
+    {
+      "t": 1.0,
+      "pose": {
+        "shinAngle": 78,
+        "thighAngle": 78,
+        "torsoAngle": 78,
+        "neckAngle": 82,
+        "headPitch": 8
+      }
+    }
+  ]
+}

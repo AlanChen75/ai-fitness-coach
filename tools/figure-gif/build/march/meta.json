@@ -1,0 +1,34 @@
+{
+  "id": "march",
+  "name": "Standing March",
+  "view": "front",
+  "highlightMuscles": [
+    "hipFlexors",
+    "core"
+  ],
+  "width": 384,
+  "height": 384,
+  "logicalWidth": 512,
+  "logicalHeight": 512,
+  "totalFrames": 25,
+  "durationMs": 2000,
+  "fps": 12.5,
+  "frameDelayMs": 80,
+  "anchorX": 256,
+  "groundY": 454,
+  "anchorCategory": "standing",
+  "anchorMode": "feet",
+  "anchorBox": [
+    170,
+    333,
+    179,
+    338
+  ],
+  "contactBox": [
+    170,
+    333,
+    179,
+    338
+  ],
+  "contactLabel": "left_foot"
+}

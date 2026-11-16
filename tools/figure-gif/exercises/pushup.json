@@ -1,0 +1,72 @@
+{
+  "id": "pushup",
+  "name": "Standard Push-Up",
+  "view": "side",
+  "prop": "mat",
+  "anchor": "pushup",
+  "anchorCategory": "prone",
+  "anchorX": 94,
+  "wristAnchorX": 396,
+  "groundY": 386,
+  "durationMs": 2000,
+  "totalFrames": 25,
+  "highlightMuscles": ["pectorals", "triceps"],
+  "keyframes": [
+    {
+      "t": 0.0,
+      "pose": {
+        "plankAngle": 19,
+        "headPitch": 44
+      }
+    },
+    {
+      "t": 0.08,
+      "pose": {
+        "plankAngle": 19,
+        "headPitch": 44
+      }
+    },
+    {
+      "t": 0.27,
+      "pose": {
+        "plankAngle": 12,
+        "headPitch": 48
+      }
+    },
+    {
+      "t": 0.46,
+      "pose": {
+        "plankAngle": 5,
+        "headPitch": 54
+      }
+    },
+    {
+      "t": 0.56,
+      "pose": {
+        "plankAngle": 5,
+        "headPitch": 54
+      }
+    },
+    {
+      "t": 0.77,
+      "pose": {
+        "plankAngle": 12,
+        "headPitch": 48
+      }
+    },
+    {
+      "t": 0.92,
+      "pose": {
+        "plankAngle": 19,
+        "headPitch": 44
+      }
+    },
+    {
+      "t": 1.0,
+      "pose": {
+        "plankAngle": 19,
+        "headPitch": 44
+      }
+    }
+  ]
+}

@@ -1,0 +1,1090 @@
+{
+  "pass": true,
+  "count": 24,
+  "passed_count": 24,
+  "total_bytes": 4547925,
+  "total_mb": 4.337,
+  "max_total_mb": 15.0,
+  "results": [
+    {
+      "id": "bulgarian-split-squat",
+      "pass": true,
+      "gif": "/Users/user/Desktop/AI100講/oppo-fitness-coach/public/figures/bulgarian-split-squat.gif",
+      "review_png": "/Users/user/Desktop/AI100講/oppo-fitness-coach/tools/figure-gif/review/bulgarian-split-squat.png",
+      "width": 384,
+      "height": 384,
+      "frames": 25,
+      "duration_ms": 2000,
+      "loop": 0,
+      "palette_colors": 63,
+      "size_bytes": 217147,
+      "size_kb": 212.06,
+      "anchor_check": {
+        "category": "standing",
+        "sampled_frames": [
+          0,
+          6,
+          12
+        ],
+        "status": "checked",
+        "box": [
+          227,
+          333,
+          260,
+          339
+        ],
+        "max_diff": 0,
+        "changed_pct": 0.0,
+        "per_frame": [
+          {
+            "frame": 0,
+            "max_diff": 0,
+            "changed_pct": 0.0
+          },
+          {
+            "frame": 6,
+            "max_diff": 0,
+            "changed_pct": 0.0
+          },
+          {
+            "frame": 12,
+            "max_diff": 0,
+            "changed_pct": 0.0
+          }
+        ]
+      },
+      "warnings": [],
+      "errors": []
+    },
+    {
+      "id": "calf-raise",
+      "pass": true,
+      "gif": "/Users/user/Desktop/AI100講/oppo-fitness-coach/public/figures/calf-raise.gif",
+      "review_png": "/Users/user/Desktop/AI100講/oppo-fitness-coach/tools/figure-gif/review/calf-raise.png",
+      "width": 384,
+      "height": 384,
+      "frames": 25,
+      "duration_ms": 2000,
+      "loop": 0,
+      "palette_colors": 63,
+      "size_bytes": 180564,
+      "size_kb": 176.33,
+      "anchor_check": {
+        "category": "standing",
+        "sampled_frames": [
+          0,
+          6,
+          12
+        ],
+        "status": "checked",
+        "box": [
+          203,
+          347,
+          212,
+          350
+        ],
+        "max_diff": 0,
+        "changed_pct": 0.0,
+        "per_frame": [
+          {
+            "frame": 0,
+            "max_diff": 0,
+            "changed_pct": 0.0
+          },
+          {
+            "frame": 6,
+            "max_diff": 0,
+            "changed_pct": 0.0
+          },
+          {
+            "frame": 12,
+            "max_diff": 0,
+            "changed_pct": 0.0
+          }
+        ]
+      },
+      "warnings": [],
+      "errors": []
+    },
+    {
+      "id": "chest-press-machine",
+      "pass": true,
+      "gif": "/Users/user/Desktop/AI100講/oppo-fitness-coach/public/figures/chest-press-machine.gif",
+      "review_png": "/Users/user/Desktop/AI100講/oppo-fitness-coach/tools/figure-gif/review/chest-press-machine.png",
+      "width": 384,
+      "height": 384,
+      "frames": 25,
+      "duration_ms": 2000,
+      "loop": 0,
+      "palette_colors": 63,
+      "size_bytes": 90732,
+      "size_kb": 88.61,
+      "anchor_check": {
+        "category": "seated",
+        "sampled_frames": [
+          0,
+          6,
+          12
+        ],
+        "status": "skipped",
+        "skipped_reason": "Seated machine exercise: hips fixed on seat cushion (checked hip/seat contact instead)",
+        "contact_check": {
+          "label": "seat_hip",
+          "frames": [
+            0,
+            6,
+            12
+          ],
+          "box": [
+            170,
+            260,
+            195,
+            264
+          ],
+          "max_diff": 0,
+          "changed_pct": 0.0
+        }
+      },
+      "warnings": [],
+      "errors": []
+    },
+    {
+      "id": "glute-bridge",
+      "pass": true,
+      "gif": "/Users/user/Desktop/AI100講/oppo-fitness-coach/public/figures/glute-bridge.gif",
+      "review_png": "/Users/user/Desktop/AI100講/oppo-fitness-coach/tools/figure-gif/review/glute-bridge.png",
+      "width": 384,
+      "height": 384,
+      "frames": 25,
+      "duration_ms": 2000,
+      "loop": 0,
+      "palette_colors": 62,
+      "size_bytes": 123134,
+      "size_kb": 120.25,
+      "anchor_check": {
+        "category": "supine",
+        "sampled_frames": [
+          0,
+          6,
+          12
+        ],
+        "status": "skipped",
+        "skipped_reason": "Supine floor exercise: scapula and feet on mat (checked foot/mat contact instead)",
+        "contact_check": {
+          "label": "supine_foot",
+          "frames": [
+            0,
+            6,
+            12
+          ],
+          "box": [
+            284,
+            282,
+            317,
+            288
+          ],
+          "max_diff": 0,
+          "changed_pct": 0.0
+        }
+      },
+      "warnings": [],
+      "errors": []
+    },
+    {
+      "id": "high-knees",
+      "pass": true,
+      "gif": "/Users/user/Desktop/AI100講/oppo-fitness-coach/public/figures/high-knees.gif",
+      "review_png": "/Users/user/Desktop/AI100講/oppo-fitness-coach/tools/figure-gif/review/high-knees.png",
+      "width": 384,
+      "height": 384,
+      "frames": 25,
+      "duration_ms": 2000,
+      "loop": 0,
+      "palette_colors": 63,
+      "size_bytes": 244471,
+      "size_kb": 238.74,
+      "anchor_check": {
+        "category": "jump",
+        "sampled_frames": [
+          0,
+          6,
+          12
+        ],
+        "status": "skipped",
+        "skipped_reason": "Jump exercise: feet leave ground during airborne phase (checked start vs landing return instead)",
+        "return_check": {
+          "frames": [
+            0,
+            24
+          ],
+          "box": [
+            170,
+            342,
+            179,
+            347
+          ],
+          "max_diff": 0,
+          "changed_pct": 0.0
+        }
+      },
+      "warnings": [],
+      "errors": []
+    },
+    {
+      "id": "jump-lunge",
+      "pass": true,
+      "gif": "/Users/user/Desktop/AI100講/oppo-fitness-coach/public/figures/jump-lunge.gif",
+      "review_png": "/Users/user/Desktop/AI100講/oppo-fitness-coach/tools/figure-gif/review/jump-lunge.png",
+      "width": 384,
+      "height": 384,
+      "frames": 25,
+      "duration_ms": 2000,
+      "loop": 0,
+      "palette_colors": 63,
+      "size_bytes": 272185,
+      "size_kb": 265.81,
+      "anchor_check": {
+        "category": "jump",
+        "sampled_frames": [
+          0,
+          6,
+          12
+        ],
+        "status": "skipped",
+        "skipped_reason": "Jump exercise: feet leave ground during airborne phase (checked start vs landing return instead)",
+        "return_check": {
+          "frames": [
+            0,
+            24
+          ],
+          "box": [
+            213,
+            345,
+            246,
+            351
+          ],
+          "max_diff": 0,
+          "changed_pct": 0.0
+        }
+      },
+      "warnings": [],
+      "errors": []
+    },
+    {
+      "id": "jump-squat",
+      "pass": true,
+      "gif": "/Users/user/Desktop/AI100講/oppo-fitness-coach/public/figures/jump-squat.gif",
+      "review_png": "/Users/user/Desktop/AI100講/oppo-fitness-coach/tools/figure-gif/review/jump-squat.png",
+      "width": 384,
+      "height": 384,
+      "frames": 25,
+      "duration_ms": 2000,
+      "loop": 0,
+      "palette_colors": 63,
+      "size_bytes": 241290,
+      "size_kb": 235.63,
+      "anchor_check": {
+        "category": "jump",
+        "sampled_frames": [
+          0,
+          6,
+          12
+        ],
+        "status": "skipped",
+        "skipped_reason": "Jump exercise: feet leave ground during airborne phase (checked start vs landing return instead)",
+        "return_check": {
+          "frames": [
+            0,
+            24
+          ],
+          "box": [
+            161,
+            345,
+            194,
+            351
+          ],
+          "max_diff": 0,
+          "changed_pct": 0.0
+        }
+      },
+      "warnings": [],
+      "errors": []
+    },
+    {
+      "id": "jumping-jack",
+      "pass": true,
+      "gif": "/Users/user/Desktop/AI100講/oppo-fitness-coach/public/figures/jumping-jack.gif",
+      "review_png": "/Users/user/Desktop/AI100講/oppo-fitness-coach/tools/figure-gif/review/jumping-jack.png",
+      "width": 384,
+      "height": 384,
+      "frames": 25,
+      "duration_ms": 2000,
+      "loop": 0,
+      "palette_colors": 63,
+      "size_bytes": 266656,
+      "size_kb": 260.41,
+      "anchor_check": {
+        "category": "jump",
+        "sampled_frames": [
+          0,
+          6,
+          12
+        ],
+        "status": "skipped",
+        "skipped_reason": "Jump exercise: feet leave ground during airborne phase (checked start vs landing return instead)",
+        "return_check": {
+          "frames": [
+            0,
+            24
+          ],
+          "box": [
+            170,
+            351,
+            179,
+            356
+          ],
+          "max_diff": 0,
+          "changed_pct": 0.0
+        }
+      },
+      "warnings": [],
+      "errors": []
+    },
+    {
+      "id": "knee-pushup",
+      "pass": true,
+      "gif": "/Users/user/Desktop/AI100講/oppo-fitness-coach/public/figures/knee-pushup.gif",
+      "review_png": "/Users/user/Desktop/AI100講/oppo-fitness-coach/tools/figure-gif/review/knee-pushup.png",
+      "width": 384,
+      "height": 384,
+      "frames": 25,
+      "duration_ms": 2000,
+      "loop": 0,
+      "palette_colors": 61,
+      "size_bytes": 175699,
+      "size_kb": 171.58,
+      "anchor_check": {
+        "category": "prone",
+        "sampled_frames": [
+          0,
+          6,
+          12
+        ],
+        "status": "skipped",
+        "skipped_reason": "Prone floor exercise: body horizontal on mat (checked floor contact point instead)",
+        "contact_check": {
+          "label": "floor_palm",
+          "frames": [
+            0,
+            6,
+            12
+          ],
+          "box": [
+            288,
+            286,
+            296,
+            288
+          ],
+          "max_diff": 0,
+          "changed_pct": 0.0
+        }
+      },
+      "warnings": [],
+      "errors": []
+    },
+    {
+      "id": "lat-pulldown",
+      "pass": true,
+      "gif": "/Users/user/Desktop/AI100講/oppo-fitness-coach/public/figures/lat-pulldown.gif",
+      "review_png": "/Users/user/Desktop/AI100講/oppo-fitness-coach/tools/figure-gif/review/lat-pulldown.png",
+      "width": 384,
+      "height": 384,
+      "frames": 25,
+      "duration_ms": 2000,
+      "loop": 0,
+      "palette_colors": 63,
+      "size_bytes": 110328,
+      "size_kb": 107.74,
+      "anchor_check": {
+        "category": "seated",
+        "sampled_frames": [
+          0,
+          6,
+          12
+        ],
+        "status": "skipped",
+        "skipped_reason": "Seated machine exercise: hips fixed on seat cushion (checked hip/seat contact instead)",
+        "contact_check": {
+          "label": "seat_hip",
+          "frames": [
+            0,
+            6,
+            12
+          ],
+          "box": [
+            176,
+            260,
+            201,
+            264
+          ],
+          "max_diff": 0,
+          "changed_pct": 0.0
+        }
+      },
+      "warnings": [],
+      "errors": []
+    },
+    {
+      "id": "leg-extension",
+      "pass": true,
+      "gif": "/Users/user/Desktop/AI100講/oppo-fitness-coach/public/figures/leg-extension.gif",
+      "review_png": "/Users/user/Desktop/AI100講/oppo-fitness-coach/tools/figure-gif/review/leg-extension.png",
+      "width": 384,
+      "height": 384,
+      "frames": 25,
+      "duration_ms": 2000,
+      "loop": 0,
+      "palette_colors": 62,
+      "size_bytes": 74182,
+      "size_kb": 72.44,
+      "anchor_check": {
+        "category": "seated",
+        "sampled_frames": [
+          0,
+          6,
+          12
+        ],
+        "status": "skipped",
+        "skipped_reason": "Seated machine exercise: hips fixed on seat cushion (checked hip/seat contact instead)",
+        "contact_check": {
+          "label": "seat_hip",
+          "frames": [
+            0,
+            6,
+            12
+          ],
+          "box": [
+            162,
+            260,
+            188,
+            264
+          ],
+          "max_diff": 0,
+          "changed_pct": 0.0
+        }
+      },
+      "warnings": [],
+      "errors": []
+    },
+    {
+      "id": "leg-press",
+      "pass": true,
+      "gif": "/Users/user/Desktop/AI100講/oppo-fitness-coach/public/figures/leg-press.gif",
+      "review_png": "/Users/user/Desktop/AI100講/oppo-fitness-coach/tools/figure-gif/review/leg-press.png",
+      "width": 384,
+      "height": 384,
+      "frames": 25,
+      "duration_ms": 2000,
+      "loop": 0,
+      "palette_colors": 62,
+      "size_bytes": 115088,
+      "size_kb": 112.39,
+      "anchor_check": {
+        "category": "seated",
+        "sampled_frames": [
+          0,
+          6,
+          12
+        ],
+        "status": "skipped",
+        "skipped_reason": "Seated machine exercise: hips fixed on seat cushion (checked hip/seat contact instead)",
+        "contact_check": {
+          "label": "seat_hip",
+          "frames": [
+            0,
+            6,
+            12
+          ],
+          "box": [
+            68,
+            249,
+            83,
+            272
+          ],
+          "max_diff": 0,
+          "changed_pct": 0.0
+        }
+      },
+      "warnings": [],
+      "errors": []
+    },
+    {
+      "id": "lunge",
+      "pass": true,
+      "gif": "/Users/user/Desktop/AI100講/oppo-fitness-coach/public/figures/lunge.gif",
+      "review_png": "/Users/user/Desktop/AI100講/oppo-fitness-coach/tools/figure-gif/review/lunge.png",
+      "width": 384,
+      "height": 384,
+      "frames": 25,
+      "duration_ms": 2000,
+      "loop": 0,
+      "palette_colors": 63,
+      "size_bytes": 220734,
+      "size_kb": 215.56,
+      "anchor_check": {
+        "category": "standing",
+        "sampled_frames": [
+          0,
+          6,
+          12
+        ],
+        "status": "checked",
+        "box": [
+          213,
+          333,
+          246,
+          339
+        ],
+        "max_diff": 0,
+        "changed_pct": 0.0,
+        "per_frame": [
+          {
+            "frame": 0,
+            "max_diff": 0,
+            "changed_pct": 0.0
+          },
+          {
+            "frame": 6,
+            "max_diff": 0,
+            "changed_pct": 0.0
+          },
+          {
+            "frame": 12,
+            "max_diff": 0,
+            "changed_pct": 0.0
+          }
+        ]
+      },
+      "warnings": [],
+      "errors": []
+    },
+    {
+      "id": "march",
+      "pass": true,
+      "gif": "/Users/user/Desktop/AI100講/oppo-fitness-coach/public/figures/march.gif",
+      "review_png": "/Users/user/Desktop/AI100講/oppo-fitness-coach/tools/figure-gif/review/march.png",
+      "width": 384,
+      "height": 384,
+      "frames": 25,
+      "duration_ms": 2000,
+      "loop": 0,
+      "palette_colors": 62,
+      "size_bytes": 229372,
+      "size_kb": 224.0,
+      "anchor_check": {
+        "category": "standing",
+        "sampled_frames": [
+          0,
+          6,
+          12
+        ],
+        "status": "checked",
+        "box": [
+          170,
+          333,
+          179,
+          338
+        ],
+        "max_diff": 0,
+        "changed_pct": 0.0,
+        "per_frame": [
+          {
+            "frame": 0,
+            "max_diff": 0,
+            "changed_pct": 0.0
+          },
+          {
+            "frame": 6,
+            "max_diff": 0,
+            "changed_pct": 0.0
+          },
+          {
+            "frame": 12,
+            "max_diff": 0,
+            "changed_pct": 0.0
+          }
+        ]
+      },
+      "warnings": [],
+      "errors": []
+    },
+    {
+      "id": "pistol-squat",
+      "pass": true,
+      "gif": "/Users/user/Desktop/AI100講/oppo-fitness-coach/public/figures/pistol-squat.gif",
+      "review_png": "/Users/user/Desktop/AI100講/oppo-fitness-coach/tools/figure-gif/review/pistol-squat.png",
+      "width": 384,
+      "height": 384,
+      "frames": 25,
+      "duration_ms": 2000,
+      "loop": 0,
+      "palette_colors": 61,
+      "size_bytes": 227915,
+      "size_kb": 222.57,
+      "anchor_check": {
+        "category": "standing",
+        "sampled_frames": [
+          0,
+          6,
+          12
+        ],
+        "status": "checked",
+        "box": [
+          168,
+          333,
+          201,
+          339
+        ],
+        "max_diff": 0,
+        "changed_pct": 0.0,
+        "per_frame": [
+          {
+            "frame": 0,
+            "max_diff": 0,
+            "changed_pct": 0.0
+          },
+          {
+            "frame": 6,
+            "max_diff": 0,
+            "changed_pct": 0.0
+          },
+          {
+            "frame": 12,
+            "max_diff": 0,
+            "changed_pct": 0.0
+          }
+        ]
+      },
+      "warnings": [],
+      "errors": []
+    },
+    {
+      "id": "pushup",
+      "pass": true,
+      "gif": "/Users/user/Desktop/AI100講/oppo-fitness-coach/public/figures/pushup.gif",
+      "review_png": "/Users/user/Desktop/AI100講/oppo-fitness-coach/tools/figure-gif/review/pushup.png",
+      "width": 384,
+      "height": 384,
+      "frames": 25,
+      "duration_ms": 2000,
+      "loop": 0,
+      "palette_colors": 63,
+      "size_bytes": 168443,
+      "size_kb": 164.5,
+      "anchor_check": {
+        "category": "prone",
+        "sampled_frames": [
+          0,
+          6,
+          12
+        ],
+        "status": "skipped",
+        "skipped_reason": "Prone floor exercise: body horizontal on mat (checked floor contact point instead)",
+        "contact_check": {
+          "label": "floor_palm",
+          "frames": [
+            0,
+            6,
+            12
+          ],
+          "box": [
+            305,
+            286,
+            312,
+            288
+          ],
+          "max_diff": 0,
+          "changed_pct": 0.0
+        }
+      },
+      "warnings": [],
+      "errors": []
+    },
+    {
+      "id": "seated-row",
+      "pass": true,
+      "gif": "/Users/user/Desktop/AI100講/oppo-fitness-coach/public/figures/seated-row.gif",
+      "review_png": "/Users/user/Desktop/AI100講/oppo-fitness-coach/tools/figure-gif/review/seated-row.png",
+      "width": 384,
+      "height": 384,
+      "frames": 25,
+      "duration_ms": 2000,
+      "loop": 0,
+      "palette_colors": 63,
+      "size_bytes": 109725,
+      "size_kb": 107.15,
+      "anchor_check": {
+        "category": "seated",
+        "sampled_frames": [
+          0,
+          6,
+          12
+        ],
+        "status": "skipped",
+        "skipped_reason": "Seated machine exercise: hips fixed on seat cushion (checked hip/seat contact instead)",
+        "contact_check": {
+          "label": "seat_hip",
+          "frames": [
+            0,
+            6,
+            12
+          ],
+          "box": [
+            155,
+            260,
+            180,
+            264
+          ],
+          "max_diff": 0,
+          "changed_pct": 0.0
+        }
+      },
+      "warnings": [],
+      "errors": []
+    },
+    {
+      "id": "shoulder-press-machine",
+      "pass": true,
+      "gif": "/Users/user/Desktop/AI100講/oppo-fitness-coach/public/figures/shoulder-press-machine.gif",
+      "review_png": "/Users/user/Desktop/AI100講/oppo-fitness-coach/tools/figure-gif/review/shoulder-press-machine.png",
+      "width": 384,
+      "height": 384,
+      "frames": 25,
+      "duration_ms": 2000,
+      "loop": 0,
+      "palette_colors": 63,
+      "size_bytes": 101220,
+      "size_kb": 98.85,
+      "anchor_check": {
+        "category": "seated",
+        "sampled_frames": [
+          0,
+          6,
+          12
+        ],
+        "status": "skipped",
+        "skipped_reason": "Seated machine exercise: hips fixed on seat cushion (checked hip/seat contact instead)",
+        "contact_check": {
+          "label": "seat_hip",
+          "frames": [
+            0,
+            6,
+            12
+          ],
+          "box": [
+            180,
+            236,
+            204,
+            242
+          ],
+          "max_diff": 0,
+          "changed_pct": 0.0
+        }
+      },
+      "warnings": [],
+      "errors": []
+    },
+    {
+      "id": "side-leg-raise",
+      "pass": true,
+      "gif": "/Users/user/Desktop/AI100講/oppo-fitness-coach/public/figures/side-leg-raise.gif",
+      "review_png": "/Users/user/Desktop/AI100講/oppo-fitness-coach/tools/figure-gif/review/side-leg-raise.png",
+      "width": 384,
+      "height": 384,
+      "frames": 25,
+      "duration_ms": 2000,
+      "loop": 0,
+      "palette_colors": 60,
+      "size_bytes": 258480,
+      "size_kb": 252.42,
+      "anchor_check": {
+        "category": "standing",
+        "sampled_frames": [
+          0,
+          6,
+          12
+        ],
+        "status": "checked",
+        "box": [
+          173,
+          333,
+          182,
+          338
+        ],
+        "max_diff": 0,
+        "changed_pct": 0.0,
+        "per_frame": [
+          {
+            "frame": 0,
+            "max_diff": 0,
+            "changed_pct": 0.0
+          },
+          {
+            "frame": 6,
+            "max_diff": 0,
+            "changed_pct": 0.0
+          },
+          {
+            "frame": 12,
+            "max_diff": 0,
+            "changed_pct": 0.0
+          }
+        ]
+      },
+      "warnings": [],
+      "errors": []
+    },
+    {
+      "id": "single-leg-rdl",
+      "pass": true,
+      "gif": "/Users/user/Desktop/AI100講/oppo-fitness-coach/public/figures/single-leg-rdl.gif",
+      "review_png": "/Users/user/Desktop/AI100講/oppo-fitness-coach/tools/figure-gif/review/single-leg-rdl.png",
+      "width": 384,
+      "height": 384,
+      "frames": 25,
+      "duration_ms": 2000,
+      "loop": 0,
+      "palette_colors": 63,
+      "size_bytes": 242955,
+      "size_kb": 237.26,
+      "anchor_check": {
+        "category": "standing",
+        "sampled_frames": [
+          0,
+          6,
+          12
+        ],
+        "status": "checked",
+        "box": [
+          176,
+          333,
+          209,
+          339
+        ],
+        "max_diff": 0,
+        "changed_pct": 0.0,
+        "per_frame": [
+          {
+            "frame": 0,
+            "max_diff": 0,
+            "changed_pct": 0.0
+          },
+          {
+            "frame": 6,
+            "max_diff": 0,
+            "changed_pct": 0.0
+          },
+          {
+            "frame": 12,
+            "max_diff": 0,
+            "changed_pct": 0.0
+          }
+        ]
+      },
+      "warnings": [],
+      "errors": []
+    },
+    {
+      "id": "sit-to-stand",
+      "pass": true,
+      "gif": "/Users/user/Desktop/AI100講/oppo-fitness-coach/public/figures/sit-to-stand.gif",
+      "review_png": "/Users/user/Desktop/AI100講/oppo-fitness-coach/tools/figure-gif/review/sit-to-stand.png",
+      "width": 384,
+      "height": 384,
+      "frames": 25,
+      "duration_ms": 2000,
+      "loop": 0,
+      "palette_colors": 62,
+      "size_bytes": 215679,
+      "size_kb": 210.62,
+      "anchor_check": {
+        "category": "standing",
+        "sampled_frames": [
+          0,
+          6,
+          12
+        ],
+        "status": "checked",
+        "box": [
+          218,
+          333,
+          251,
+          339
+        ],
+        "max_diff": 0,
+        "changed_pct": 0.0,
+        "per_frame": [
+          {
+            "frame": 0,
+            "max_diff": 0,
+            "changed_pct": 0.0
+          },
+          {
+            "frame": 6,
+            "max_diff": 0,
+            "changed_pct": 0.0
+          },
+          {
+            "frame": 12,
+            "max_diff": 0,
+            "changed_pct": 0.0
+          }
+        ]
+      },
+      "warnings": [],
+      "errors": []
+    },
+    {
+      "id": "squat",
+      "pass": true,
+      "gif": "/Users/user/Desktop/AI100講/oppo-fitness-coach/public/figures/squat.gif",
+      "review_png": "/Users/user/Desktop/AI100講/oppo-fitness-coach/tools/figure-gif/review/squat.png",
+      "width": 384,
+      "height": 384,
+      "frames": 25,
+      "duration_ms": 2000,
+      "loop": 0,
+      "palette_colors": 62,
+      "size_bytes": 225076,
+      "size_kb": 219.8,
+      "anchor_check": {
+        "category": "standing",
+        "sampled_frames": [
+          0,
+          6,
+          12
+        ],
+        "status": "checked",
+        "box": [
+          161,
+          333,
+          194,
+          339
+        ],
+        "max_diff": 0,
+        "changed_pct": 0.0,
+        "per_frame": [
+          {
+            "frame": 0,
+            "max_diff": 0,
+            "changed_pct": 0.0
+          },
+          {
+            "frame": 6,
+            "max_diff": 0,
+            "changed_pct": 0.0
+          },
+          {
+            "frame": 12,
+            "max_diff": 0,
+            "changed_pct": 0.0
+          }
+        ]
+      },
+      "warnings": [],
+      "errors": []
+    },
+    {
+      "id": "sumo-squat",
+      "pass": true,
+      "gif": "/Users/user/Desktop/AI100講/oppo-fitness-coach/public/figures/sumo-squat.gif",
+      "review_png": "/Users/user/Desktop/AI100講/oppo-fitness-coach/tools/figure-gif/review/sumo-squat.png",
+      "width": 384,
+      "height": 384,
+      "frames": 25,
+      "duration_ms": 2000,
+      "loop": 0,
+      "palette_colors": 63,
+      "size_bytes": 224885,
+      "size_kb": 219.61,
+      "anchor_check": {
+        "category": "standing",
+        "sampled_frames": [
+          0,
+          6,
+          12
+        ],
+        "status": "checked",
+        "box": [
+          137,
+          333,
+          146,
+          338
+        ],
+        "max_diff": 0,
+        "changed_pct": 0.0,
+        "per_frame": [
+          {
+            "frame": 0,
+            "max_diff": 0,
+            "changed_pct": 0.0
+          },
+          {
+            "frame": 6,
+            "max_diff": 0,
+            "changed_pct": 0.0
+          },
+          {
+            "frame": 12,
+            "max_diff": 0,
+            "changed_pct": 0.0
+          }
+        ]
+      },
+      "warnings": [],
+      "errors": []
+    },
+    {
+      "id": "wall-pushup",
+      "pass": true,
+      "gif": "/Users/user/Desktop/AI100講/oppo-fitness-coach/public/figures/wall-pushup.gif",
+      "review_png": "/Users/user/Desktop/AI100講/oppo-fitness-coach/tools/figure-gif/review/wall-pushup.png",
+      "width": 384,
+      "height": 384,
+      "frames": 25,
+      "duration_ms": 2000,
+      "loop": 0,
+      "palette_colors": 63,
+      "size_bytes": 211965,
+      "size_kb": 207.0,
+      "anchor_check": {
+        "category": "wall",
+        "sampled_frames": [
+          0,
+          6,
+          12
+        ],
+        "status": "skipped",
+        "skipped_reason": "Wall pushup: palms fixed on wall and feet on floor (checked both contact points)",
+        "contact_check": {
+          "label": "wall_palm",
+          "frames": [
+            0,
+            6,
+            12
+          ],
+          "box": [
+            272,
+            78,
+            275,
+            86
+          ],
+          "max_diff": 0,
+          "changed_pct": 0.0
+        }
+      },
+      "warnings": [],
+      "errors": []
+    }
+  ]
+}

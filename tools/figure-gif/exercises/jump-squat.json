@@ -1,0 +1,133 @@
+{
+  "id": "jump-squat",
+  "name": "Jump Squat",
+  "view": "side",
+  "anchor": "feet",
+  "anchorCategory": "jump",
+  "anchorX": 224,
+  "groundY": 470,
+  "durationMs": 2000,
+  "totalFrames": 25,
+  "highlightMuscles": ["quadriceps", "glutes", "calves"],
+  "keyframes": [
+    {
+      "t": 0.0,
+      "pose": {
+        "footOffsetY": 0,
+        "footAngle": 0,
+        "shinAngle": 88,
+        "thighAngle": 92,
+        "torsoAngle": 88,
+        "neckAngle": 88,
+        "headPitch": 0,
+        "upperArmAngle": -84,
+        "forearmAngle": -72,
+        "handAngle": -76,
+        "farUpperArmAngle": -82,
+        "farForearmAngle": -70
+      }
+    },
+    {
+      "t": 0.06,
+      "pose": {
+        "footOffsetY": 0,
+        "footAngle": 0,
+        "shinAngle": 88,
+        "thighAngle": 92,
+        "torsoAngle": 88,
+        "neckAngle": 88,
+        "headPitch": 0,
+        "upperArmAngle": -84,
+        "forearmAngle": -72,
+        "handAngle": -76,
+        "farUpperArmAngle": -82,
+        "farForearmAngle": -70
+      }
+    },
+    {
+      "t": 0.24,
+      "pose": {
+        "footOffsetY": 0,
+        "footAngle": 0,
+        "shinAngle": 66,
+        "thighAngle": 172,
+        "torsoAngle": 60,
+        "neckAngle": 74,
+        "headPitch": 8,
+        "upperArmAngle": -118,
+        "forearmAngle": -106,
+        "handAngle": -110,
+        "farUpperArmAngle": -115,
+        "farForearmAngle": -103
+      }
+    },
+    {
+      "t": 0.5,
+      "pose": {
+        "footOffsetY": -34,
+        "footAngle": 14,
+        "shinAngle": 88,
+        "thighAngle": 92,
+        "torsoAngle": 88,
+        "neckAngle": 88,
+        "headPitch": -2,
+        "upperArmAngle": -32,
+        "forearmAngle": -18,
+        "handAngle": -20,
+        "farUpperArmAngle": -29,
+        "farForearmAngle": -15
+      }
+    },
+    {
+      "t": 0.74,
+      "pose": {
+        "footOffsetY": 0,
+        "footAngle": 0,
+        "shinAngle": 68,
+        "thighAngle": 168,
+        "torsoAngle": 62,
+        "neckAngle": 75,
+        "headPitch": 6,
+        "upperArmAngle": -110,
+        "forearmAngle": -96,
+        "handAngle": -100,
+        "farUpperArmAngle": -107,
+        "farForearmAngle": -93
+      }
+    },
+    {
+      "t": 0.92,
+      "pose": {
+        "footOffsetY": 0,
+        "footAngle": 0,
+        "shinAngle": 88,
+        "thighAngle": 92,
+        "torsoAngle": 88,
+        "neckAngle": 88,
+        "headPitch": 0,
+        "upperArmAngle": -84,
+        "forearmAngle": -72,
+        "handAngle": -76,
+        "farUpperArmAngle": -82,
+        "farForearmAngle": -70
+      }
+    },
+    {
+      "t": 1.0,
+      "pose": {
+        "footOffsetY": 0,
+        "footAngle": 0,
+        "shinAngle": 88,
+        "thighAngle": 92,
+        "torsoAngle": 88,
+        "neckAngle": 88,
+        "headPitch": 0,
+        "upperArmAngle": -84,
+        "forearmAngle": -72,
+        "handAngle": -76,
+        "farUpperArmAngle": -82,
+        "farForearmAngle": -70
+      }
+    }
+  ]
+}

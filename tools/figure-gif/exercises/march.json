@@ -1,0 +1,124 @@
+{
+  "id": "march",
+  "name": "Standing March",
+  "view": "front",
+  "anchorSide": "lowest",
+  "anchorCategory": "standing",
+  "anchorX": 256,
+  "groundY": 454,
+  "durationMs": 2000,
+  "totalFrames": 25,
+  "highlightMuscles": ["hipFlexors", "core"],
+  "keyframes": [
+    {
+      "t": 0.0,
+      "pose": {
+        "bodyLiftY": 0,
+        "hipShiftX": 0,
+        "torsoTilt": 0,
+        "leftThighAbd": 2,
+        "leftThighFlex": 0,
+        "leftShinAbd": 0,
+        "leftShinFlex": 0,
+        "rightThighAbd": 2,
+        "rightThighFlex": 0,
+        "rightShinAbd": 0,
+        "rightShinFlex": 0,
+        "leftUpperArmAngle": -102,
+        "leftForearmAngle": -94,
+        "leftArmForeshorten": 1.0,
+        "rightUpperArmAngle": -78,
+        "rightForearmAngle": -86,
+        "rightArmForeshorten": 1.0
+      }
+    },
+    {
+      "t": 0.25,
+      "pose": {
+        "bodyLiftY": 0,
+        "hipShiftX": 0,
+        "torsoTilt": -2,
+        "leftThighAbd": 2,
+        "leftThighFlex": 0,
+        "leftShinAbd": 0,
+        "leftShinFlex": 0,
+        "rightThighAbd": 4,
+        "rightThighFlex": 66,
+        "rightShinAbd": 2,
+        "rightShinFlex": 6,
+        "leftUpperArmAngle": -118,
+        "leftForearmAngle": -74,
+        "leftArmForeshorten": 0.78,
+        "rightUpperArmAngle": -72,
+        "rightForearmAngle": -86,
+        "rightArmForeshorten": 0.94
+      }
+    },
+    {
+      "t": 0.5,
+      "pose": {
+        "bodyLiftY": 0,
+        "hipShiftX": 0,
+        "torsoTilt": 0,
+        "leftThighAbd": 2,
+        "leftThighFlex": 0,
+        "leftShinAbd": 0,
+        "leftShinFlex": 0,
+        "rightThighAbd": 2,
+        "rightThighFlex": 0,
+        "rightShinAbd": 0,
+        "rightShinFlex": 0,
+        "leftUpperArmAngle": -102,
+        "leftForearmAngle": -94,
+        "leftArmForeshorten": 1.0,
+        "rightUpperArmAngle": -78,
+        "rightForearmAngle": -86,
+        "rightArmForeshorten": 1.0
+      }
+    },
+    {
+      "t": 0.75,
+      "pose": {
+        "bodyLiftY": 0,
+        "hipShiftX": 0,
+        "torsoTilt": 2,
+        "leftThighAbd": 4,
+        "leftThighFlex": 66,
+        "leftShinAbd": 2,
+        "leftShinFlex": 6,
+        "rightThighAbd": 2,
+        "rightThighFlex": 0,
+        "rightShinAbd": 0,
+        "rightShinFlex": 0,
+        "leftUpperArmAngle": -108,
+        "leftForearmAngle": -94,
+        "leftArmForeshorten": 0.94,
+        "rightUpperArmAngle": -62,
+        "rightForearmAngle": -106,
+        "rightArmForeshorten": 0.78
+      }
+    },
+    {
+      "t": 1.0,
+      "pose": {
+        "bodyLiftY": 0,
+        "hipShiftX": 0,
+        "torsoTilt": 0,
+        "leftThighAbd": 2,
+        "leftThighFlex": 0,
+        "leftShinAbd": 0,
+        "leftShinFlex": 0,
+        "rightThighAbd": 2,
+        "rightThighFlex": 0,
+        "rightShinAbd": 0,
+        "rightShinFlex": 0,
+        "leftUpperArmAngle": -102,
+        "leftForearmAngle": -94,
+        "leftArmForeshorten": 1.0,
+        "rightUpperArmAngle": -78,
+        "rightForearmAngle": -86,
+        "rightArmForeshorten": 1.0
+      }
+    }
+  ]
+}

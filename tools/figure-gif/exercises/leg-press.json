@@ -1,0 +1,129 @@
+{
+  "id": "leg-press",
+  "name": "Leg Press",
+  "view": "side",
+  "prop": "machine-leg-press",
+  "anchor": "leg-press",
+  "anchorCategory": "seated",
+  "anchorX": 146,
+  "hipY": 386,
+  "seatY": 406,
+  "groundY": 454,
+  "durationMs": 2000,
+  "totalFrames": 25,
+  "highlightMuscles": ["quadriceps", "glutes"],
+  "keyframes": [
+    {
+      "t": 0.0,
+      "pose": {
+        "torsoAngle": 128,
+        "neckAngle": 116,
+        "headPitch": 18,
+        "ankleX": 264,
+        "ankleY": 308,
+        "footAngle": -124,
+        "upperArmAngle": -78,
+        "forearmAngle": -12,
+        "handAngle": 0
+      }
+    },
+    {
+      "t": 0.08,
+      "pose": {
+        "torsoAngle": 128,
+        "neckAngle": 116,
+        "headPitch": 18,
+        "ankleX": 264,
+        "ankleY": 308,
+        "footAngle": -124,
+        "upperArmAngle": -78,
+        "forearmAngle": -12,
+        "handAngle": 0
+      }
+    },
+    {
+      "t": 0.27,
+      "pose": {
+        "torsoAngle": 128,
+        "neckAngle": 116,
+        "headPitch": 18,
+        "ankleX": 294,
+        "ankleY": 287,
+        "footAngle": -124,
+        "upperArmAngle": -78,
+        "forearmAngle": -12,
+        "handAngle": 0
+      }
+    },
+    {
+      "t": 0.46,
+      "pose": {
+        "torsoAngle": 128,
+        "neckAngle": 116,
+        "headPitch": 18,
+        "ankleX": 324,
+        "ankleY": 266,
+        "footAngle": -124,
+        "upperArmAngle": -78,
+        "forearmAngle": -12,
+        "handAngle": 0
+      }
+    },
+    {
+      "t": 0.56,
+      "pose": {
+        "torsoAngle": 128,
+        "neckAngle": 116,
+        "headPitch": 18,
+        "ankleX": 324,
+        "ankleY": 266,
+        "footAngle": -124,
+        "upperArmAngle": -78,
+        "forearmAngle": -12,
+        "handAngle": 0
+      }
+    },
+    {
+      "t": 0.77,
+      "pose": {
+        "torsoAngle": 128,
+        "neckAngle": 116,
+        "headPitch": 18,
+        "ankleX": 294,
+        "ankleY": 287,
+        "footAngle": -124,
+        "upperArmAngle": -78,
+        "forearmAngle": -12,
+        "handAngle": 0
+      }
+    },
+    {
+      "t": 0.92,
+      "pose": {
+        "torsoAngle": 128,
+        "neckAngle": 116,
+        "headPitch": 18,
+        "ankleX": 264,
+        "ankleY": 308,
+        "footAngle": -124,
+        "upperArmAngle": -78,
+        "forearmAngle": -12,
+        "handAngle": 0
+      }
+    },
+    {
+      "t": 1.0,
+      "pose": {
+        "torsoAngle": 128,
+        "neckAngle": 116,
+        "headPitch": 18,
+        "ankleX": 264,
+        "ankleY": 308,
+        "footAngle": -124,
+        "upperArmAngle": -78,
+        "forearmAngle": -12,
+        "handAngle": 0
+      }
+    }
+  ]
+}

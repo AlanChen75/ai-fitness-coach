@@ -1,0 +1,174 @@
+{
+  "id": "jumping-jack",
+  "name": "Jumping Jack",
+  "view": "front",
+  "anchorSide": "lowest",
+  "anchorCategory": "jump",
+  "anchorX": 256,
+  "groundY": 478,
+  "durationMs": 2000,
+  "totalFrames": 25,
+  "highlightMuscles": ["deltoids", "calves"],
+  "keyframes": [
+    {
+      "t": 0.0,
+      "pose": {
+        "bodyLiftY": 0,
+        "hipShiftX": 0,
+        "torsoTilt": 0,
+        "leftThighAbd": 2,
+        "leftThighFlex": 0,
+        "leftShinAbd": 0,
+        "leftShinFlex": 0,
+        "rightThighAbd": 2,
+        "rightThighFlex": 0,
+        "rightShinAbd": 0,
+        "rightShinFlex": 0,
+        "leftUpperArmAngle": -100,
+        "leftForearmAngle": -92,
+        "rightUpperArmAngle": -80,
+        "rightForearmAngle": -88
+      }
+    },
+    {
+      "t": 0.08,
+      "pose": {
+        "bodyLiftY": 0,
+        "hipShiftX": 0,
+        "torsoTilt": 0,
+        "leftThighAbd": 2,
+        "leftThighFlex": 0,
+        "leftShinAbd": 0,
+        "leftShinFlex": 0,
+        "rightThighAbd": 2,
+        "rightThighFlex": 0,
+        "rightShinAbd": 0,
+        "rightShinFlex": 0,
+        "leftUpperArmAngle": -100,
+        "leftForearmAngle": -92,
+        "rightUpperArmAngle": -80,
+        "rightForearmAngle": -88
+      }
+    },
+    {
+      "t": 0.26,
+      "pose": {
+        "bodyLiftY": -22,
+        "hipShiftX": 0,
+        "torsoTilt": 0,
+        "leftThighAbd": 14,
+        "leftThighFlex": 0,
+        "leftShinAbd": 10,
+        "leftShinFlex": 0,
+        "rightThighAbd": 14,
+        "rightThighFlex": 0,
+        "rightShinAbd": 10,
+        "rightShinFlex": 0,
+        "leftUpperArmAngle": -176,
+        "leftForearmAngle": -186,
+        "rightUpperArmAngle": -4,
+        "rightForearmAngle": 6
+      }
+    },
+    {
+      "t": 0.45,
+      "pose": {
+        "bodyLiftY": 0,
+        "hipShiftX": 0,
+        "torsoTilt": 0,
+        "leftThighAbd": 22,
+        "leftThighFlex": 0,
+        "leftShinAbd": 16,
+        "leftShinFlex": 0,
+        "rightThighAbd": 22,
+        "rightThighFlex": 0,
+        "rightShinAbd": 16,
+        "rightShinFlex": 0,
+        "leftUpperArmAngle": -204,
+        "leftForearmAngle": -242,
+        "rightUpperArmAngle": 24,
+        "rightForearmAngle": 62
+      }
+    },
+    {
+      "t": 0.56,
+      "pose": {
+        "bodyLiftY": 0,
+        "hipShiftX": 0,
+        "torsoTilt": 0,
+        "leftThighAbd": 22,
+        "leftThighFlex": 0,
+        "leftShinAbd": 16,
+        "leftShinFlex": 0,
+        "rightThighAbd": 22,
+        "rightThighFlex": 0,
+        "rightShinAbd": 16,
+        "rightShinFlex": 0,
+        "leftUpperArmAngle": -204,
+        "leftForearmAngle": -242,
+        "rightUpperArmAngle": 24,
+        "rightForearmAngle": 62
+      }
+    },
+    {
+      "t": 0.74,
+      "pose": {
+        "bodyLiftY": -22,
+        "hipShiftX": 0,
+        "torsoTilt": 0,
+        "leftThighAbd": 14,
+        "leftThighFlex": 0,
+        "leftShinAbd": 10,
+        "leftShinFlex": 0,
+        "rightThighAbd": 14,
+        "rightThighFlex": 0,
+        "rightShinAbd": 10,
+        "rightShinFlex": 0,
+        "leftUpperArmAngle": -176,
+        "leftForearmAngle": -186,
+        "rightUpperArmAngle": -4,
+        "rightForearmAngle": 6
+      }
+    },
+    {
+      "t": 0.92,
+      "pose": {
+        "bodyLiftY": 0,
+        "hipShiftX": 0,
+        "torsoTilt": 0,
+        "leftThighAbd": 2,
+        "leftThighFlex": 0,
+        "leftShinAbd": 0,
+        "leftShinFlex": 0,
+        "rightThighAbd": 2,
+        "rightThighFlex": 0,
+        "rightShinAbd": 0,
+        "rightShinFlex": 0,
+        "leftUpperArmAngle": -100,
+        "leftForearmAngle": -92,
+        "rightUpperArmAngle": -80,
+        "rightForearmAngle": -88
+      }
+    },
+    {
+      "t": 1.0,
+      "pose": {
+        "bodyLiftY": 0,
+        "hipShiftX": 0,
+        "torsoTilt": 0,
+        "leftThighAbd": 2,
+        "leftThighFlex": 0,
+        "leftShinAbd": 0,
+        "leftShinFlex": 0,
+        "rightThighAbd": 2,
+        "rightThighFlex": 0,
+        "rightShinAbd": 0,
+        "rightShinFlex": 0,
+        "leftUpperArmAngle": -100,
+        "leftForearmAngle": -92,
+        "rightUpperArmAngle": -80,
+        "rightForearmAngle": -88
+      }
+    }
+  ]
+}

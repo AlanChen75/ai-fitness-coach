@@ -1,0 +1,146 @@
+{
+  "id": "shoulder-press-machine",
+  "name": "Shoulder Press Machine",
+  "view": "front",
+  "frontMode": "seated",
+  "prop": "machine-shoulder-press",
+  "anchor": "seated",
+  "anchorCategory": "seated",
+  "anchorX": 256,
+  "hipY": 300,
+  "seatY": 318,
+  "groundY": 454,
+  "durationMs": 2000,
+  "totalFrames": 25,
+  "highlightMuscles": ["deltoids"],
+  "keyframes": [
+    {
+      "t": 0.0,
+      "pose": {
+        "torsoTilt": 0,
+        "leftThighAbd": 8,
+        "leftThighFlex": 76,
+        "rightThighAbd": 8,
+        "rightThighFlex": 76,
+        "leftUpperArmAngle": -156,
+        "leftForearmAngle": 84,
+        "leftHandAngle": 84,
+        "rightUpperArmAngle": -24,
+        "rightForearmAngle": 96,
+        "rightHandAngle": 96
+      }
+    },
+    {
+      "t": 0.08,
+      "pose": {
+        "torsoTilt": 0,
+        "leftThighAbd": 8,
+        "leftThighFlex": 76,
+        "rightThighAbd": 8,
+        "rightThighFlex": 76,
+        "leftUpperArmAngle": -156,
+        "leftForearmAngle": 84,
+        "leftHandAngle": 84,
+        "rightUpperArmAngle": -24,
+        "rightForearmAngle": 96,
+        "rightHandAngle": 96
+      }
+    },
+    {
+      "t": 0.27,
+      "pose": {
+        "torsoTilt": 0,
+        "leftThighAbd": 8,
+        "leftThighFlex": 76,
+        "rightThighAbd": 8,
+        "rightThighFlex": 76,
+        "leftUpperArmAngle": 154,
+        "leftForearmAngle": 82,
+        "leftHandAngle": 82,
+        "rightUpperArmAngle": 26,
+        "rightForearmAngle": 98,
+        "rightHandAngle": 98
+      }
+    },
+    {
+      "t": 0.46,
+      "pose": {
+        "torsoTilt": 0,
+        "leftThighAbd": 8,
+        "leftThighFlex": 76,
+        "rightThighAbd": 8,
+        "rightThighFlex": 76,
+        "leftUpperArmAngle": 122,
+        "leftForearmAngle": 78,
+        "leftHandAngle": 78,
+        "rightUpperArmAngle": 58,
+        "rightForearmAngle": 102,
+        "rightHandAngle": 102
+      }
+    },
+    {
+      "t": 0.56,
+      "pose": {
+        "torsoTilt": 0,
+        "leftThighAbd": 8,
+        "leftThighFlex": 76,
+        "rightThighAbd": 8,
+        "rightThighFlex": 76,
+        "leftUpperArmAngle": 122,
+        "leftForearmAngle": 78,
+        "leftHandAngle": 78,
+        "rightUpperArmAngle": 58,
+        "rightForearmAngle": 102,
+        "rightHandAngle": 102
+      }
+    },
+    {
+      "t": 0.77,
+      "pose": {
+        "torsoTilt": 0,
+        "leftThighAbd": 8,
+        "leftThighFlex": 76,
+        "rightThighAbd": 8,
+        "rightThighFlex": 76,
+        "leftUpperArmAngle": 154,
+        "leftForearmAngle": 82,
+        "leftHandAngle": 82,
+        "rightUpperArmAngle": 26,
+        "rightForearmAngle": 98,
+        "rightHandAngle": 98
+      }
+    },
+    {
+      "t": 0.92,
+      "pose": {
+        "torsoTilt": 0,
+        "leftThighAbd": 8,
+        "leftThighFlex": 76,
+        "rightThighAbd": 8,
+        "rightThighFlex": 76,
+        "leftUpperArmAngle": -156,
+        "leftForearmAngle": 84,
+        "leftHandAngle": 84,
+        "rightUpperArmAngle": -24,
+        "rightForearmAngle": 96,
+        "rightHandAngle": 96
+      }
+    },
+    {
+      "t": 1.0,
+      "pose": {
+        "torsoTilt": 0,
+        "leftThighAbd": 8,
+        "leftThighFlex": 76,
+        "rightThighAbd": 8,
+        "rightThighFlex": 76,
+        "leftUpperArmAngle": -156,
+        "leftForearmAngle": 84,
+        "leftHandAngle": 84,
+        "rightUpperArmAngle": -24,
+        "rightForearmAngle": 96,
+        "rightHandAngle": 96
+      }
+    }
+  ]
+}

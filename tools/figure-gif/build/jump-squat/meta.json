@@ -1,0 +1,35 @@
+{
+  "id": "jump-squat",
+  "name": "Jump Squat",
+  "view": "side",
+  "highlightMuscles": [
+    "quadriceps",
+    "glutes",
+    "calves"
+  ],
+  "width": 384,
+  "height": 384,
+  "logicalWidth": 512,
+  "logicalHeight": 512,
+  "totalFrames": 25,
+  "durationMs": 2000,
+  "fps": 12.5,
+  "frameDelayMs": 80,
+  "anchorX": 224,
+  "groundY": 470,
+  "anchorCategory": "jump",
+  "anchorMode": "feet",
+  "anchorBox": [
+    161,
+    345,
+    194,
+    351
+  ],
+  "contactBox": [
+    161,
+    345,
+    194,
+    351
+  ],
+  "contactLabel": "near_foot"
+}

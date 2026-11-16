@@ -1,0 +1,28 @@
+{
+  "id": "chest-press-machine",
+  "name": "Chest Press Machine",
+  "view": "side",
+  "highlightMuscles": [
+    "pectorals"
+  ],
+  "width": 384,
+  "height": 384,
+  "logicalWidth": 512,
+  "logicalHeight": 512,
+  "totalFrames": 25,
+  "durationMs": 2000,
+  "fps": 12.5,
+  "frameDelayMs": 80,
+  "anchorX": 192,
+  "groundY": 454,
+  "anchorCategory": "seated",
+  "anchorMode": "seated",
+  "anchorBox": null,
+  "contactBox": [
+    170,
+    260,
+    195,
+    264
+  ],
+  "contactLabel": "seat_hip"
+}

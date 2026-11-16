@@ -1,0 +1,111 @@
+{
+  "id": "sumo-squat",
+  "name": "Sumo Squat",
+  "view": "front",
+  "frontMode": "sumo-squat",
+  "stanceHalfW": 68,
+  "anchorCategory": "standing",
+  "anchorX": 256,
+  "groundY": 454,
+  "durationMs": 2000,
+  "totalFrames": 25,
+  "highlightMuscles": ["adductors", "glutes"],
+  "keyframes": [
+    {
+      "t": 0.0,
+      "pose": {
+        "hipDrop": 0,
+        "kneeOutX": 46,
+        "torsoTilt": 0,
+        "leftUpperArmAngle": -104,
+        "leftForearmAngle": -90,
+        "rightUpperArmAngle": -76,
+        "rightForearmAngle": -90
+      }
+    },
+    {
+      "t": 0.08,
+      "pose": {
+        "hipDrop": 0,
+        "kneeOutX": 46,
+        "torsoTilt": 0,
+        "leftUpperArmAngle": -104,
+        "leftForearmAngle": -90,
+        "rightUpperArmAngle": -76,
+        "rightForearmAngle": -90
+      }
+    },
+    {
+      "t": 0.27,
+      "pose": {
+        "hipDrop": 42,
+        "kneeOutX": 66,
+        "torsoTilt": 0,
+        "leftUpperArmAngle": -112,
+        "leftForearmAngle": -52,
+        "rightUpperArmAngle": -68,
+        "rightForearmAngle": -128
+      }
+    },
+    {
+      "t": 0.46,
+      "pose": {
+        "hipDrop": 82,
+        "kneeOutX": 82,
+        "torsoTilt": 0,
+        "leftUpperArmAngle": -122,
+        "leftForearmAngle": -22,
+        "rightUpperArmAngle": -58,
+        "rightForearmAngle": -158
+      }
+    },
+    {
+      "t": 0.56,
+      "pose": {
+        "hipDrop": 82,
+        "kneeOutX": 82,
+        "torsoTilt": 0,
+        "leftUpperArmAngle": -122,
+        "leftForearmAngle": -22,
+        "rightUpperArmAngle": -58,
+        "rightForearmAngle": -158
+      }
+    },
+    {
+      "t": 0.77,
+      "pose": {
+        "hipDrop": 42,
+        "kneeOutX": 66,
+        "torsoTilt": 0,
+        "leftUpperArmAngle": -112,
+        "leftForearmAngle": -52,
+        "rightUpperArmAngle": -68,
+        "rightForearmAngle": -128
+      }
+    },
+    {
+      "t": 0.92,
+      "pose": {
+        "hipDrop": 0,
+        "kneeOutX": 46,
+        "torsoTilt": 0,
+        "leftUpperArmAngle": -104,
+        "leftForearmAngle": -90,
+        "rightUpperArmAngle": -76,
+        "rightForearmAngle": -90
+      }
+    },
+    {
+      "t": 1.0,
+      "pose": {
+        "hipDrop": 0,
+        "kneeOutX": 46,
+        "torsoTilt": 0,
+        "leftUpperArmAngle": -104,
+        "leftForearmAngle": -90,
+        "rightUpperArmAngle": -76,
+        "rightForearmAngle": -90
+      }
+    }
+  ]
+}

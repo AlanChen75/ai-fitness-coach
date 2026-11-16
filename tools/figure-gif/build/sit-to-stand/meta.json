@@ -1,0 +1,34 @@
+{
+  "id": "sit-to-stand",
+  "name": "Chair Sit-to-Stand",
+  "view": "side",
+  "highlightMuscles": [
+    "quadriceps",
+    "glutes"
+  ],
+  "width": 384,
+  "height": 384,
+  "logicalWidth": 512,
+  "logicalHeight": 512,
+  "totalFrames": 25,
+  "durationMs": 2000,
+  "fps": 12.5,
+  "frameDelayMs": 80,
+  "anchorX": 300,
+  "groundY": 454,
+  "anchorCategory": "standing",
+  "anchorMode": "feet",
+  "anchorBox": [
+    218,
+    333,
+    251,
+    339
+  ],
+  "contactBox": [
+    218,
+    333,
+    251,
+    339
+  ],
+  "contactLabel": "near_foot"
+}

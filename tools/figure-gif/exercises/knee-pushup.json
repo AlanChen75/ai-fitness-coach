@@ -1,0 +1,80 @@
+{
+  "id": "knee-pushup",
+  "name": "Knee Push-Up",
+  "view": "side",
+  "prop": "mat",
+  "anchor": "knee-pushup",
+  "anchorCategory": "prone",
+  "anchorX": 158,
+  "wristAnchorX": 374,
+  "groundY": 386,
+  "durationMs": 2000,
+  "totalFrames": 25,
+  "highlightMuscles": ["pectorals", "triceps"],
+  "keyframes": [
+    {
+      "t": 0.0,
+      "pose": {
+        "plankAngle": 27,
+        "shinAngle": 144,
+        "headPitch": 40
+      }
+    },
+    {
+      "t": 0.08,
+      "pose": {
+        "plankAngle": 27,
+        "shinAngle": 144,
+        "headPitch": 40
+      }
+    },
+    {
+      "t": 0.27,
+      "pose": {
+        "plankAngle": 17,
+        "shinAngle": 140,
+        "headPitch": 46
+      }
+    },
+    {
+      "t": 0.46,
+      "pose": {
+        "plankAngle": 8,
+        "shinAngle": 136,
+        "headPitch": 52
+      }
+    },
+    {
+      "t": 0.56,
+      "pose": {
+        "plankAngle": 8,
+        "shinAngle": 136,
+        "headPitch": 52
+      }
+    },
+    {
+      "t": 0.77,
+      "pose": {
+        "plankAngle": 17,
+        "shinAngle": 140,
+        "headPitch": 46
+      }
+    },
+    {
+      "t": 0.92,
+      "pose": {
+        "plankAngle": 27,
+        "shinAngle": 144,
+        "headPitch": 40
+      }
+    },
+    {
+      "t": 1.0,
+      "pose": {
+        "plankAngle": 27,
+        "shinAngle": 144,
+        "headPitch": 40
+      }
+    }
+  ]
+}

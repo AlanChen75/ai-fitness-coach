@@ -1,0 +1,34 @@
+{
+  "id": "wall-pushup",
+  "name": "Wall Push-Up",
+  "view": "side",
+  "highlightMuscles": [
+    "pectorals",
+    "triceps"
+  ],
+  "width": 384,
+  "height": 384,
+  "logicalWidth": 512,
+  "logicalHeight": 512,
+  "totalFrames": 25,
+  "durationMs": 2000,
+  "fps": 12.5,
+  "frameDelayMs": 80,
+  "anchorX": 170,
+  "groundY": 454,
+  "anchorCategory": "wall",
+  "anchorMode": "wall-pushup",
+  "anchorBox": [
+    120,
+    333,
+    153,
+    339
+  ],
+  "contactBox": [
+    272,
+    78,
+    275,
+    86
+  ],
+  "contactLabel": "wall_palm"
+}

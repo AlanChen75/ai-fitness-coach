@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="384" height="384" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg_grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#EEF1F4" />
+      <stop offset="100%" stop-color="#DDE2E8" />
+    </linearGradient>
+    <radialGradient id="floor_shadow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="rgba(25, 32, 42, 0.24)" />
+      <stop offset="55%" stop-color="rgba(25, 32, 42, 0.10)" />
+      <stop offset="100%" stop-color="rgba(25, 32, 42, 0)" />
+    </radialGradient>
+    <linearGradient id="prop_chair_grad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#CBD2DC" />
+          <stop offset="100%" stop-color="#AEB7C4" />
+        </linearGradient>
+    <linearGradient id="far_arm_ua_grad" gradientUnits="userSpaceOnUse" x1="336.71" y1="119.66" x2="317.22" y2="133.56">
+      <stop offset="0%" stop-color="#CFD6E0" />
+      <stop offset="22%" stop-color="#BCC4D0" />
+      <stop offset="56%" stop-color="#A1ABB9" />
+      <stop offset="86%" stop-color="#7D8798" />
+      <stop offset="100%" stop-color="#909AA9" />
+    </linearGradient>
+    <linearGradient id="far_arm_fa_grad" gradientUnits="userSpaceOnUse" x1="377.05" y1="169.2" x2="361.61" y2="184.64">
+      <stop offset="0%" stop-color="#CFD6E0" />
+      <stop offset="22%" stop-color="#BCC4D0" />
+      <stop offset="56%" stop-color="#A1ABB9" />
+      <stop offset="86%" stop-color="#7D8798" />
+      <stop offset="100%" stop-color="#909AA9" />
+    </linearGradient>
+    <linearGradient id="far_arm_hand_grad" gradientUnits="userSpaceOnUse" x1="406.56" y1="204.04" x2="396.46" y2="214.14">
+      <stop offset="0%" stop-color="#CFD6E0" />
+      <stop offset="22%" stop-color="#BCC4D0" />
+      <stop offset="56%" stop-color="#A1ABB9" />
+      <stop offset="86%" stop-color="#7D8798" />
+      <stop offset="100%" stop-color="#909AA9" />
+    </linearGradient>
+    <linearGradient id="far_foot_grad" gradientUnits="userSpaceOnUse" x1="328" y1="424" x2="302" y2="450">
+      <stop offset="0%" stop-color="#CFD6E0" />
+      <stop offset="26%" stop-color="#BCC4D0" />
+      <stop offset="60%" stop-color="#A1ABB9" />
+      <stop offset="88%" stop-color="#7D8798" />
+      <stop offset="100%" stop-color="#909AA9" />
+    </linearGradient>
+    <linearGradient id="far_shin_grad" gradientUnits="userSpaceOnUse" x1="334.8" y1="378.25" x2="301.42" y2="374.45">
+      <stop offset="0%" stop-color="#CFD6E0" />
+      <stop offset="22%" stop-color="#BCC4D0" />
+      <stop offset="56%" stop-color="#A1ABB9" />
+      <stop offset="86%" stop-color="#7D8798" />
+      <stop offset="100%" stop-color="#909AA9" />
+    </linearGradient>
+    <linearGradient id="far_thigh_grad" gradientUnits="userSpaceOnUse" x1="325.95" y1="261.74" x2="281.89" y2="278.81">
+      <stop offset="0%" stop-color="#CFD6E0" />
+      <stop offset="22%" stop-color="#BCC4D0" />
+      <stop offset="56%" stop-color="#A1ABB9" />
+      <stop offset="86%" stop-color="#7D8798" />
+      <stop offset="100%" stop-color="#909AA9" />
+    </linearGradient>
+    <linearGradient id="far_quad_grad" gradientUnits="userSpaceOnUse" x1="323.75" y1="262.6" x2="284.1" y2="277.95">
+      <stop offset="0%" stop-color="#E26145" />
+      <stop offset="22%" stop-color="#D04628" />
+      <stop offset="56%" stop-color="#B42E14" />
+      <stop offset="86%" stop-color="#8A1C07" />
+      <stop offset="100%" stop-color="#BD4228" />
+    </linearGradient>
+    <linearGradient id="near_torso_grad" gradientUnits="userSpaceOnUse" x1="315.21" y1="163.58" x2="264.62" y2="154.21">
+      <stop offset="0%" stop-color="#F9FBFD" />
+      <stop offset="22%" stop-color="#E7EBF1" />
+      <stop offset="56%" stop-color="#CCD3DD" />
+      <stop offset="86%" stop-color="#9AA4B4" />
+      <stop offset="100%" stop-color="#B8C1CF" />
+    </linearGradient>
+    <linearGradient id="near_neck_grad" gradientUnits="userSpaceOnUse" x1="312.69" y1="88.17" x2="292.24" y2="85.84">
+      <stop offset="0%" stop-color="#F9FBFD" />
+      <stop offset="22%" stop-color="#E7EBF1" />
+      <stop offset="56%" stop-color="#CCD3DD" />
+      <stop offset="86%" stop-color="#9AA4B4" />
+      <stop offset="100%" stop-color="#B8C1CF" />
+    </linearGradient>
+    <linearGradient id="near_head_grad" gradientUnits="userSpaceOnUse" x1="321.81" y1="38.81" x2="285.01" y2="80.21">
+      <stop offset="0%" stop-color="#F9FBFD" />
+      <stop offset="26%" stop-color="#E7EBF1" />
+      <stop offset="60%" stop-color="#CCD3DD" />
+      <stop offset="88%" stop-color="#9AA4B4" />
+      <stop offset="100%" stop-color="#B8C1CF" />
+    </linearGradient>
+    <linearGradient id="near_foot_grad" gradientUnits="userSpaceOnUse" x1="316" y1="428" x2="290" y2="454">
+      <stop offset="0%" stop-color="#F9FBFD" />
+      <stop offset="26%" stop-color="#E7EBF1" />
+      <stop offset="60%" stop-color="#CCD3DD" />
+      <stop offset="88%" stop-color="#9AA4B4" />
+      <stop offset="100%" stop-color="#B8C1CF" />
+    </linearGradient>
+    <linearGradient id="near_shin_grad" gradientUnits="userSpaceOnUse" x1="322.8" y1="382.25" x2="289.42" y2="378.45">
+      <stop offset="0%" stop-color="#F9FBFD" />
+      <stop offset="22%" stop-color="#E7EBF1" />
+      <stop offset="56%" stop-color="#CCD3DD" />
+      <stop offset="86%" stop-color="#9AA4B4" />
+      <stop offset="100%" stop-color="#B8C1CF" />
+    </linearGradient>
+    <linearGradient id="near_thigh_grad" gradientUnits="userSpaceOnUse" x1="317.96" y1="266.19" x2="272.89" y2="280.36">
+      <stop offset="0%" stop-color="#F9FBFD" />
+      <stop offset="22%" stop-color="#E7EBF1" />
+      <stop offset="56%" stop-color="#CCD3DD" />
+      <stop offset="86%" stop-color="#9AA4B4" />
+      <stop offset="100%" stop-color="#B8C1CF" />
+    </linearGradient>
+    <linearGradient id="near_quad_grad" gradientUnits="userSpaceOnUse" x1="315.71" y1="266.89" x2="275.14" y2="279.65">
+      <stop offset="0%" stop-color="#FF8A6B" />
+      <stop offset="22%" stop-color="#FF603B" />
+      <stop offset="56%" stop-color="#E73E1B" />
+      <stop offset="86%" stop-color="#B5240A" />
+      <stop offset="100%" stop-color="#EE5D3D" />
+    </linearGradient>
+    <linearGradient id="near_glute_grad" gradientUnits="userSpaceOnUse" x1="284.61" y1="219.49" x2="250.11" y2="221.59">
+      <stop offset="0%" stop-color="#FF8A6B" />
+      <stop offset="26%" stop-color="#FF603B" />
+      <stop offset="60%" stop-color="#E73E1B" />
+      <stop offset="88%" stop-color="#B5240A" />
+      <stop offset="100%" stop-color="#EE5D3D" />
+    </linearGradient>
+    <linearGradient id="near_arm_ua_grad" gradientUnits="userSpaceOnUse" x1="329.77" y1="119.93" x2="309.7" y2="132.97">
+      <stop offset="0%" stop-color="#F9FBFD" />
+      <stop offset="22%" stop-color="#E7EBF1" />
+      <stop offset="56%" stop-color="#CCD3DD" />
+      <stop offset="86%" stop-color="#9AA4B4" />
+      <stop offset="100%" stop-color="#B8C1CF" />
+    </linearGradient>
+    <linearGradient id="near_arm_fa_grad" gradientUnits="userSpaceOnUse" x1="367.87" y1="171.27" x2="351.72" y2="185.97">
+      <stop offset="0%" stop-color="#F9FBFD" />
+      <stop offset="22%" stop-color="#E7EBF1" />
+      <stop offset="56%" stop-color="#CCD3DD" />
+      <stop offset="86%" stop-color="#9AA4B4" />
+      <stop offset="100%" stop-color="#B8C1CF" />
+    </linearGradient>
+    <linearGradient id="near_arm_hand_grad" gradientUnits="userSpaceOnUse" x1="395.42" y1="208.2" x2="384.37" y2="217.25">
+      <stop offset="0%" stop-color="#F9FBFD" />
+      <stop offset="22%" stop-color="#E7EBF1" />
+      <stop offset="56%" stop-color="#CCD3DD" />
+      <stop offset="86%" stop-color="#9AA4B4" />
+      <stop offset="100%" stop-color="#B8C1CF" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg_grad)" />
+  <ellipse cx="308.17" cy="456" rx="62" ry="10" fill="url(#floor_shadow)" />
+  <g class="prop-chair">
+        <rect x="136" y="348" width="10" height="106" rx="3" fill="#AEB7C4" stroke="#8D98A8" stroke-width="0.9" />
+        <rect x="204" y="348" width="10" height="106" rx="3" fill="#AEB7C4" stroke="#8D98A8" stroke-width="0.9" />
+        <rect x="126" y="202" width="12" height="146" rx="5" fill="url(#prop_chair_grad)" stroke="#8D98A8" stroke-width="0.9" />
+        <rect x="126" y="336" width="100" height="12" rx="5" fill="url(#prop_chair_grad)" stroke="#8D98A8" stroke-width="0.9" />
+      </g>
+  <g class="figure">
+    
+    <g class="arm">
+      <path d="M 302.1,91.75 C 311.75,84.87 317.61,91.52 336.19,118.35 Q 347.65,138.41 353.82,149.22 Q 353.92,157.28 350.55,159.68 Q 347.18,162.09 339.36,159.53 Q 327.53,145 315.7,130.46 C 296.57,106.52 292.44,98.64 302.1,91.75 Z" fill="url(#far_arm_ua_grad)" />
+      <path d="M 342.02,149.61 Q 347.22,144.4 352.88,148.11 C 368.52,159.63 385.24,180.92 396.39,195.12 L 387.54,203.97 C 372.44,191.37 353.98,175.98 340.52,160.47 Q 336.82,154.81 342.02,149.61 Z" fill="url(#far_arm_fa_grad)" />
+      <path d="M 396.19,195.31 Q 408.18,204.7 414.18,215.51 Q 413.53,221.11 407.59,222.1 Q 396.46,214.14 387.73,203.77 Z" fill="url(#far_arm_hand_grad)" stroke="rgba(80, 90, 108, 0.24)" stroke-width="0.7" stroke-linejoin="round" />
+      <path d="M 302.1,91.75 C 311.75,84.87 317.61,91.52 336.19,118.35 Q 347.65,138.41 353.82,149.22" fill="none" stroke="rgba(80, 90, 108, 0.24)" stroke-width="0.75" stroke-linecap="round" />
+      <path d="M 339.36,159.53 Q 327.53,145 315.7,130.46 C 296.57,106.52 292.44,98.64 302.1,91.75" fill="none" stroke="rgba(80, 90, 108, 0.24)" stroke-width="0.75" stroke-linecap="round" />
+      <path d="M 352.88,148.11 C 368.52,159.63 385.24,180.92 396.39,195.12" fill="none" stroke="rgba(80, 90, 108, 0.24)" stroke-width="0.75" stroke-linecap="round" />
+      <path d="M 387.54,203.97 C 372.44,191.37 353.98,175.98 340.52,160.47" fill="none" stroke="rgba(80, 90, 108, 0.24)" stroke-width="0.75" stroke-linecap="round" />
+      <path d="M 314.02,94.08 Q 314.45,109.08 299.17,104.67" fill="none" stroke="rgba(70, 80, 96, 0.20)" stroke-width="1.0" stroke-linecap="round" />
+      <path d="M 350.82,151.35 Q 346.7,154.29 345.58,155.09" fill="none" stroke="rgba(70, 80, 96, 0.20)" stroke-width="0.9" stroke-linecap="round" />
+      
+    </g>
+    <g class="foot">
+      
+      <path d="M 320.5,425 C 323,430.5 331.5,435 333.5,437 C 344.5,440.5 353.5,436.8 357.5,437.8 C 362,439.5 363.6,442.5 363,445.2 C 363,449 356,450 349,450 L 341,450 Q 322.75,446.8 306.5,450 L 296.5,450 C 292,450 290.5,447.2 291,443.5 C 292,437 301.8,433 303.8,428 Z" fill="url(#far_foot_grad)" />
+      <path d="M 321.2,429 C 324,431.5 331.5,435 333.5,437 C 344.5,440.5 353.5,436.8 357.5,437.8 C 362,439.5 363.6,442.5 363,445.2 C 363,449 356,450 349,450 L 341,450 Q 322.75,446.8 306.5,450 L 296.5,450 C 292,450 290.5,447.2 291,443.5 C 292,437 301.8,433 303.8,428" fill="none" stroke="rgba(80, 90, 108, 0.24)" stroke-width="0.75" stroke-linejoin="round" stroke-linecap="round" />
+      <ellipse cx="311" cy="431.5" rx="4.4" ry="3.8" fill="#BCC4D0" opacity="0.5" />
+      
+    </g>
+    <g class="shin">
+      <path d="M 320.07,433.09 C 324.43,404.24 327.97,375.3 334.28,347.75 Q 337.81,327.5 329.13,317.82 Q 316,317.41 310.74,326.59 C 301.99,339.73 300.23,358.01 300.38,376.5 C 307.6,399.06 305.97,416.27 304.1,431.27 Z" fill="url(#far_shin_grad)" />
+      <path d="M 320.07,433.09 C 324.43,404.24 327.97,375.3 334.28,347.75 Q 337.81,327.5 336.57,324.1" fill="none" stroke="rgba(80, 90, 108, 0.24)" stroke-width="0.75" stroke-linecap="round" />
+      <path d="M 310.74,326.59 C 301.99,339.73 300.23,358.01 300.38,376.5 C 307.6,399.06 305.97,416.27 304.1,431.27" fill="none" stroke="rgba(80, 90, 108, 0.24)" stroke-width="0.75" stroke-linecap="round" />
+      <path d="M 309.24,380.77 Q 316.13,359.82 317.56,338.24" fill="none" stroke="rgba(70, 80, 96, 0.20)" stroke-width="1.1" stroke-linecap="round" />
+      
+    </g>
+    <g class="thigh">
+      <path d="M 330.5,329.91 Q 338.63,319.53 337.07,317.72 C 332.19,283.44 324.59,252.62 309.47,222.31 Q 298.18,208.6 279.96,208.42 Q 264.9,220.28 266.4,229.35 C 276.68,259.12 295.29,295.32 311.17,324.13 Q 317.67,330.06 330.5,329.91 Z" fill="url(#far_thigh_grad)" />
+      <path d="M 330.5,329.91 Q 338.63,319.53 337.07,317.72 C 332.19,283.44 324.59,252.62 309.47,222.31" fill="none" stroke="rgba(80, 90, 108, 0.24)" stroke-width="0.75" stroke-linecap="round" />
+      <path d="M 266.4,229.35 C 276.68,259.12 295.29,295.32 311.17,324.13" fill="none" stroke="rgba(80, 90, 108, 0.24)" stroke-width="0.75" stroke-linecap="round" />
+      <g class="muscle-quads">
+      <path d="M 326.35,304.99 C 330.91,285.14 324.36,255.13 309.43,225.94 C 301.97,220.39 296.78,217.58 294.46,219.68 C 289.82,223.89 288.49,230.44 289.7,234.79 C 297.74,263.03 311.6,293.83 321.68,311.63 Q 325.05,309.11 326.35,304.99 Z" fill="url(#far_quad_grad)" stroke="rgba(120, 24, 8, 0.26)" stroke-width="0.65" opacity="0.96" />
+      <path d="M 326.62,295.24 Q 316.98,260.39 302.47,232.26" fill="none" stroke="rgba(255, 205, 185, 0.22)" stroke-width="1.15" stroke-linecap="round" />
+      <path d="M 320.72,299.94 Q 309.01,263.48 294.73,232.84" fill="none" stroke="rgba(100, 15, 3, 0.20)" stroke-width="1.05" stroke-linecap="round" />
+      <path d="M 329.63,288.05 Q 320.79,256.51 307.27,232.81" fill="none" stroke="rgba(255, 205, 185, 0.22)" stroke-width="0.9" stroke-linecap="round" />
+    </g>
+      
+    </g>
+    <g class="torso">
+      <path d="M 294.34,225.29 C 298.97,200.93 303.39,179.05 315.27,148.46 C 320.66,136.85 322.25,128.31 313.09,103.92 Q 311.66,91.04 301.06,87.81 Q 290.33,92.13 282.22,107.02 C 270.74,122.55 270.47,140.16 270.53,180.52 C 261.92,201.63 258.53,219.92 258.53,219.92 Q 276.81,229.61 294.34,225.29 Z" fill="url(#near_torso_grad)" />
+      <path d="M 294.34,225.29 C 298.97,200.93 303.39,179.05 315.27,148.46 C 320.66,136.85 322.25,128.31 313.09,103.92" fill="none" stroke="rgba(105, 116, 134, 0.28)" stroke-width="0.75" stroke-linecap="round" />
+      <path d="M 282.22,107.02 C 270.74,122.55 270.47,140.16 270.53,180.52 C 261.92,201.63 258.53,219.92 258.53,219.92" fill="none" stroke="rgba(105, 116, 134, 0.28)" stroke-width="0.75" stroke-linecap="round" />
+      <path d="M 300.91,133.19 Q 311.78,137.72 319.43,134.1" fill="none" stroke="rgba(82, 92, 110, 0.24)" stroke-width="1.1" stroke-linecap="round" />
+      <path d="M 292.65,161.92 Q 301.39,153.45 302.69,141.08" fill="none" stroke="rgba(82, 92, 110, 0.24)" stroke-width="1.0" stroke-linecap="round" />
+      
+      
+      
+    </g>
+    <g class="head-neck">
+      <path d="M 310.28,106.71 Q 310.38,86.8 311.98,69.27 L 295.81,67.42 Q 292.41,86.96 287.87,100.84 Z" fill="url(#near_neck_grad)" />
+      <path d="M 310.77,96.36 Q 310.43,84.59 311.23,75.82" fill="none" stroke="rgba(105, 116, 134, 0.28)" stroke-width="0.75" stroke-linecap="round" />
+      <path d="M 289.73,96.62 Q 293.04,84.82 295.26,74" fill="none" stroke="rgba(105, 116, 134, 0.28)" stroke-width="0.75" stroke-linecap="round" />
+      <g transform="rotate(2 305.71 59.51)">
+        <path d="M 296.05,79.75 C 283.86,73.31 282.71,54.45 288.23,42.95 C 295.59,33.06 314.45,33.29 323.19,43.41 C 326.41,48.93 325.95,53.53 325.49,55.83 L 330.55,62.73 C 331.01,64.57 328.25,65.72 325.95,66.18 L 326.64,70.09 L 324.57,71.93 C 325.95,75.15 324.11,78.83 319.97,79.75 C 312.15,81.13 302.95,81.13 296.05,79.75 Z" fill="url(#near_head_grad)" stroke="rgba(105, 116, 134, 0.28)" stroke-width="0.75" stroke-linejoin="round" />
+        <path d="M 302.03,65.95 Q 307.09,75.15 298.81,77.91" fill="none" stroke="rgba(82, 92, 110, 0.24)" stroke-width="0.95" stroke-linecap="round" />
+        <ellipse cx="300.19" cy="63.19" rx="3.3" ry="5.4" fill="#CCD3DD" stroke="rgba(82, 92, 110, 0.24)" stroke-width="0.65" />
+      </g>
+    </g>
+    <g class="foot">
+      
+      <path d="M 308.5,429 C 311,434.5 319.5,439 321.5,441 C 332.5,444.5 341.5,440.8 345.5,441.8 C 350,443.5 351.6,446.5 351,449.2 C 351,453 344,454 337,454 L 329,454 Q 310.75,450.8 294.5,454 L 284.5,454 C 280,454 278.5,451.2 279,447.5 C 280,441 289.8,437 291.8,432 Z" fill="url(#near_foot_grad)" />
+      <path d="M 309.2,433 C 312,435.5 319.5,439 321.5,441 C 332.5,444.5 341.5,440.8 345.5,441.8 C 350,443.5 351.6,446.5 351,449.2 C 351,453 344,454 337,454 L 329,454 Q 310.75,450.8 294.5,454 L 284.5,454 C 280,454 278.5,451.2 279,447.5 C 280,441 289.8,437 291.8,432" fill="none" stroke="rgba(105, 116, 134, 0.28)" stroke-width="0.75" stroke-linejoin="round" stroke-linecap="round" />
+      <ellipse cx="299" cy="435.5" rx="4.4" ry="3.8" fill="#E7EBF1" opacity="0.5" />
+      
+    </g>
+    <g class="shin">
+      <path d="M 308.07,437.09 C 312.43,408.24 315.97,379.3 322.28,351.75 Q 325.81,331.5 317.13,321.82 Q 304,321.41 298.74,330.59 C 289.99,343.73 288.23,362.01 288.38,380.5 C 295.6,403.06 293.97,420.27 292.1,435.27 Z" fill="url(#near_shin_grad)" />
+      <path d="M 308.07,437.09 C 312.43,408.24 315.97,379.3 322.28,351.75 Q 325.81,331.5 324.57,328.1" fill="none" stroke="rgba(105, 116, 134, 0.28)" stroke-width="0.75" stroke-linecap="round" />
+      <path d="M 298.74,330.59 C 289.99,343.73 288.23,362.01 288.38,380.5 C 295.6,403.06 293.97,420.27 292.1,435.27" fill="none" stroke="rgba(105, 116, 134, 0.28)" stroke-width="0.75" stroke-linecap="round" />
+      <path d="M 297.24,384.77 Q 304.13,363.82 305.56,342.24" fill="none" stroke="rgba(82, 92, 110, 0.24)" stroke-width="1.1" stroke-linecap="round" />
+      
+    </g>
+    <g class="thigh">
+      <path d="M 318.01,334.27 Q 326.81,324.46 325.36,322.56 C 322.75,288.16 317.2,257.03 304.11,225.92 Q 293.75,211.57 275.59,210.24 Q 259.79,221.08 260.68,230.19 C 268.98,260.46 285.16,297.64 299.11,327.3 Q 305.2,333.6 318.01,334.27 Z" fill="url(#near_thigh_grad)" />
+      <path d="M 318.01,334.27 Q 326.81,324.46 325.36,322.56 C 322.75,288.16 317.2,257.03 304.11,225.92" fill="none" stroke="rgba(105, 116, 134, 0.28)" stroke-width="0.75" stroke-linecap="round" />
+      <path d="M 260.68,230.19 C 268.98,260.46 285.16,297.64 299.11,327.3" fill="none" stroke="rgba(105, 116, 134, 0.28)" stroke-width="0.75" stroke-linecap="round" />
+      <g class="muscle-quads">
+      <path d="M 315.51,309.23 C 321.37,289.77 316.8,259.51 303.84,229.53 C 296.76,223.54 291.77,220.42 289.31,222.36 C 284.41,226.25 282.65,232.68 283.57,237.08 C 289.73,265.67 301.53,297.18 310.41,315.52 Q 313.94,313.24 315.51,309.23 Z" fill="url(#near_quad_grad)" stroke="rgba(165, 34, 10, 0.30)" stroke-width="0.65" opacity="0.96" />
+      <path d="M 316.42,299.54 Q 309.1,264.28 296.47,235.37" fill="none" stroke="rgba(255, 228, 215, 0.36)" stroke-width="1.15" stroke-linecap="round" />
+      <path d="M 310.23,303.84 Q 300.95,266.84 288.72,235.46" fill="none" stroke="rgba(130, 20, 4, 0.24)" stroke-width="1.05" stroke-linecap="round" />
+      <path d="M 319.89,292.58 Q 313.15,260.65 301.22,236.23" fill="none" stroke="rgba(255, 228, 215, 0.36)" stroke-width="0.9" stroke-linecap="round" />
+    </g>
+      
+    </g>
+    <g class="glutes">
+      <path d="M 265.34,190.91 C 258.85,191.31 255.46,210.24 256.1,221.22 C 256.74,232.21 263.89,257.36 269.14,255.71 C 277.47,243.41 286.08,239.06 284.28,233.34 Q 281.87,217.85 279.47,202.36 Q 271.7,196.06 265.34,190.91 Z" fill="url(#near_glute_grad)" stroke="rgba(165, 34, 10, 0.30)" stroke-width="0.7" stroke-linejoin="round" />
+      
+      <path d="M 270.29,194.92 Q 266.91,220.57 279.13,240.95" fill="none" stroke="rgba(255, 228, 215, 0.36)" stroke-width="1.15" stroke-linecap="round" />
+      <path d="M 262.2,201.22 Q 261.05,220.92 271.87,251.68" fill="none" stroke="rgba(130, 20, 4, 0.24)" stroke-width="1.05" stroke-linecap="round" />
+    
+    </g>
+    <g class="arm">
+      <path d="M 296.41,90.54 C 306.36,84.08 311.92,90.98 329.32,118.6 Q 339.89,139.14 345.58,150.2 Q 345.33,158.26 341.86,160.52 Q 338.39,162.77 330.69,159.87 Q 319.51,144.84 308.32,129.8 C 290.25,105.05 286.47,97 296.41,90.54 Z" fill="url(#near_arm_ua_grad)" />
+      <path d="M 333.79,150.06 Q 339.23,145.11 344.71,149.08 C 359.79,161.32 375.5,183.37 385.97,198.07 L 376.71,206.49 C 362.22,193.21 344.5,176.97 331.79,160.85 Q 328.35,155.02 333.79,150.06 Z" fill="url(#near_arm_fa_grad)" />
+      <path d="M 385.97,198.49 Q 396.97,209.03 401.87,220.37 Q 400.66,225.88 394.66,226.27 Q 384.37,217.25 376.71,206.07 Z" fill="url(#near_arm_hand_grad)" stroke="rgba(105, 116, 134, 0.28)" stroke-width="0.7" stroke-linejoin="round" />
+      <path d="M 296.41,90.54 C 306.36,84.08 311.92,90.98 329.32,118.6 Q 339.89,139.14 345.58,150.2" fill="none" stroke="rgba(105, 116, 134, 0.28)" stroke-width="0.75" stroke-linecap="round" />
+      <path d="M 330.69,159.87 Q 319.51,144.84 308.32,129.8 C 290.25,105.05 286.47,97 296.41,90.54" fill="none" stroke="rgba(105, 116, 134, 0.28)" stroke-width="0.75" stroke-linecap="round" />
+      <path d="M 344.71,149.08 C 359.79,161.32 375.5,183.37 385.97,198.07" fill="none" stroke="rgba(105, 116, 134, 0.28)" stroke-width="0.75" stroke-linecap="round" />
+      <path d="M 376.71,206.49 C 362.22,193.21 344.5,176.97 331.79,160.85" fill="none" stroke="rgba(105, 116, 134, 0.28)" stroke-width="0.75" stroke-linecap="round" />
+      <path d="M 308.23,93.38 Q 308,108.38 292.93,103.31" fill="none" stroke="rgba(82, 92, 110, 0.24)" stroke-width="1.0" stroke-linecap="round" />
+      <path d="M 342.5,152.21 Q 338.25,154.96 337.09,155.71" fill="none" stroke="rgba(82, 92, 110, 0.24)" stroke-width="0.9" stroke-linecap="round" />
+      
+    </g>
+  </g>
+  
+</svg>

@@ -1,0 +1,159 @@
+{
+  "id": "single-leg-rdl",
+  "name": "Single-Leg Romanian Deadlift",
+  "view": "side",
+  "anchor": "feet",
+  "backLegMode": "free",
+  "anchorCategory": "standing",
+  "anchorX": 244,
+  "groundY": 454,
+  "durationMs": 2000,
+  "totalFrames": 25,
+  "highlightMuscles": ["hamstrings", "glutes"],
+  "keyframes": [
+    {
+      "t": 0.0,
+      "pose": {
+        "shinAngle": 89,
+        "thighAngle": 91,
+        "torsoAngle": 89,
+        "neckAngle": 89,
+        "headPitch": 0,
+        "upperArmAngle": -86,
+        "forearmAngle": -80,
+        "handAngle": -82,
+        "farUpperArmAngle": -84,
+        "farForearmAngle": -78,
+        "farThighAngle": -94,
+        "farShinAngle": -104,
+        "farFootAngle": 14
+      }
+    },
+    {
+      "t": 0.08,
+      "pose": {
+        "shinAngle": 89,
+        "thighAngle": 91,
+        "torsoAngle": 89,
+        "neckAngle": 89,
+        "headPitch": 0,
+        "upperArmAngle": -86,
+        "forearmAngle": -80,
+        "handAngle": -82,
+        "farUpperArmAngle": -84,
+        "farForearmAngle": -78,
+        "farThighAngle": -94,
+        "farShinAngle": -104,
+        "farFootAngle": 14
+      }
+    },
+    {
+      "t": 0.27,
+      "pose": {
+        "shinAngle": 86,
+        "thighAngle": 94,
+        "torsoAngle": 48,
+        "neckAngle": 54,
+        "headPitch": 22,
+        "upperArmAngle": -88,
+        "forearmAngle": -84,
+        "handAngle": -86,
+        "farUpperArmAngle": -86,
+        "farForearmAngle": -82,
+        "farThighAngle": -132,
+        "farShinAngle": -138,
+        "farFootAngle": 44
+      }
+    },
+    {
+      "t": 0.46,
+      "pose": {
+        "shinAngle": 83,
+        "thighAngle": 97,
+        "torsoAngle": 12,
+        "neckAngle": 18,
+        "headPitch": 46,
+        "upperArmAngle": -90,
+        "forearmAngle": -88,
+        "handAngle": -90,
+        "farUpperArmAngle": -88,
+        "farForearmAngle": -86,
+        "farThighAngle": -170,
+        "farShinAngle": -174,
+        "farFootAngle": 75
+      }
+    },
+    {
+      "t": 0.56,
+      "pose": {
+        "shinAngle": 83,
+        "thighAngle": 97,
+        "torsoAngle": 12,
+        "neckAngle": 18,
+        "headPitch": 46,
+        "upperArmAngle": -90,
+        "forearmAngle": -88,
+        "handAngle": -90,
+        "farUpperArmAngle": -88,
+        "farForearmAngle": -86,
+        "farThighAngle": -170,
+        "farShinAngle": -174,
+        "farFootAngle": 75
+      }
+    },
+    {
+      "t": 0.77,
+      "pose": {
+        "shinAngle": 86,
+        "thighAngle": 94,
+        "torsoAngle": 48,
+        "neckAngle": 54,
+        "headPitch": 22,
+        "upperArmAngle": -88,
+        "forearmAngle": -84,
+        "handAngle": -86,
+        "farUpperArmAngle": -86,
+        "farForearmAngle": -82,
+        "farThighAngle": -132,
+        "farShinAngle": -138,
+        "farFootAngle": 44
+      }
+    },
+    {
+      "t": 0.92,
+      "pose": {
+        "shinAngle": 89,
+        "thighAngle": 91,
+        "torsoAngle": 89,
+        "neckAngle": 89,
+        "headPitch": 0,
+        "upperArmAngle": -86,
+        "forearmAngle": -80,
+        "handAngle": -82,
+        "farUpperArmAngle": -84,
+        "farForearmAngle": -78,
+        "farThighAngle": -94,
+        "farShinAngle": -104,
+        "farFootAngle": 14
+      }
+    },
+    {
+      "t": 1.0,
+      "pose": {
+        "shinAngle": 89,
+        "thighAngle": 91,
+        "torsoAngle": 89,
+        "neckAngle": 89,
+        "headPitch": 0,
+        "upperArmAngle": -86,
+        "forearmAngle": -80,
+        "handAngle": -82,
+        "farUpperArmAngle": -84,
+        "farForearmAngle": -78,
+        "farThighAngle": -94,
+        "farShinAngle": -104,
+        "farFootAngle": 14
+      }
+    }
+  ]
+}

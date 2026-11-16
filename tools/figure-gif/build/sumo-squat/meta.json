@@ -1,0 +1,34 @@
+{
+  "id": "sumo-squat",
+  "name": "Sumo Squat",
+  "view": "front",
+  "highlightMuscles": [
+    "adductors",
+    "glutes"
+  ],
+  "width": 384,
+  "height": 384,
+  "logicalWidth": 512,
+  "logicalHeight": 512,
+  "totalFrames": 25,
+  "durationMs": 2000,
+  "fps": 12.5,
+  "frameDelayMs": 80,
+  "anchorX": 256,
+  "groundY": 454,
+  "anchorCategory": "standing",
+  "anchorMode": "feet",
+  "anchorBox": [
+    137,
+    333,
+    146,
+    338
+  ],
+  "contactBox": [
+    137,
+    333,
+    146,
+    338
+  ],
+  "contactLabel": "left_foot"
+}

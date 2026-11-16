@@ -1,0 +1,72 @@
+{
+  "id": "glute-bridge",
+  "name": "Glute Bridge",
+  "view": "side",
+  "prop": "mat",
+  "anchor": "glute-bridge",
+  "anchorCategory": "supine",
+  "shoulderAnchorX": 146,
+  "anchorX": 388,
+  "groundY": 386,
+  "durationMs": 2000,
+  "totalFrames": 25,
+  "highlightMuscles": ["glutes", "hamstrings"],
+  "keyframes": [
+    {
+      "t": 0.0,
+      "pose": {
+        "torsoAngle": 3,
+        "headPitch": -76
+      }
+    },
+    {
+      "t": 0.08,
+      "pose": {
+        "torsoAngle": 3,
+        "headPitch": -76
+      }
+    },
+    {
+      "t": 0.27,
+      "pose": {
+        "torsoAngle": 16,
+        "headPitch": -74
+      }
+    },
+    {
+      "t": 0.46,
+      "pose": {
+        "torsoAngle": 30,
+        "headPitch": -72
+      }
+    },
+    {
+      "t": 0.56,
+      "pose": {
+        "torsoAngle": 30,
+        "headPitch": -72
+      }
+    },
+    {
+      "t": 0.77,
+      "pose": {
+        "torsoAngle": 16,
+        "headPitch": -74
+      }
+    },
+    {
+      "t": 0.92,
+      "pose": {
+        "torsoAngle": 3,
+        "headPitch": -76
+      }
+    },
+    {
+      "t": 1.0,
+      "pose": {
+        "torsoAngle": 3,
+        "headPitch": -76
+      }
+    }
+  ]
+}

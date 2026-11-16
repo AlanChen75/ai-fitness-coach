@@ -1,0 +1,168 @@
+{
+  "id": "high-knees",
+  "name": "High Knees",
+  "view": "front",
+  "anchorSide": "lowest",
+  "anchorCategory": "jump",
+  "anchorX": 256,
+  "groundY": 466,
+  "durationMs": 2000,
+  "totalFrames": 25,
+  "highlightMuscles": ["hipFlexors", "quadriceps"],
+  "keyframes": [
+    {
+      "t": 0.0,
+      "pose": {
+        "bodyLiftY": 0,
+        "hipShiftX": 0,
+        "torsoTilt": 0,
+        "leftThighAbd": 2,
+        "leftThighFlex": 0,
+        "leftShinAbd": 0,
+        "leftShinFlex": 0,
+        "rightThighAbd": 2,
+        "rightThighFlex": 0,
+        "rightShinAbd": 0,
+        "rightShinFlex": 0,
+        "leftUpperArmAngle": -106,
+        "leftForearmAngle": -78,
+        "leftArmForeshorten": 0.9,
+        "rightUpperArmAngle": -74,
+        "rightForearmAngle": -102,
+        "rightArmForeshorten": 0.9
+      }
+    },
+    {
+      "t": 0.06,
+      "pose": {
+        "bodyLiftY": 0,
+        "hipShiftX": 0,
+        "torsoTilt": 0,
+        "leftThighAbd": 2,
+        "leftThighFlex": 0,
+        "leftShinAbd": 0,
+        "leftShinFlex": 0,
+        "rightThighAbd": 2,
+        "rightThighFlex": 0,
+        "rightShinAbd": 0,
+        "rightShinFlex": 0,
+        "leftUpperArmAngle": -106,
+        "leftForearmAngle": -78,
+        "leftArmForeshorten": 0.9,
+        "rightUpperArmAngle": -74,
+        "rightForearmAngle": -102,
+        "rightArmForeshorten": 0.9
+      }
+    },
+    {
+      "t": 0.25,
+      "pose": {
+        "bodyLiftY": -10,
+        "hipShiftX": 0,
+        "torsoTilt": -2,
+        "leftThighAbd": 2,
+        "leftThighFlex": 6,
+        "leftShinAbd": 0,
+        "leftShinFlex": 6,
+        "rightThighAbd": 4,
+        "rightThighFlex": 68,
+        "rightShinAbd": 2,
+        "rightShinFlex": 8,
+        "leftUpperArmAngle": -128,
+        "leftForearmAngle": -64,
+        "leftArmForeshorten": 0.72,
+        "rightUpperArmAngle": -74,
+        "rightForearmAngle": -104,
+        "rightArmForeshorten": 0.96
+      }
+    },
+    {
+      "t": 0.5,
+      "pose": {
+        "bodyLiftY": 0,
+        "hipShiftX": 0,
+        "torsoTilt": 0,
+        "leftThighAbd": 2,
+        "leftThighFlex": 0,
+        "leftShinAbd": 0,
+        "leftShinFlex": 0,
+        "rightThighAbd": 2,
+        "rightThighFlex": 0,
+        "rightShinAbd": 0,
+        "rightShinFlex": 0,
+        "leftUpperArmAngle": -106,
+        "leftForearmAngle": -78,
+        "leftArmForeshorten": 0.9,
+        "rightUpperArmAngle": -74,
+        "rightForearmAngle": -102,
+        "rightArmForeshorten": 0.9
+      }
+    },
+    {
+      "t": 0.75,
+      "pose": {
+        "bodyLiftY": -10,
+        "hipShiftX": 0,
+        "torsoTilt": 2,
+        "leftThighAbd": 4,
+        "leftThighFlex": 68,
+        "leftShinAbd": 2,
+        "leftShinFlex": 8,
+        "rightThighAbd": 2,
+        "rightThighFlex": 6,
+        "rightShinAbd": 0,
+        "rightShinFlex": 6,
+        "leftUpperArmAngle": -106,
+        "leftForearmAngle": -76,
+        "leftArmForeshorten": 0.96,
+        "rightUpperArmAngle": -52,
+        "rightForearmAngle": -116,
+        "rightArmForeshorten": 0.72
+      }
+    },
+    {
+      "t": 0.92,
+      "pose": {
+        "bodyLiftY": 0,
+        "hipShiftX": 0,
+        "torsoTilt": 0,
+        "leftThighAbd": 2,
+        "leftThighFlex": 0,
+        "leftShinAbd": 0,
+        "leftShinFlex": 0,
+        "rightThighAbd": 2,
+        "rightThighFlex": 0,
+        "rightShinAbd": 0,
+        "rightShinFlex": 0,
+        "leftUpperArmAngle": -106,
+        "leftForearmAngle": -78,
+        "leftArmForeshorten": 0.9,
+        "rightUpperArmAngle": -74,
+        "rightForearmAngle": -102,
+        "rightArmForeshorten": 0.9
+      }
+    },
+    {
+      "t": 1.0,
+      "pose": {
+        "bodyLiftY": 0,
+        "hipShiftX": 0,
+        "torsoTilt": 0,
+        "leftThighAbd": 2,
+        "leftThighFlex": 0,
+        "leftShinAbd": 0,
+        "leftShinFlex": 0,
+        "rightThighAbd": 2,
+        "rightThighFlex": 0,
+        "rightShinAbd": 0,
+        "rightShinFlex": 0,
+        "leftUpperArmAngle": -106,
+        "leftForearmAngle": -78,
+        "leftArmForeshorten": 0.9,
+        "rightUpperArmAngle": -74,
+        "rightForearmAngle": -102,
+        "rightArmForeshorten": 0.9
+      }
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "id": "knee-pushup",
+  "name": "Knee Push-Up",
+  "view": "side",
+  "highlightMuscles": [
+    "pectorals",
+    "triceps"
+  ],
+  "width": 384,
+  "height": 384,
+  "logicalWidth": 512,
+  "logicalHeight": 512,
+  "totalFrames": 25,
+  "durationMs": 2000,
+  "fps": 12.5,
+  "frameDelayMs": 80,
+  "anchorX": 158,
+  "groundY": 386,
+  "anchorCategory": "prone",
+  "anchorMode": "knee-pushup",
+  "anchorBox": null,
+  "contactBox": [
+    288,
+    286,
+    296,
+    288
+  ],
+  "contactLabel": "floor_palm"
+}

@@ -1,0 +1,29 @@
+{
+  "id": "glute-bridge",
+  "name": "Glute Bridge",
+  "view": "side",
+  "highlightMuscles": [
+    "glutes",
+    "hamstrings"
+  ],
+  "width": 384,
+  "height": 384,
+  "logicalWidth": 512,
+  "logicalHeight": 512,
+  "totalFrames": 25,
+  "durationMs": 2000,
+  "fps": 12.5,
+  "frameDelayMs": 80,
+  "anchorX": 388,
+  "groundY": 386,
+  "anchorCategory": "supine",
+  "anchorMode": "glute-bridge",
+  "anchorBox": null,
+  "contactBox": [
+    284,
+    282,
+    317,
+    288
+  ],
+  "contactLabel": "supine_foot"
+}

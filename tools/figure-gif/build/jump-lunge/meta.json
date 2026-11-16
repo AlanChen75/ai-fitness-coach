@@ -1,0 +1,34 @@
+{
+  "id": "jump-lunge",
+  "name": "Jump Lunge",
+  "view": "side",
+  "highlightMuscles": [
+    "quadriceps",
+    "glutes"
+  ],
+  "width": 384,
+  "height": 384,
+  "logicalWidth": 512,
+  "logicalHeight": 512,
+  "totalFrames": 25,
+  "durationMs": 2000,
+  "fps": 12.5,
+  "frameDelayMs": 80,
+  "anchorX": 294,
+  "groundY": 470,
+  "anchorCategory": "jump",
+  "anchorMode": "feet",
+  "anchorBox": [
+    213,
+    345,
+    246,
+    351
+  ],
+  "contactBox": [
+    213,
+    345,
+    246,
+    351
+  ],
+  "contactLabel": "near_foot"
+}
