@@ -74,7 +74,7 @@ describe('Figure Rig (R2 T4a.1-T4a.3)', () => {
   })
 
   it('T4b.4: 18 個徒手動作的 figureSvg 皆由 rig 產生且非空、含 animation 且各 id 獨立', () => {
-    const rigExercises = EXERCISES.filter((ex) => !ex.demoOnly)
+    const rigExercises = EXERCISES.filter((ex) => ex.figureSvg !== '')
     expect(rigExercises).toHaveLength(18)
 
     for (const ex of rigExercises) {

@@ -241,7 +241,7 @@ describe('Exercise Metrics & Catalog (R12-R15 T15.7-T15.8)', () => {
     }
   })
 
-  it('T4b.2 & 5B.R1: catalog 恰 24 筆、各 tier 6 筆、6 筆 demoOnly 含 steps、id 唯一、metric 支援與欄位合規', () => {
+  it('T4b.2 & 5B.R1 & 6.R1: catalog 恰 24 筆、各 tier 6 筆、5 筆 demoOnly 含 steps、seated-row 為 cycle/elbowAngle、id 唯一、metric 支援與欄位合規', () => {
     expect(EXERCISES).toHaveLength(24)
     const ids = EXERCISES.map((e) => e.id)
     expect(new Set(ids).size).toBe(24)
@@ -294,8 +294,20 @@ describe('Exercise Metrics & Catalog (R12-R15 T15.7-T15.8)', () => {
     )
 
     const demoExercises = EXERCISES.filter((e) => e.demoOnly === true)
-    expect(demoExercises).toHaveLength(6)
-    expect(demoExercises.map((e) => e.id)).toEqual(expectedMachine)
+    expect(demoExercises).toHaveLength(5)
+    expect(demoExercises.map((e) => e.id)).toEqual(
+      expectedMachine.filter((id) => id !== 'seated-row')
+    )
+
+    const seatedRow = getExercise('seated-row')
+    expect(seatedRow).not.toBeNull()
+    expect(seatedRow?.demoOnly).toBeUndefined()
+    expect(seatedRow?.engine.kind).toBe('cycle')
+    if (seatedRow?.engine.kind === 'cycle') {
+      expect(seatedRow.engine.metric).toBe('elbowAngle')
+      expect(seatedRow.engine.rules.rules_version).toBe('seated-row-v0.1')
+    }
+    expect(seatedRow?.framingRegions).toEqual(['upper', 'hips'])
 
     // 準備一組所有關節皆有效且有軀幹長度的合成 landmarks 驗證每個 metricId
     const validLandmarks = makeBaseLandmarks()
@@ -339,11 +351,13 @@ describe('Exercise Metrics & Catalog (R12-R15 T15.7-T15.8)', () => {
       expect(ex.safetyZh.trim().length).toBeGreaterThan(0)
       expect(ex.framingRegions.length).toBeGreaterThan(0)
 
-      expect(ex.figureSvg).toContain('<svg')
-      expect(ex.figureSvg).toContain('viewBox="0 0 120 180"')
-      expect(ex.figureSvg.toLowerCase()).not.toContain('base64')
-      expect(ex.figureSvg.toLowerCase()).not.toContain('http://')
-      expect(ex.figureSvg.toLowerCase()).not.toContain('https://')
+      if (ex.figureSvg !== '') {
+        expect(ex.figureSvg).toContain('<svg')
+        expect(ex.figureSvg).toContain('viewBox="0 0 120 180"')
+        expect(ex.figureSvg.toLowerCase()).not.toContain('base64')
+        expect(ex.figureSvg.toLowerCase()).not.toContain('http://')
+        expect(ex.figureSvg.toLowerCase()).not.toContain('https://')
+      }
 
       if (ex.id === 'squat') {
         expect(ex.engine.kind).toBe('squat')

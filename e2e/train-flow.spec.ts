@@ -67,6 +67,23 @@ test('5B.R4 demoOnly 動作進 train.html 直接被導向 demo.html', async ({ p
   await expect(page.locator('#demo-name')).toHaveText('滑輪下拉')
 })
 
+test('6.R2 器械 tab 點坐姿划船進 train.html（標籤為側面、含相機擺放提示）', async ({ page }) => {
+  await page.goto('/index.html')
+
+  await page.locator('#tab-machine').click()
+  await expect(page.locator('#panel-machine')).toBeVisible()
+  const seatedRowCard = page.locator('#panel-machine a.exercise-card', { hasText: '坐姿划船' })
+  await expect(seatedRowCard.locator('.exercise-view-tag')).toHaveText('側面')
+  await seatedRowCard.click()
+
+  await expect(page).toHaveURL(/train\.html\?exercise=seated-row/)
+  await expect(page.locator('#preview-overlay')).toBeVisible()
+  await expect(page.locator('#preview-name')).toHaveText('坐姿划船')
+  await expect(page.locator('#top-exercise-name')).toHaveText('坐姿划船')
+  await expect(page.locator('#preview-figure img')).toHaveAttribute('src', /figures\/seated-row\.gif/)
+  await expect(page.locator('#preview-steps li').first()).toContainText('手機放在身體側面')
+})
+
 test('T4a.5 exercises.html 自動轉址到 index.html', async ({ page }) => {
   await page.goto('/exercises.html')
   await expect(page).toHaveURL(/\/(index\.html)?$/)

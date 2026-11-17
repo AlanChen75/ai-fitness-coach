@@ -284,6 +284,17 @@ const PISTOL_SQUAT_RULES = makeDefaultCycleRules({
   minRepMs: 1000
 })
 
+// 依 2026-11-17 兩支健身房實拍影片離線校準（斜側面），尚未經手機實機 session 校準
+const SEATED_ROW_RULES = makeDefaultCycleRules({
+  rules_version: 'seated-row-v0.1',
+  direction: 'down',
+  thresholdMode: 'absolute',
+  enterThreshold: 148,
+  bottomThreshold: 130,
+  exitThreshold: 150,
+  minRepMs: 800
+})
+
 export const EXERCISES: readonly ExerciseDef[] = [
   {
     id: 'squat',
@@ -696,7 +707,6 @@ export const EXERCISES: readonly ExerciseDef[] = [
     nameZh: '坐姿划船',
     tier: 'machine',
     view: 'side',
-    demoOnly: true,
     targetsZh: ['背闊肌', '菱形肌', '後三角肌'],
     steps: [
       '雙腳踩穩前方踏板，挺胸坐直並雙手握住握把',
@@ -704,14 +714,19 @@ export const EXERCISES: readonly ExerciseDef[] = [
       '控制回放伸直雙臂，全程保持下背挺直不圓背'
     ],
     stepsZh: [
+      '手機放在身體側面約 2 公尺、略高於腰，讓肩、手肘、手腕都入鏡',
       '雙腳踩穩前方踏板，挺胸坐直並雙手握住握把',
       '夾緊肩胛骨帶動手肘向後拉，將握把拉近腹部',
       '控制回放伸直雙臂，全程保持下背挺直不圓背'
     ],
     safetyZh: '勿利用腰部前後甩動借力，動作過程中不聳肩',
     figureSvg: '',
-    engine: { kind: 'demo' },
-    framingRegions: []
+    engine: {
+      kind: 'cycle',
+      metric: 'elbowAngle',
+      rules: SEATED_ROW_RULES
+    },
+    framingRegions: ['upper', 'hips']
   },
   {
     id: 'leg-press',
