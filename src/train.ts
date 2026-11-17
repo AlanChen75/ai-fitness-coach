@@ -87,6 +87,7 @@ const METRIC_LABELS: Record<MetricId, string> = {
   hipDrop: '降髖',
   hipLift: '抬臀',
   wristRaise: '舉手',
+  wristHeight: '手腕高度',
   torsoLean: '前傾'
 }
 

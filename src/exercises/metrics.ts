@@ -1,5 +1,6 @@
 // R12 動作計量純函式（MediaPipe 33 landmarks -> 標量指標）
 // 必要點 visibility < 0.5 時直接回傳 { value: null, valid: false }，絕不回傳 NaN
+// wristHeight 為單側指標，供側拍使用；雙側版本 wristRaise 側拍時遠側手常不可見
 
 import { DEFAULT_MIN_VISIBILITY, extractFeatures } from '../engine/features'
 import type { NormalizedLandmark } from '../engine/types'
@@ -13,6 +14,7 @@ export type MetricId =
   | 'hipDrop'
   | 'hipLift'
   | 'wristRaise'
+  | 'wristHeight'
   | 'torsoLean'
 
 export const SUPPORTED_METRIC_IDS: readonly MetricId[] = [
@@ -24,6 +26,7 @@ export const SUPPORTED_METRIC_IDS: readonly MetricId[] = [
   'hipDrop',
   'hipLift',
   'wristRaise',
+  'wristHeight',
   'torsoLean'
 ]
 
@@ -310,6 +313,49 @@ export function wristRaiseMetric(
   return { value, valid: true }
 }
 
+function computeSideWristHeight(
+  shoulder: NormalizedLandmark | undefined,
+  wrist: NormalizedLandmark | undefined,
+  hip: NormalizedLandmark | undefined,
+  minVisibility: number
+): { readonly value: number; readonly avgVis: number } | null {
+  if (
+    !isPointUsable(shoulder, minVisibility) ||
+    !isPointUsable(wrist, minVisibility) ||
+    !isPointUsable(hip, minVisibility)
+  ) {
+    return null
+  }
+  const torsoLen = Math.hypot(shoulder.x - hip.x, shoulder.y - hip.y)
+  if (!Number.isFinite(torsoLen) || torsoLen < EPSILON) {
+    return null
+  }
+  const value = (shoulder.y - wrist.y) / torsoLen
+  if (!Number.isFinite(value)) {
+    return null
+  }
+  const avgVis =
+    (safeVisibility(shoulder) + safeVisibility(wrist) + safeVisibility(hip)) / 3
+  return { value, avgVis }
+}
+
+/** 單側手腕相對肩部高度（(肩.y - 腕.y) / 該側軀幹長，手腕高於肩為正；單側指標供側拍使用） */
+export function wristHeightMetric(
+  landmarks: readonly NormalizedLandmark[],
+  minVisibility: number = DEFAULT_MIN_VISIBILITY
+): MetricSample {
+  const left = computeSideWristHeight(landmarks[11], landmarks[15], landmarks[23], minVisibility)
+  const right = computeSideWristHeight(landmarks[12], landmarks[16], landmarks[24], minVisibility)
+
+  if (left !== null && right !== null) {
+    const chosen = right.avgVis > left.avgVis ? right.value : left.value
+    return { value: chosen, valid: true }
+  }
+  if (left !== null) return { value: left.value, valid: true }
+  if (right !== null) return { value: right.value, valid: true }
+  return INVALID_METRIC
+}
+
 /** 側面軀幹前傾角（肩中點到髖中點向量與鉛直線夾角，度；雙側肩髖 11/12/23/24 需可見，直立約 0 度） */
 export function torsoLeanMetric(
   landmarks: readonly NormalizedLandmark[],
@@ -346,6 +392,8 @@ export function computeMetric(
       return hipLiftMetric(landmarks)
     case 'wristRaise':
       return wristRaiseMetric(landmarks)
+    case 'wristHeight':
+      return wristHeightMetric(landmarks)
     case 'torsoLean':
       return torsoLeanMetric(landmarks)
   }

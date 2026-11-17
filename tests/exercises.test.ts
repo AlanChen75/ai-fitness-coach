@@ -13,6 +13,7 @@ import {
   legAbductionMetric,
   shoulderRiseMetric,
   torsoLeanMetric,
+  wristHeightMetric,
   wristRaiseMetric
 } from '../src/exercises/metrics'
 
@@ -223,6 +224,7 @@ describe('Exercise Metrics & Catalog (R12-R15 T15.7-T15.8)', () => {
       'hipDrop',
       'hipLift',
       'wristRaise',
+      'wristHeight',
       'torsoLean'
     ] as const
 
@@ -241,11 +243,64 @@ describe('Exercise Metrics & Catalog (R12-R15 T15.7-T15.8)', () => {
     }
   })
 
-  it('T4b.2 & 5B.R1 & 6.R1: catalog 恰 24 筆、各 tier 6 筆、5 筆 demoOnly 含 steps、seated-row 為 cycle/elbowAngle、id 唯一、metric 支援與欄位合規', () => {
+  it('7.R6: wristHeightMetric 單側計算、高可見度側優先、雙側不可見回 invalid、肩上下正負號正確', () => {
+    // 1. 左側可見、右側不可見 -> 用左側計算且等於手算結果
+    const leftOnly = makeBaseLandmarks(0.2)
+    // 左肩 (0.4, 0.3), 左髖 (0.4, 0.7) -> 軀幹長 = 0.4; 左腕 (0.45, 0.1) -> (0.3 - 0.1)/0.4 = +0.5
+    setPoint(leftOnly, 11, 0.4, 0.3, 0.9)
+    setPoint(leftOnly, 15, 0.45, 0.1, 0.85)
+    setPoint(leftOnly, 23, 0.4, 0.7, 0.95)
+    // 右側手腕不可見
+    setPoint(leftOnly, 12, 0.6, 0.3, 0.95)
+    setPoint(leftOnly, 16, 0.6, 0.6, 0.3)
+    setPoint(leftOnly, 24, 0.6, 0.7, 0.95)
+
+    const leftRes = wristHeightMetric(leftOnly)
+    expect(leftRes.valid).toBe(true)
+    expect(leftRes.value!).toBeCloseTo(0.5, 6)
+    expect(computeMetric('wristHeight', leftOnly).value!).toBeCloseTo(0.5, 6)
+
+    // 2. 兩側都可見時取三點平均 visibility 較高的一側
+    const bothSides = makeBaseLandmarks(0.9)
+    // 左側平均 vis = (0.7 + 0.7 + 0.7) / 3 = 0.7，值 = (0.3 - 0.1) / 0.4 = 0.5
+    setPoint(bothSides, 11, 0.4, 0.3, 0.7)
+    setPoint(bothSides, 15, 0.4, 0.1, 0.7)
+    setPoint(bothSides, 23, 0.4, 0.7, 0.7)
+    // 右側平均 vis = (0.95 + 0.9 + 0.85) / 3 = 0.9，軀幹長 hypot(0.3, 0.4) = 0.5，值 = (0.3 - 0.45) / 0.5 = -0.3
+    setPoint(bothSides, 12, 0.6, 0.3, 0.95)
+    setPoint(bothSides, 16, 0.6, 0.45, 0.9)
+    setPoint(bothSides, 24, 0.9, 0.7, 0.85)
+
+    const bothRes = wristHeightMetric(bothSides)
+    expect(bothRes.valid).toBe(true)
+    expect(bothRes.value!).toBeCloseTo(-0.3, 6)
+
+    // 3. 兩側都不可見 -> valid: false, value: null
+    const noneVisible = makeBaseLandmarks(0.2)
+    expect(wristHeightMetric(noneVisible)).toEqual({ value: null, valid: false })
+
+    // 4. 手腕在肩上方為正、下方為負
+    const wristAbove = makeBaseLandmarks(0.2)
+    setPoint(wristAbove, 12, 0.5, 0.4, 0.9)
+    setPoint(wristAbove, 16, 0.5, 0.2, 0.9)
+    setPoint(wristAbove, 24, 0.5, 0.8, 0.9)
+    expect(wristHeightMetric(wristAbove).value!).toBeCloseTo(0.5, 6)
+    expect(wristHeightMetric(wristAbove).value!).toBeGreaterThan(0)
+
+    const wristBelow = makeBaseLandmarks(0.2)
+    setPoint(wristBelow, 12, 0.5, 0.4, 0.9)
+    setPoint(wristBelow, 16, 0.5, 0.6, 0.9)
+    setPoint(wristBelow, 24, 0.5, 0.8, 0.9)
+    expect(wristHeightMetric(wristBelow).value!).toBeCloseTo(-0.5, 6)
+    expect(wristHeightMetric(wristBelow).value!).toBeLessThan(0)
+  })
+
+  it('T4b.2 & 5B.R1 & 6.R1 & 7.R1/R8: catalog 恰 24 筆、各 tier 6 筆、器械順序如 R1、3 筆 demoOnly、lat-pulldown/seated-row/machine-row 為 cycle', () => {
     expect(EXERCISES).toHaveLength(24)
     const ids = EXERCISES.map((e) => e.id)
     expect(new Set(ids).size).toBe(24)
     expect(TIER_LABELS.machine).toBe('器械')
+    expect(getExercise('leg-extension')).toBeNull()
 
     const expectedBeginner = [
       'squat',
@@ -273,11 +328,11 @@ describe('Exercise Metrics & Catalog (R12-R15 T15.7-T15.8)', () => {
     ]
     const expectedMachine = [
       'lat-pulldown',
-      'chest-press-machine',
       'seated-row',
-      'leg-press',
+      'machine-row',
+      'chest-press-machine',
       'shoulder-press-machine',
-      'leg-extension'
+      'leg-press'
     ]
 
     expect(EXERCISES.filter((e) => e.tier === 'beginner').map((e) => e.id)).toEqual(
@@ -294,10 +349,22 @@ describe('Exercise Metrics & Catalog (R12-R15 T15.7-T15.8)', () => {
     )
 
     const demoExercises = EXERCISES.filter((e) => e.demoOnly === true)
-    expect(demoExercises).toHaveLength(5)
-    expect(demoExercises.map((e) => e.id)).toEqual(
-      expectedMachine.filter((id) => id !== 'seated-row')
-    )
+    expect(demoExercises).toHaveLength(3)
+    expect(demoExercises.map((e) => e.id)).toEqual([
+      'chest-press-machine',
+      'shoulder-press-machine',
+      'leg-press'
+    ])
+
+    const latPulldown = getExercise('lat-pulldown')
+    expect(latPulldown).not.toBeNull()
+    expect(latPulldown?.demoOnly).toBeUndefined()
+    expect(latPulldown?.engine.kind).toBe('cycle')
+    if (latPulldown?.engine.kind === 'cycle') {
+      expect(latPulldown.engine.metric).toBe('wristHeight')
+      expect(latPulldown.engine.rules.rules_version).toBe('lat-pulldown-v0.1')
+    }
+    expect(latPulldown?.framingRegions).toEqual(['upper', 'hips'])
 
     const seatedRow = getExercise('seated-row')
     expect(seatedRow).not.toBeNull()
@@ -308,6 +375,16 @@ describe('Exercise Metrics & Catalog (R12-R15 T15.7-T15.8)', () => {
       expect(seatedRow.engine.rules.rules_version).toBe('seated-row-v0.1')
     }
     expect(seatedRow?.framingRegions).toEqual(['upper', 'hips'])
+
+    const machineRow = getExercise('machine-row')
+    expect(machineRow).not.toBeNull()
+    expect(machineRow?.demoOnly).toBeUndefined()
+    expect(machineRow?.engine.kind).toBe('cycle')
+    if (machineRow?.engine.kind === 'cycle') {
+      expect(machineRow.engine.metric).toBe('elbowAngle')
+      expect(machineRow.engine.rules.rules_version).toBe('machine-row-v0.1')
+    }
+    expect(machineRow?.framingRegions).toEqual(['upper', 'hips'])
 
     // 準備一組所有關節皆有效且有軀幹長度的合成 landmarks 驗證每個 metricId
     const validLandmarks = makeBaseLandmarks()

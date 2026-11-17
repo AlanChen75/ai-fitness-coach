@@ -2,8 +2,8 @@
   "pass": true,
   "count": 24,
   "passed_count": 24,
-  "total_bytes": 4545251,
-  "total_mb": 4.335,
+  "total_bytes": 4536128,
+  "total_mb": 4.326,
   "max_total_mb": 15.0,
   "results": [
     {
@@ -435,48 +435,6 @@
       "errors": []
     },
     {
-      "id": "leg-extension",
-      "pass": true,
-      "gif": "/Users/user/Desktop/AI100講/oppo-fitness-coach/public/figures/leg-extension.gif",
-      "review_png": "/Users/user/Desktop/AI100講/oppo-fitness-coach/tools/figure-gif/review/leg-extension.png",
-      "width": 384,
-      "height": 384,
-      "frames": 25,
-      "duration_ms": 2000,
-      "loop": 0,
-      "palette_colors": 62,
-      "size_bytes": 74182,
-      "size_kb": 72.44,
-      "anchor_check": {
-        "category": "seated",
-        "sampled_frames": [
-          0,
-          6,
-          12
-        ],
-        "status": "skipped",
-        "skipped_reason": "Seated machine exercise: hips fixed on seat cushion (checked hip/seat contact instead)",
-        "contact_check": {
-          "label": "seat_hip",
-          "frames": [
-            0,
-            6,
-            12
-          ],
-          "box": [
-            162,
-            260,
-            188,
-            264
-          ],
-          "max_diff": 0,
-          "changed_pct": 0.0
-        }
-      },
-      "warnings": [],
-      "errors": []
-    },
-    {
       "id": "leg-press",
       "pass": true,
       "gif": "/Users/user/Desktop/AI100講/oppo-fitness-coach/public/figures/leg-press.gif",
@@ -564,6 +522,48 @@
             "changed_pct": 0.0
           }
         ]
+      },
+      "warnings": [],
+      "errors": []
+    },
+    {
+      "id": "machine-row",
+      "pass": true,
+      "gif": "/Users/user/Desktop/AI100講/oppo-fitness-coach/public/figures/machine-row.gif",
+      "review_png": "/Users/user/Desktop/AI100講/oppo-fitness-coach/tools/figure-gif/review/machine-row.png",
+      "width": 384,
+      "height": 384,
+      "frames": 25,
+      "duration_ms": 2000,
+      "loop": 0,
+      "palette_colors": 63,
+      "size_bytes": 65059,
+      "size_kb": 63.53,
+      "anchor_check": {
+        "category": "seated",
+        "sampled_frames": [
+          0,
+          6,
+          12
+        ],
+        "status": "skipped",
+        "skipped_reason": "Seated machine exercise: hips fixed on seat cushion (checked hip/seat contact instead)",
+        "contact_check": {
+          "label": "seat_hip",
+          "frames": [
+            0,
+            6,
+            12
+          ],
+          "box": [
+            155,
+            260,
+            180,
+            264
+          ],
+          "max_diff": 0,
+          "changed_pct": 0.0
+        }
       },
       "warnings": [],
       "errors": []

@@ -1,0 +1,122 @@
+{
+  "id": "machine-row",
+  "name": "Machine Row",
+  "view": "side",
+  "prop": "machine-row",
+  "anchor": "seated",
+  "anchorCategory": "seated",
+  "anchorX": 172,
+  "hipY": 326,
+  "seatY": 348,
+  "armBendSign": 1,
+  "groundY": 454,
+  "durationMs": 2000,
+  "totalFrames": 25,
+  "highlightMuscles": ["lats", "rhomboids"],
+  "keyframes": [
+    {
+      "t": 0.0,
+      "pose": {
+        "thighAngle": 0,
+        "shinAngle": -90,
+        "torsoAngle": 90,
+        "neckAngle": 90,
+        "headPitch": 0,
+        "wristX": 296,
+        "wristY": 244,
+        "handAngle": 0
+      }
+    },
+    {
+      "t": 0.08,
+      "pose": {
+        "thighAngle": 0,
+        "shinAngle": -90,
+        "torsoAngle": 90,
+        "neckAngle": 90,
+        "headPitch": 0,
+        "wristX": 296,
+        "wristY": 244,
+        "handAngle": 0
+      }
+    },
+    {
+      "t": 0.27,
+      "pose": {
+        "thighAngle": 0,
+        "shinAngle": -90,
+        "torsoAngle": 90,
+        "neckAngle": 90,
+        "headPitch": 0,
+        "wristX": 240,
+        "wristY": 244,
+        "handAngle": 0
+      }
+    },
+    {
+      "t": 0.46,
+      "pose": {
+        "thighAngle": 0,
+        "shinAngle": -90,
+        "torsoAngle": 90,
+        "neckAngle": 90,
+        "headPitch": 0,
+        "wristX": 196,
+        "wristY": 244,
+        "handAngle": 0
+      }
+    },
+    {
+      "t": 0.56,
+      "pose": {
+        "thighAngle": 0,
+        "shinAngle": -90,
+        "torsoAngle": 90,
+        "neckAngle": 90,
+        "headPitch": 0,
+        "wristX": 196,
+        "wristY": 244,
+        "handAngle": 0
+      }
+    },
+    {
+      "t": 0.77,
+      "pose": {
+        "thighAngle": 0,
+        "shinAngle": -90,
+        "torsoAngle": 90,
+        "neckAngle": 90,
+        "headPitch": 0,
+        "wristX": 240,
+        "wristY": 244,
+        "handAngle": 0
+      }
+    },
+    {
+      "t": 0.92,
+      "pose": {
+        "thighAngle": 0,
+        "shinAngle": -90,
+        "torsoAngle": 90,
+        "neckAngle": 90,
+        "headPitch": 0,
+        "wristX": 296,
+        "wristY": 244,
+        "handAngle": 0
+      }
+    },
+    {
+      "t": 1.0,
+      "pose": {
+        "thighAngle": 0,
+        "shinAngle": -90,
+        "torsoAngle": 90,
+        "neckAngle": 90,
+        "headPitch": 0,
+        "wristX": 296,
+        "wristY": 244,
+        "handAngle": 0
+      }
+    }
+  ]
+}

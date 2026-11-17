@@ -46,25 +46,25 @@ test('T4b.5 & 5B.R2 首頁四個 tier 各 6 張可點卡且圖片為 figures/*.g
   await expect(page.locator('#preview-figure img')).toHaveAttribute('src', /figures\/lunge\.gif/)
 })
 
-test('5B.R3 點器械卡進 demo.html 顯示名稱、目標肌群、要點與 GIF', async ({ page }) => {
+test('5B.R3 點器械 demoOnly 卡進 demo.html 顯示名稱、目標肌群、要點與 GIF', async ({ page }) => {
   await page.goto('/index.html')
 
   await page.locator('#tab-machine').click()
   await expect(page.locator('#panel-machine')).toBeVisible()
-  await page.locator('#panel-machine a.exercise-card', { hasText: '滑輪下拉' }).click()
+  await page.locator('#panel-machine a.exercise-card', { hasText: '坐姿胸推' }).click()
 
-  await expect(page).toHaveURL(/demo\.html\?exercise=lat-pulldown/)
-  await expect(page.locator('#demo-name')).toHaveText('滑輪下拉')
-  await expect(page.locator('#demo-targets')).toContainText('背闊肌')
-  await expect(page.locator('#demo-fig img')).toHaveAttribute('src', /figures\/lat-pulldown\.gif/)
+  await expect(page).toHaveURL(/demo\.html\?exercise=chest-press-machine/)
+  await expect(page.locator('#demo-name')).toHaveText('坐姿胸推')
+  await expect(page.locator('#demo-targets')).toContainText('胸大肌')
+  await expect(page.locator('#demo-fig img')).toHaveAttribute('src', /figures\/chest-press-machine\.gif/)
   const stepCount = await page.locator('#demo-steps li').count()
   expect(stepCount).toBeGreaterThanOrEqual(3)
 })
 
 test('5B.R4 demoOnly 動作進 train.html 直接被導向 demo.html', async ({ page }) => {
-  await page.goto('/train.html?exercise=lat-pulldown')
-  await expect(page).toHaveURL(/demo\.html\?exercise=lat-pulldown/)
-  await expect(page.locator('#demo-name')).toHaveText('滑輪下拉')
+  await page.goto('/train.html?exercise=chest-press-machine')
+  await expect(page).toHaveURL(/demo\.html\?exercise=chest-press-machine/)
+  await expect(page.locator('#demo-name')).toHaveText('坐姿胸推')
 })
 
 test('6.R2 器械 tab 點坐姿划船進 train.html（標籤為側面、含相機擺放提示）', async ({ page }) => {
@@ -82,6 +82,30 @@ test('6.R2 器械 tab 點坐姿划船進 train.html（標籤為側面、含相�
   await expect(page.locator('#top-exercise-name')).toHaveText('坐姿划船')
   await expect(page.locator('#preview-figure img')).toHaveAttribute('src', /figures\/seated-row\.gif/)
   await expect(page.locator('#preview-steps li').first()).toContainText('手機放在身體側面')
+})
+
+test('7.R8 器械 tab 卡片順序與 R1 一致，且點滑輪下拉與器械划船皆進 train.html 顯示各自 GIF', async ({ page }) => {
+  await page.goto('/index.html')
+
+  await page.locator('#tab-machine').click()
+  await expect(page.locator('#panel-machine')).toBeVisible()
+
+  const names = await page.locator('#panel-machine a.exercise-card .exercise-name').allTextContents()
+  expect(names).toEqual(['滑輪下拉', '坐姿划船', '器械划船', '坐姿胸推', '肩推機', '腿部推蹬'])
+
+  await page.locator('#panel-machine a.exercise-card', { hasText: '滑輪下拉' }).click()
+  await expect(page).toHaveURL(/train\.html\?exercise=lat-pulldown/)
+  await expect(page.locator('#preview-overlay')).toBeVisible()
+  await expect(page.locator('#preview-name')).toHaveText('滑輪下拉')
+  await expect(page.locator('#preview-figure img')).toHaveAttribute('src', /figures\/lat-pulldown\.gif/)
+
+  await page.goto('/index.html')
+  await page.locator('#tab-machine').click()
+  await page.locator('#panel-machine a.exercise-card', { hasText: '器械划船' }).click()
+  await expect(page).toHaveURL(/train\.html\?exercise=machine-row/)
+  await expect(page.locator('#preview-overlay')).toBeVisible()
+  await expect(page.locator('#preview-name')).toHaveText('器械划船')
+  await expect(page.locator('#preview-figure img')).toHaveAttribute('src', /figures\/machine-row\.gif/)
 })
 
 test('T4a.5 exercises.html 自動轉址到 index.html', async ({ page }) => {

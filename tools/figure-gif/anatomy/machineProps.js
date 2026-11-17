@@ -221,39 +221,36 @@ function renderShoulderPressProp(exerciseConfig, skel) {
   return { defs: buildMachineDefs(m), backSvg, frontSvg };
 }
 
-function renderLegExtensionProp(exerciseConfig, skel) {
+function renderMachineRowProp(exerciseConfig, skel) {
   const m = PALETTES.machine;
   const gY = skel.groundY;
   const seatY = skel.seatY;
-  const hip = skel.near.hip;
+  const hipX = skel.near.hip.x;
   const shoulder = skel.near.shoulder;
-  const knee = skel.near.knee;
-  const ankle = skel.near.ankle;
+  const wrist = skel.near.wrist;
 
-  const backBot = add(hip, { x: -24, y: 24 });
-  const backTop = add(shoulder, { x: -24, y: -12 });
-  const pivot = { x: knee.x - 4, y: knee.y + 18 };
+  const padX = shoulder.x + 25;
+  const padTopY = shoulder.y + 12;
+  const padH = 62;
+  const trackY = 244;
+  const towerX = 398;
 
-  const shinDir = norm(sub(ankle, knee));
-  const shinAnt = posteriorNormal(shinDir);
-  const rollerPos = add(lerpVec(knee, ankle, 0.84), scale(shinAnt, 13));
-
-  const backSvg = `<g class="prop-machine prop-leg-extension">
-    <rect x="112" y="${f(gY - 10)}" width="224" height="10" rx="4" fill="url(#mach_frame_grad)" stroke="${m.outline}" stroke-width="1" />
-    ${weightStackSvg(114, 198, 30, gY - 208, 7, m)}
-    <rect x="${f(hip.x - 16)}" y="${f(seatY + 12)}" width="12" height="${f(gY - seatY - 22)}" rx="3" fill="url(#mach_frame_grad)" stroke="${m.outline}" stroke-width="0.9" />
-    <rect x="${f(knee.x - 28)}" y="${f(seatY + 12)}" width="14" height="${f(gY - seatY - 22)}" rx="3" fill="url(#mach_frame_grad)" stroke="${m.outline}" stroke-width="0.9" />
-    ${angledPadSvg(backBot, backTop, 16, 1, m)}
-    <rect x="${f(hip.x - 32)}" y="${f(seatY)}" width="136" height="15" rx="6" fill="url(#mach_pad_grad)" stroke="${m.outline}" stroke-width="1" />
-    <line x1="${f(hip.x - 6)}" y1="${f(seatY)}" x2="${f(hip.x - 6)}" y2="${f(seatY - 12)}" stroke="${m.frameDark}" stroke-width="5" stroke-linecap="round" />
-    <line x1="${f(hip.x - 18)}" y1="${f(seatY - 12)}" x2="${f(hip.x + 12)}" y2="${f(seatY - 12)}" stroke="${m.padDark}" stroke-width="7" stroke-linecap="round" />
-    <line x1="${f(pivot.x)}" y1="${f(pivot.y)}" x2="${f(rollerPos.x)}" y2="${f(rollerPos.y)}" stroke="${m.frameDark}" stroke-width="8" stroke-linecap="round" />
-    <circle cx="${f(pivot.x)}" cy="${f(pivot.y)}" r="8" fill="${m.frameMid}" stroke="${m.outline}" stroke-width="1" />
+  const backSvg = `<g class="prop-machine prop-machine-row">
+    <rect x="${f(hipX - 36)}" y="${f(gY - 10)}" width="308" height="10" rx="4" fill="url(#mach_frame_grad)" stroke="${m.outline}" stroke-width="1" />
+    ${weightStackSvg(towerX, 148, 34, gY - 158, 8, m)}
+    <rect x="${f(hipX + 14)}" y="${f(seatY + 12)}" width="14" height="${f(gY - seatY - 22)}" rx="3" fill="url(#mach_frame_grad)" stroke="${m.outline}" stroke-width="0.9" />
+    <rect x="${f(hipX - 32)}" y="${f(seatY)}" width="118" height="15" rx="6" fill="url(#mach_pad_grad)" stroke="${m.outline}" stroke-width="1" />
+    <rect x="${f(padX + 6)}" y="${f(padTopY + 10)}" width="12" height="${f(gY - padTopY - 20)}" rx="3" fill="url(#mach_frame_grad)" stroke="${m.outline}" stroke-width="1" />
+    <rect x="${f(padX)}" y="${f(padTopY)}" width="15" height="${f(padH)}" rx="6" fill="url(#mach_pad_grad)" stroke="${m.outline}" stroke-width="1" />
+    <rect x="${f(padX + 6)}" y="${f(trackY - 4)}" width="${f(towerX - (padX + 6))}" height="8" rx="3" fill="url(#mach_frame_grad)" stroke="${m.outline}" stroke-width="0.9" />
+    <line x1="${f(wrist.x + 8)}" y1="${f(trackY)}" x2="${f(towerX)}" y2="${f(trackY)}" stroke="${m.frameLight}" stroke-width="3.2" stroke-linecap="round" />
+    <circle cx="${f(towerX)}" cy="${f(trackY)}" r="7" fill="${m.frameDark}" stroke="${m.outline}" stroke-width="1" />
+    <circle cx="${f(towerX)}" cy="${f(trackY)}" r="3" fill="${m.accent}" />
   </g>`;
 
   const frontSvg = `<g class="prop-machine-front">
-    <circle cx="${f(rollerPos.x)}" cy="${f(rollerPos.y)}" r="12" fill="url(#mach_pad_grad)" stroke="${m.outline}" stroke-width="1" />
-    <circle cx="${f(rollerPos.x)}" cy="${f(rollerPos.y)}" r="4.2" fill="${m.accent}" />
+    <rect x="${f(wrist.x + 3)}" y="${f(wrist.y - 12)}" width="9" height="24" rx="4" fill="url(#mach_pad_grad)" stroke="${m.outline}" stroke-width="0.9" />
+    <rect x="${f(wrist.x + 10)}" y="${f(trackY - 5)}" width="10" height="10" rx="2.5" fill="${m.frameMid}" stroke="${m.outline}" stroke-width="0.9" />
   </g>`;
 
   return { defs: buildMachineDefs(m), backSvg, frontSvg };
@@ -263,9 +260,9 @@ function renderMachineProp(prop, exerciseConfig, skel) {
   if (prop === 'machine-lat-pulldown') return renderLatPulldownProp(exerciseConfig, skel);
   if (prop === 'machine-chest-press') return renderChestPressProp(exerciseConfig, skel);
   if (prop === 'machine-seated-row') return renderSeatedRowProp(exerciseConfig, skel);
+  if (prop === 'machine-row') return renderMachineRowProp(exerciseConfig, skel);
   if (prop === 'machine-leg-press') return renderLegPressProp(exerciseConfig, skel);
   if (prop === 'machine-shoulder-press') return renderShoulderPressProp(exerciseConfig, skel);
-  if (prop === 'machine-leg-extension') return renderLegExtensionProp(exerciseConfig, skel);
   return null;
 }
 
