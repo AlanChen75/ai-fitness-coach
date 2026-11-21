@@ -1,0 +1,22 @@
+# AI 健身教練 SmallGreen 契約（first-party Path A：契約與程式碼同 repo）。
+schema_version: "0.3.0"
+profile: small-app
+summary:
+  purpose: 用手機相機辨識身體姿勢、自動計算運動次數的網頁 App，畫面與姿勢資料只在手機上處理
+  audience: 在家自主訓練的人、想讓學員回家練習的健身教練與瑜伽老師
+  users_estimate: 1-10
+login_method: none
+data:
+  types: [training_sessions, pose_sequences, user_settings]
+  stored_in: [none]
+  notes: 伺服器端不存任何資料。訓練紀錄與逐幀姿勢資料存在使用者瀏覽器的 IndexedDB 與 OPFS，設定存在 localStorage；刪除瀏覽器網站資料即一併刪除。相機畫面不離開裝置。
+secrets: []
+external_services: []
+build_requirements:
+  runtime: node>=20
+  package_manager: npm
+  gates:
+    - npm test
+    - npm run build
+  notes: 靜態資產由 npm run build 產生於 dist/，wrangler.jsonc 只宣告 assets；姿勢模型檔與 WASM 已隨 repo 提供於 public/，執行期不呼叫外部服務。
+alt_deployment: []

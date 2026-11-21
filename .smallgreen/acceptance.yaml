@@ -1,0 +1,36 @@
+schema_version: "0.1.0"
+health:
+  path: /index.html
+  expect_status: 200
+smoke:
+  - name: 訓練頁與姿勢模型檔可載入
+    steps:
+      - action: http_request
+        params:
+          method: GET
+          path: /train.html
+      - action: http_request
+        params:
+          method: GET
+          path: /models/pose_landmarker_lite.task
+    expect: { status: 200 }
+    idempotency: true
+  - name: Service worker 與 manifest 可載入
+    steps:
+      - action: http_request
+        params:
+          method: GET
+          path: /sw.js
+      - action: http_request
+        params:
+          method: GET
+          path: /manifest.webmanifest
+    expect: { status: 200 }
+    idempotency: true
+user_acceptance:
+  - task: 用 Android 手機 Chrome 開啟部署網址，選「深蹲」，允許相機，依入位引導站好後做三下
+    success_looks_like: 骨架貼合身體，次數跳到 3，結束後回顧頁看得到這一組
+  - task: 開啟訓練頁「電視」開關並把手機橫放
+    success_looks_like: 左側大字次數、右側相機畫面，骨架與相機畫面對齊
+uninstall_check:
+  resource_zero_diff: true

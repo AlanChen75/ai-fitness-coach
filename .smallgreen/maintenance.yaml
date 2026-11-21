@@ -1,0 +1,21 @@
+schema_version: "0.1.0"
+update:
+  strategy: upstream-pr
+  upstream_check: gh api repos/AlanChen75/ai-fitness-coach/commits/main
+  preview_before_promote: true
+backup:
+  targets: [none]
+  method: 伺服器端無資料。使用者可在 App 的回顧頁把訓練紀錄匯出成 JSON 自行保存。
+  frequency_hint: 換手機或清除瀏覽器資料前
+restore:
+  method: 伺服器端無資料可還原；重新部署即恢復 App。訓練紀錄目前不支援匯入。
+uninstall:
+  steps:
+    - npx wrangler delete ai-fitness-coach
+  data_export_first: false
+quota_watchdog:
+  watch:
+    - resource: workers_static_assets_requests
+      free_limit: 靜態資產請求不計入 Workers 每日請求額度
+      check_method: Cloudflare dashboard → Workers & Pages → ai-fitness-coach → Metrics
+      alert_threshold: 無需告警

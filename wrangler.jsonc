@@ -1,0 +1,11 @@
+{
+  // AI 健身教練：純靜態 PWA，部署到 Cloudflare Workers Static Assets（免費層）。
+  // 沒有 Worker 程式碼、沒有任何 binding；所有運算與資料都在使用者瀏覽器內。
+  // 部署：npm run build && npx wrangler deploy
+  "name": "ai-fitness-coach",
+  "compatibility_date": "2026-11-01",
+  "workers_dev": true,
+  "assets": {
+    "directory": "./dist"
+  }
+}

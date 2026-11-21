@@ -1,0 +1,14 @@
+name: smallgreen-conformance
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  conformance:
+    uses: smallgreen-cloud/conformance/.github/workflows/conformance.yml@main
+    with:
+      spec_ref: v0.4.0
+      # smoke 需要先 npm run build 產生 dist/；本地 smoke 由部署流程在 build 後執行
+      run_smoke: false
