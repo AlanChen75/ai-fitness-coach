@@ -9,6 +9,7 @@ jobs:
   conformance:
     uses: smallgreen-cloud/conformance/.github/workflows/conformance.yml@main
     with:
-      spec_ref: v0.4.0
+      # spec v0.4.0 的 commit；release tag 尚未推到 spec 遠端（registry CI 同樣釘 commit）
+      spec_ref: e61861aeb6a82b473b6d52aa449ceff130b33cb0
       # smoke 需要先 npm run build 產生 dist/；本地 smoke 由部署流程在 build 後執行
       run_smoke: false

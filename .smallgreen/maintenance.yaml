@@ -11,7 +11,7 @@ restore:
   method: 伺服器端無資料可還原；重新部署即恢復 App。訓練紀錄目前不支援匯入。
 uninstall:
   steps:
-    - npx wrangler delete ai-fitness-coach
+    - npx wrangler@4.166.0 delete ai-fitness-coach
   data_export_first: false
 quota_watchdog:
   watch:

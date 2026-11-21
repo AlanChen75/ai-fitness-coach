@@ -27,8 +27,8 @@ AI 健身教練是純靜態 PWA：用 MediaPipe Pose Landmarker 在瀏覽器內�
 ## 部署與驗收
 
 ```bash
-npx wrangler whoami
-npx wrangler deploy
+npx wrangler@4.166.0 whoami
+npx wrangler@4.166.0 deploy
 ```
 
 部署輸出會給出 `https://ai-fitness-coach.<subdomain>.workers.dev`。剛部署的前幾秒可能回 1042 或 404，等待 10 秒重試，最多三次。
@@ -42,12 +42,12 @@ npx wrangler deploy
 
 ## 維護與退出
 
-更新：拉取新 commit 後重跑本機閘門，`npm run build && npx wrangler deploy`。改版時必須升級 `public/sw.js` 的 `CACHE_NAME`，否則已安裝的使用者會繼續看到舊版。
+更新：拉取新 commit 後重跑本機閘門，`npm run build && npx wrangler@4.166.0 deploy`。改版時必須升級 `public/sw.js` 的 `CACHE_NAME`，否則已安裝的使用者會繼續看到舊版。
 
 移除：
 
 ```bash
-npx wrangler delete ai-fitness-coach
+npx wrangler@4.166.0 delete ai-fitness-coach
 ```
 
 移除後以部署前資源清單比對，Worker 清單回到部署前狀態。使用者手機上的訓練紀錄存在瀏覽器本機，不受移除影響；需要時請使用者先在回顧頁匯出 JSON，再清除瀏覽器網站資料。
