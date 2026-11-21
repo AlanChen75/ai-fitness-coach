@@ -64,6 +64,7 @@ const CHECKPOINT_SAMPLE_THRESHOLD = 100
 const INVALID_WARN_MS = 3000
 const FACING_WARN_MS = 3000
 const POSE_MODEL_NAME = 'pose_landmarker_lite.task'
+const TV_MODE_STORAGE_KEY = 'fc.tvMode'
 
 const SKELETON: ReadonlyArray<readonly [number, number]> = [
   [11, 12], [11, 13], [13, 15], [12, 14], [14, 16],
@@ -136,6 +137,7 @@ const elCamWrap = $('#cam-wrap')
 const elVideo = $('#cam') as HTMLVideoElement
 const elOverlay = $('#overlay') as HTMLCanvasElement
 const elTtsToggle = $('#tts-toggle') as HTMLInputElement
+const elTvToggle = $('#tv-toggle') as HTMLInputElement
 
 const elPreviewOverlay = $('#preview-overlay')
 const elPreviewFigure = $('#preview-figure')
@@ -206,6 +208,7 @@ let lastFacing: FacingOrientation = 'unknown'
 let lastFrameValid = false
 let lastMetricValue: number | null = null
 let lastLandmarkCount = 0
+let wakeLockSentinel: WakeLockSentinel | null = null
 
 function initExerciseUi(): void {
   const viewText = currentExercise.view === 'front' ? '正面' : '側面'
@@ -889,6 +892,7 @@ function stepFrame(now: number): void {
 
 function startLoop(): void {
   if (loopRafId !== null) return
+  void requestWakeLock()
   const tick = (now: number) => {
     if (loopRafId === null) return
     stepFrame(now)
@@ -1055,6 +1059,7 @@ async function endSession(): Promise<void> {
 
   stopLoop()
   stopCameraTracks()
+  releaseWakeLock()
   window.location.href = `./review.html?session=${encodeURIComponent(stored.session_id)}`
 }
 
@@ -1066,6 +1071,7 @@ async function triggerInterrupt(reasonLabel: string): Promise<void> {
   interrupted = true
   inSet = false
   stopLoop()
+  releaseWakeLock()
   tts.stop()
 
   elInterruptMsg.textContent = `已中斷（${reasonLabel}）：已立即停止取樣並寫入本地儲存。請按「重新開始」重新訓練，或前往回顧頁查看紀錄。`
@@ -1086,6 +1092,8 @@ async function triggerInterrupt(reasonLabel: string): Promise<void> {
 function handleVisibilityChange(): void {
   if (document.visibilityState === 'hidden') {
     void triggerInterrupt('頁面進入背景')
+  } else if (document.visibilityState === 'visible' && !interrupted && (inSet || loopRafId !== null)) {
+    void requestWakeLock()
   }
 }
 
@@ -1136,8 +1144,61 @@ function dismissPreviewAndInit(): void {
   void initCameraAndModel()
 }
 
+function readSavedTvMode(): boolean {
+  try {
+    return window.localStorage.getItem(TV_MODE_STORAGE_KEY) === '1'
+  } catch {
+    return false
+  }
+}
+
+function applyTvMode(enabled: boolean, persist: boolean): void {
+  document.body.classList.toggle('tv-mode', enabled)
+  elTvToggle.checked = enabled
+  if (!persist) return
+  try {
+    window.localStorage.setItem(TV_MODE_STORAGE_KEY, enabled ? '1' : '0')
+  } catch {
+    // localStorage 不可用時略過
+  }
+}
+
+function initTvMode(): void {
+  const param = new URLSearchParams(window.location.search).get('tv')
+  if (param === '1' || param === '0') {
+    applyTvMode(param === '1', true)
+  } else {
+    applyTvMode(readSavedTvMode(), false)
+  }
+}
+
+async function requestWakeLock(): Promise<void> {
+  if (wakeLockSentinel && !wakeLockSentinel.released) return
+  if (!('wakeLock' in navigator) || !navigator.wakeLock) return
+  try {
+    const sentinel = await navigator.wakeLock.request('screen')
+    wakeLockSentinel = sentinel
+    sentinel.addEventListener('release', () => {
+      if (wakeLockSentinel === sentinel) wakeLockSentinel = null
+    }, { once: true })
+  } catch (err) {
+    console.warn('Wake Lock request failed:', err)
+  }
+}
+
+function releaseWakeLock(): void {
+  const sentinel = wakeLockSentinel
+  wakeLockSentinel = null
+  if (sentinel && !sentinel.released) {
+    void sentinel.release().catch(() => {})
+  }
+}
+
 elTtsToggle.addEventListener('change', () => {
   tts.setEnabled(elTtsToggle.checked)
+})
+elTvToggle.addEventListener('change', () => {
+  applyTvMode(elTvToggle.checked, true)
 })
 btnPreviewStart.addEventListener('click', dismissPreviewAndInit)
 btnInitCam.addEventListener('click', () => { void initCameraAndModel() })
@@ -1148,6 +1209,7 @@ btnEndSession.addEventListener('click', () => { void endSession() })
 btnRestart.addEventListener('click', restartTraining)
 document.addEventListener('visibilitychange', handleVisibilityChange)
 
+initTvMode()
 initExerciseUi()
 updateHud()
 syncButtons()

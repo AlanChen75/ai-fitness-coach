@@ -190,3 +190,70 @@ test('無 exercise 參數安全回退深蹲', async ({ page }) => {
   await expect(page.locator('#top-exercise-name')).toHaveText('深蹲')
   await expect(page.locator('#preview-name')).toHaveText('深蹲')
 })
+
+test('8.R2 橫放電視模式版面：左側 42% 大字資訊欄、右側 58% 相機與骨架對齊、示範卡可點', async ({ page }) => {
+  await page.setViewportSize({ width: 915, height: 412 })
+  await page.goto('/index.html')
+  await page.evaluate(() => localStorage.clear())
+  await page.goto('/train.html?exercise=squat&tv=1')
+
+  await expect(page.locator('body')).toHaveClass(/tv-mode/)
+  await expect(page.locator('#tv-toggle')).toBeChecked()
+
+  const camBox = await page.locator('#cam-wrap').boundingBox()
+  expect(camBox).not.toBeNull()
+  expect(camBox!.x).toBeGreaterThanOrEqual(0.4 * 915)
+
+  const overlayClientWidth = await page.locator('#overlay').evaluate((el) => el.clientWidth)
+  expect(overlayClientWidth).toBeCloseTo(camBox!.width, 0)
+
+  const repFontSize = await page.locator('#rep-complete').evaluate((el) => parseFloat(getComputedStyle(el).fontSize))
+  expect(repFontSize).toBeGreaterThanOrEqual(150)
+
+  const topBandBox = await page.locator('#top-band').boundingBox()
+  const repBox = await page.locator('.hud-rep-box').boundingBox()
+  expect(topBandBox).not.toBeNull()
+  expect(repBox).not.toBeNull()
+  expect(topBandBox!.x + topBandBox!.width).toBeLessThanOrEqual(0.42 * 915 + 1)
+  expect(repBox!.x + repBox!.width).toBeLessThanOrEqual(0.42 * 915 + 1)
+
+  const startBtn = page.locator('#btn-preview-start')
+  await expect(startBtn).toBeVisible()
+  const btnBox = await startBtn.boundingBox()
+  expect(btnBox).not.toBeNull()
+  expect(btnBox!.y + btnBox!.height).toBeLessThanOrEqual(412)
+  await startBtn.click()
+  await expect.poll(() => page.locator('#preview-overlay').isVisible()).toBe(false)
+})
+
+test('8.R1/R3/R4 直立電視模式提示、保存生效與關閉後恢復 68px', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/index.html')
+  await page.evaluate(() => localStorage.clear())
+  await page.goto('/train.html?exercise=squat&tv=1')
+
+  await expect(page.locator('body')).toHaveClass(/tv-mode/)
+  await expect(page.locator('#tv-rotate-hint')).toBeVisible()
+
+  await page.goto('/train.html?exercise=squat')
+  await expect(page.locator('body')).toHaveClass(/tv-mode/)
+  await expect(page.locator('#tv-toggle')).toBeChecked()
+  await expect(page.locator('#tv-rotate-hint')).toBeVisible()
+
+  await page.locator('#tv-toggle').uncheck()
+  await expect(page.locator('body')).not.toHaveClass(/tv-mode/)
+  await expect(page.locator('#tv-rotate-hint')).toBeHidden()
+
+  const repFontSize = await page.locator('#rep-complete').evaluate((el) => parseFloat(getComputedStyle(el).fontSize))
+  expect(repFontSize).toBe(68)
+})
+
+test('8.R1 tv=0 強制關閉電視模式', async ({ page }) => {
+  await page.setViewportSize({ width: 915, height: 412 })
+  await page.goto('/index.html')
+  await page.evaluate(() => localStorage.setItem('fc.tvMode', '1'))
+  await page.goto('/train.html?exercise=squat&tv=0')
+
+  await expect(page.locator('body')).not.toHaveClass(/tv-mode/)
+  await expect(page.locator('#tv-toggle')).not.toBeChecked()
+})

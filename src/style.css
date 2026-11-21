@@ -450,7 +450,7 @@ body.train-page {
   right: 0;
   z-index: 30;
   display: grid;
-  grid-template-columns: 1fr 1.2fr 1fr auto;
+  grid-template-columns: 1fr 1.2fr 1fr auto auto;
   gap: 8px;
   align-items: stretch;
   padding: 10px 10px calc(10px + env(safe-area-inset-bottom));
@@ -858,4 +858,225 @@ body.train-page {
 
 .demo-steps li {
   margin-bottom: 8px;
+}
+
+/* ---------- Iteration 8 電視模式（橫放鏡像大字版面） ---------- */
+.tv-rotate-hint {
+  display: none;
+}
+
+@media (orientation: portrait) {
+  body.train-page.tv-mode .tv-rotate-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    left: 16px;
+    right: 16px;
+    bottom: calc(82px + env(safe-area-inset-bottom));
+    z-index: 32;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: rgba(14, 165, 233, 0.94);
+    color: #06202e;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    pointer-events: none;
+  }
+}
+
+@media (orientation: landscape) {
+  body.train-page.tv-mode .train-stage {
+    background: #0b1220;
+  }
+
+  body.train-page.tv-mode .stage-video-wrap {
+    left: 42%;
+    right: 0;
+    width: 58%;
+    height: 100%;
+  }
+
+  body.train-page.tv-mode .top-band {
+    left: 0;
+    right: auto;
+    width: 42%;
+    padding: calc(8px + env(safe-area-inset-top)) 12px 8px;
+    gap: 6px;
+  }
+
+  body.train-page.tv-mode .top-exercise-name {
+    font-size: 4vh;
+  }
+
+  body.train-page.tv-mode .top-status-text {
+    font-size: 7vh;
+    line-height: 1.15;
+  }
+
+  body.train-page.tv-mode .top-set-progress {
+    font-size: 4vh;
+  }
+
+  body.train-page.tv-mode .top-nav-link {
+    min-height: 32px;
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+
+  body.train-page.tv-mode .hud-rep-box {
+    left: 0;
+    right: auto;
+    width: 42%;
+    min-width: 0;
+    top: 55%;
+    transform: translateY(-50%);
+    padding: 0 12px;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  body.train-page.tv-mode .hud-rep-num {
+    font-size: min(46vh, 30vw);
+    line-height: 0.95;
+  }
+
+  body.train-page.tv-mode .hud-rep-sub {
+    font-size: 4vh;
+    margin-top: 2px;
+  }
+
+  body.train-page.tv-mode .bottom-bar {
+    left: 0;
+    right: auto;
+    width: 42%;
+    padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+    gap: 5px;
+  }
+
+  body.train-page.tv-mode .bottom-bar .bar-btn {
+    min-height: 40px;
+    min-width: 0;
+    padding: 4px;
+    font-size: 12px;
+  }
+
+  body.train-page.tv-mode .bottom-bar .bar-toggle {
+    min-height: 40px;
+    padding: 0 7px;
+    gap: 4px;
+    font-size: 12px;
+  }
+
+  body.train-page.tv-mode .bottom-bar .bar-toggle input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+  }
+
+  body.train-page.tv-mode .hud-knee {
+    display: none;
+  }
+
+  body.train-page.tv-mode .stage-alerts {
+    left: 44%;
+    right: 12px;
+    top: 12px;
+    max-height: 92vh;
+    overflow-y: auto;
+  }
+
+  body.train-page.tv-mode .preview-overlay,
+  body.train-page.tv-mode .guide-overlay {
+    left: 42%;
+    right: 0;
+    padding: 12px;
+  }
+
+  body.train-page.tv-mode .preview-card,
+  body.train-page.tv-mode .guide-card {
+    max-width: 440px;
+    max-height: 92vh;
+    overflow-y: auto;
+    padding: 14px 16px 12px;
+  }
+
+  body.train-page.tv-mode .preview-figure {
+    margin-bottom: 6px;
+  }
+
+  body.train-page.tv-mode .preview-figure img {
+    width: 92px;
+    height: 92px;
+  }
+
+  body.train-page.tv-mode .preview-figure svg {
+    width: 72px;
+    height: 108px;
+  }
+
+  body.train-page.tv-mode .preview-header {
+    margin-bottom: 6px;
+  }
+
+  body.train-page.tv-mode .preview-name {
+    font-size: 18px;
+  }
+
+  body.train-page.tv-mode .preview-steps {
+    margin: 0 0 8px 18px;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  body.train-page.tv-mode .preview-steps li {
+    margin-bottom: 3px;
+  }
+
+  body.train-page.tv-mode .preview-safety {
+    padding: 7px 10px;
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+
+  body.train-page.tv-mode .preview-card .btn-primary,
+  body.train-page.tv-mode .guide-card .btn-primary {
+    min-height: 42px;
+    padding: 9px;
+    margin-bottom: 0;
+    font-size: 15px;
+  }
+
+  body.train-page.tv-mode .guide-figure {
+    margin-bottom: 4px;
+  }
+
+  body.train-page.tv-mode .guide-figure img {
+    width: 72px;
+    height: 72px;
+  }
+
+  body.train-page.tv-mode .guide-title {
+    font-size: 17px;
+    margin-bottom: 2px;
+  }
+
+  body.train-page.tv-mode .guide-hint {
+    font-size: 13px;
+    margin-bottom: 8px;
+    min-height: 18px;
+  }
+
+  body.train-page.tv-mode .guide-checklist {
+    margin-bottom: 8px;
+  }
+
+  body.train-page.tv-mode .guide-check-item {
+    padding: 5px 8px;
+    margin-bottom: 4px;
+    font-size: 13px;
+  }
 }
