@@ -87,7 +87,7 @@ btnInstall.addEventListener('click', () => {
 
 // ---------- 分享給朋友 ----------
 
-const SHARE_URL = 'https://alanchen75.github.io/oppo-fitness-coach/'
+const SHARE_URL = 'https://alanchen75.github.io/ai-fitness-coach/'
 const btnShare = getEl('#btn-share') as HTMLButtonElement
 const shareStatus = getEl('#share-status')
 

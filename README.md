@@ -3,7 +3,7 @@
 用手機相機辨識身體姿勢、自動計算運動次數的網頁 App（PWA）。不用安裝、不用註冊。
 所有畫面與姿勢資料只在你的手機上處理，不會上傳。
 
-線上版：https://alanchen75.github.io/oppo-fitness-coach/
+線上版：https://alanchen75.github.io/ai-fitness-coach/
 
 ## 這是什麼、適合誰
 
