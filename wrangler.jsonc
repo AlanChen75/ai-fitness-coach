@@ -6,6 +6,11 @@
   "compatibility_date": "2026-11-01",
   "workers_dev": true,
   "assets": {
-    "directory": "./dist"
+    "directory": "./dist",
+    // App 內部連結與 service worker 預先快取都用 xxx.html；預設的 auto-trailing-slash 會把
+    // /train.html 307 轉址到 /train，SW 快取到轉址回應後頁面會載入失敗，所以關閉自動轉址。
+    "html_handling": "none",
+    // html_handling none 之後 / 不會自動對到 index.html；用 SPA 模式讓找不到的導覽請求回首頁。
+    "not_found_handling": "single-page-application"
   }
 }
