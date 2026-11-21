@@ -94,7 +94,27 @@
     </div>
   </section>
 
-  <div id="tv-rotate-hint" class="tv-rotate-hint">電視模式請把手機橫放</div>
+  <button id="tv-rotate-hint" class="tv-rotate-hint" type="button">
+    <span>電視模式請把手機橫放</span>
+    <span class="tv-rotate-hint-link">怎麼投放到電視</span>
+  </button>
+
+  <section id="tv-cast-guide" class="tv-cast-guide is-hidden" role="dialog" aria-modal="true" aria-labelledby="tv-cast-title">
+    <div class="tv-cast-card">
+      <h2 id="tv-cast-title" class="tv-cast-title">把畫面投放到電視</h2>
+      <h3 class="tv-cast-sub">Android 手機</h3>
+      <ol class="tv-cast-steps">
+        <li>手機和電視連上同一個 Wi-Fi</li>
+        <li>從螢幕頂端往下滑，打開快速設定</li>
+        <li>點「投放螢幕」或「螢幕投放」（各品牌名稱不同，三星叫 Smart View），選你的電視</li>
+        <li>回到這個畫面，把手機橫放架好：左邊是大字次數，右邊是相機畫面</li>
+      </ol>
+      <h3 class="tv-cast-sub">iPhone（尚未實測）</h3>
+      <p class="tv-cast-text">打開控制中心，點「螢幕鏡像輸出」，選 Apple TV 或支援 AirPlay 的電視。</p>
+      <p class="tv-cast-note">投放時請讓這個網頁保持在前景；訓練中 App 會讓手機螢幕保持常亮。</p>
+      <button id="btn-tv-cast-close" class="btn-primary" type="button">知道了</button>
+    </div>
+  </section>
 
   <footer class="bottom-bar" aria-label="訓練控制列">
     <button id="btn-end-set" class="bar-btn" type="button" disabled>結束一組</button>

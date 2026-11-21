@@ -65,6 +65,7 @@ const INVALID_WARN_MS = 3000
 const FACING_WARN_MS = 3000
 const POSE_MODEL_NAME = 'pose_landmarker_lite.task'
 const TV_MODE_STORAGE_KEY = 'fc.tvMode'
+const TV_CAST_GUIDE_SEEN_KEY = 'fc.tvCastGuideSeen'
 
 const SKELETON: ReadonlyArray<readonly [number, number]> = [
   [11, 12], [11, 13], [13, 15], [12, 14], [14, 16],
@@ -138,6 +139,9 @@ const elVideo = $('#cam') as HTMLVideoElement
 const elOverlay = $('#overlay') as HTMLCanvasElement
 const elTtsToggle = $('#tts-toggle') as HTMLInputElement
 const elTvToggle = $('#tv-toggle') as HTMLInputElement
+const elTvRotateHint = $('#tv-rotate-hint') as HTMLButtonElement
+const elTvCastGuide = $('#tv-cast-guide') as HTMLElement
+const btnTvCastClose = $('#btn-tv-cast-close') as HTMLButtonElement
 
 const elPreviewOverlay = $('#preview-overlay')
 const elPreviewFigure = $('#preview-figure')
@@ -1172,6 +1176,31 @@ function initTvMode(): void {
   }
 }
 
+function showTvCastGuide(): void {
+  elTvCastGuide.classList.remove('is-hidden')
+  // 橫放時卡片要捲動；焦點移到按鈕不可把卡片捲到底，否則標題與第一步被遮住
+  const card = elTvCastGuide.querySelector('.tv-cast-card')
+  if (card) card.scrollTop = 0
+  btnTvCastClose.focus({ preventScroll: true })
+}
+
+function hideTvCastGuide(): void {
+  elTvCastGuide.classList.add('is-hidden')
+  try {
+    window.localStorage.setItem(TV_CAST_GUIDE_SEEN_KEY, '1')
+  } catch {
+    // localStorage 不可用時略過
+  }
+}
+
+function tvCastGuideSeen(): boolean {
+  try {
+    return window.localStorage.getItem(TV_CAST_GUIDE_SEEN_KEY) === '1'
+  } catch {
+    return false
+  }
+}
+
 async function requestWakeLock(): Promise<void> {
   if (wakeLockSentinel && !wakeLockSentinel.released) return
   if (!('wakeLock' in navigator) || !navigator.wakeLock) return
@@ -1199,7 +1228,11 @@ elTtsToggle.addEventListener('change', () => {
 })
 elTvToggle.addEventListener('change', () => {
   applyTvMode(elTvToggle.checked, true)
+  // 使用者第一次親手打開電視模式時，說明怎麼投放；之後可從直立提示再開
+  if (elTvToggle.checked && !tvCastGuideSeen()) showTvCastGuide()
 })
+elTvRotateHint.addEventListener('click', showTvCastGuide)
+btnTvCastClose.addEventListener('click', hideTvCastGuide)
 btnPreviewStart.addEventListener('click', dismissPreviewAndInit)
 btnInitCam.addEventListener('click', () => { void initCameraAndModel() })
 btnSkipGuide.addEventListener('click', () => { void startSet() })

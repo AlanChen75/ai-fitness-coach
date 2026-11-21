@@ -882,8 +882,80 @@ body.train-page {
     font-size: 20px;
     font-weight: 700;
     text-align: center;
-    pointer-events: none;
+    flex-direction: column;
+    gap: 4px;
+    border: 0;
+    font-family: inherit;
+    cursor: pointer;
   }
+}
+
+.tv-rotate-hint-link {
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+/* 投放說明卡：疊在示範卡與直立提示之上 */
+.tv-cast-guide {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(11, 18, 32, 0.9);
+}
+
+.tv-cast-guide.is-hidden {
+  display: none;
+}
+
+.tv-cast-card {
+  width: 100%;
+  max-width: 420px;
+  max-height: 92vh;
+  overflow-y: auto;
+  padding: 18px 18px 14px;
+  border-radius: 16px;
+  background: var(--surface);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  color: var(--text);
+}
+
+.tv-cast-title {
+  margin: 0 0 10px;
+  font-size: 22px;
+}
+
+.tv-cast-sub {
+  margin: 12px 0 6px;
+  font-size: 16px;
+  color: var(--accent);
+}
+
+.tv-cast-steps {
+  margin: 0 0 4px 20px;
+  padding: 0;
+  line-height: 1.6;
+}
+
+.tv-cast-text {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.tv-cast-note {
+  margin: 12px 0;
+  font-size: 14px;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+.tv-cast-card .btn-primary {
+  width: 100%;
+  min-height: 44px;
 }
 
 @media (orientation: landscape) {
